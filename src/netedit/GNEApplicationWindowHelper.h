@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -106,10 +106,10 @@ struct GNEApplicationWindowHelper {
 
         /// @brief menu bar drag for save elements
         FXToolBarShell* myPythonToolBarShellSaveElements = nullptr;
-        
+
         /// @brief menu bar drag for time switch
         FXToolBarShell* myPythonToolBarShellTimeFormat = nullptr;
-        
+
         /// @brief menu bar drag for navigation (Zoom, coloring...)
         FXToolBarShell* myPythonToolBarShellNavigation = nullptr;
 
@@ -228,7 +228,7 @@ struct GNEApplicationWindowHelper {
         /// @brief FXMenuCascade for data
         FXMenuCascade* myDataMenuCascade = nullptr;
 
-        /// @brief FXMenuCascade for mean datadata
+        /// @brief FXMenuCascade for mean data
         FXMenuCascade* myMeanDataMenuCascade = nullptr;
 
         /// @brief Invalidated copy constructor.
@@ -349,19 +349,19 @@ struct GNEApplicationWindowHelper {
 
             /// @brief menu command for route mode
             FXMenuCommand* routeMode = nullptr;
-            
+
             /// @brief menu command for route distribution mode
             FXMenuCommand* routeDistributionMode = nullptr;
-            
+
             /// @brief menu command for vehicle mode
             FXMenuCommand* vehicleMode = nullptr;
 
             /// @brief menu command for type mode
             FXMenuCommand* typeMode = nullptr;
-            
+
             /// @brief menu command for type distribution mode
             FXMenuCommand* typeDistributionMode = nullptr;
-            
+
             /// @brief menu command for stop mode
             FXMenuCommand* stopMode = nullptr;
 
@@ -797,18 +797,6 @@ struct GNEApplicationWindowHelper {
 
         /// @brief menu check to lock jps obstacles
         MFXMenuCheckIcon* menuCheckLockJpsObstacles = nullptr;
-        
-        /// @brief menu check to lock jps waiting areas
-        MFXMenuCheckIcon* menuCheckLockJpsWaitingAreas = nullptr;
-
-        /// @brief menu check to lock jps sources
-        MFXMenuCheckIcon* menuCheckLockJpsSources = nullptr;
-
-        /// @brief menu check to lock jps sinks
-        MFXMenuCheckIcon* menuCheckLockJpsSinks = nullptr;
-        
-        /// @brief menu check to lock jps waypoints
-        MFXMenuCheckIcon* menuCheckLockJpsWaypoints = nullptr;
 
         /// @}
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-# Copyright (C) 2013-2023 German Aerospace Center (DLR) and others.
+# Copyright (C) 2013-2024 German Aerospace Center (DLR) and others.
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # https://www.eclipse.org/legal/epl-2.0/
@@ -226,7 +226,7 @@ output format. Optionally the output can be sampled, filtered and distorted.
     optParser.add_option("--fcd-filter-type", dest="fcdtype",
                          help="vehicle type to include in fcd file")
     optParser.add_option("--shift", dest="shift",
-                         help="shift coordinates to postive values only")
+                         help="shift coordinates to positive values only")
     # IPG
     optParser.add_option("--ipg-output", dest="ipg", metavar="FILE",
                          help="Defines the name of the ipg trace file to generate")

@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -119,7 +119,7 @@ GUICalibrator::GUIManip_Calibrator::GUIManip_Calibrator(
                           ICON_BEFORE_TEXT | LAYOUT_SIDE_TOP | LAYOUT_CENTER_Y,
                           0, 0, 0, 0,   2, 2, 0, 0);
         myPredefinedValues =
-            new MFXComboBoxIcon(gf2, 10, false, GUIDesignComboBoxSizeSmall, this, MID_PRE_DEF,
+            new MFXComboBoxIcon(gf2, 10, false, GUIDesignComboBoxVisibleItemsSmall, this, MID_PRE_DEF,
                                 ICON_BEFORE_TEXT | LAYOUT_SIDE_TOP | LAYOUT_CENTER_Y | COMBOBOX_STATIC);
         myPredefinedValues->appendIconItem("20 km/h");
         myPredefinedValues->appendIconItem("40 km/h");
@@ -150,7 +150,7 @@ GUICalibrator::GUIManip_Calibrator::GUIManip_Calibrator(
         //static_cast<GUICalibrator*>(myObject)->getDefaultSpeed() * 3.6);
     }
     GUIDesigns::buildFXButton(f1, "Close", "", "", nullptr, this, MID_CLOSE,
-                 BUTTON_INITIAL | BUTTON_DEFAULT | FRAME_RAISED | FRAME_THICK | LAYOUT_TOP | LAYOUT_LEFT | LAYOUT_CENTER_X, 0, 0, 0, 0, 30, 30, 4, 4);
+                              BUTTON_INITIAL | BUTTON_DEFAULT | FRAME_RAISED | FRAME_THICK | LAYOUT_TOP | LAYOUT_LEFT | LAYOUT_CENTER_X, 0, 0, 0, 0, 30, 30, 4, 4);
     //static_cast<GUICalibrator*>(myObject)->setOverriding(true);
 }
 

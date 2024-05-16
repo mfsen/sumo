@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -114,11 +114,11 @@ GUIParameterTracker::buildToolBar() {
     new FXToolBarGrip(myToolBar, myToolBar, FXToolBar::ID_TOOLBARGRIP, GUIDesignToolBarGrip);
     // save button
     GUIDesigns::buildFXButton(myToolBar, "", "", + TL("Save the data..."),
-                 GUIIconSubSys::getIcon(GUIIcon::SAVE), this, GUIParameterTracker::MID_SAVE, GUIDesignButtonToolbar);
+                              GUIIconSubSys::getIcon(GUIIcon::SAVE), this, GUIParameterTracker::MID_SAVE, GUIDesignButtonToolbar);
 
     // aggregation interval combo
     myAggregationInterval =
-        new MFXComboBoxIcon(myToolBar, 8, false, GUIDesignComboBoxSizeMedium,
+        new MFXComboBoxIcon(myToolBar, 8, false, GUIDesignComboBoxVisibleItemsMedium,
                             this, MID_AGGREGATIONINTERVAL, GUIDesignComboBoxStatic);
     myAggregationInterval->appendIconItem("1s");
     myAggregationInterval->appendIconItem("1min");

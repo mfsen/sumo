@@ -67,11 +67,11 @@ to collapse the static test suites on program start. E.g.:
 There are several packages being used by the tools under test. So if you want to run
 the "tools" and/or "complex" tests please do
 
-`pip3 install -r {{SUMO}}/tools/requirements.txt`
+`pip3 install -r $SUMO_HOME/tools/requirements.txt`
 
 # Running the Tests
 
-Within the  `{{SUMO}}/tests` folder you can find batch files for Windows and shell files for Linux & macOS which start
+Within the  `$SUMO_HOME/tests` folder you can find batch files for Windows and shell files for Linux & macOS which start
 [TextTest](https://texttest.org/) with our test suites. `runAllTests.bat` (Windows) or `runTests.sh` (Linux, macOS)
 starts TextTest for testing all applications located in the folder,
 `runNetconvertTests.bat` (Windows) will only show tests for netconvert,
@@ -93,7 +93,7 @@ To add a test suite for a new application, you have to perform the
 following steps. For the examples below we'll use "polyconvert" as the
 example application.
 
-- go to {{SUMO}}*/tests*
+- go to `$SUMO_HOME/tests`
 - copy one of the **run...Tests.bat**-files and rename it properly
   (**runPolyconvertTests.bat** in our case); change the name of the
   application within it. In our case the resulting file will look as
@@ -266,7 +266,7 @@ Different methods to extract TextTest tests (offline and online) are explained [
 
 ## Developing for Python2 and Python3
 
-SUMO is downwards compatible, hence contributed code should be able to 
+SUMO is downwards compatible, hence contributed code should be able to
 run with both Python 2.7 and Python 3.5 and above. On Windows you can either use python launcher
 to have access to both Python versions, or use free online tools
 like [paiza.io](https://paiza.io/en/languages/python) to check for compatibility.

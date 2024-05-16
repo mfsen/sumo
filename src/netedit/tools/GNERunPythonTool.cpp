@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -20,6 +20,7 @@
 
 #include <netedit/GNEApplicationWindow.h>
 #include <netedit/dialogs/tools/GNERunPythonToolDialog.h>
+#include <utils/common/StringUtils.h>
 #include <utils/gui/events/GUIEvent_Message.h>
 
 #include "GNEPythonTool.h"
@@ -85,7 +86,7 @@ GNERunPythonTool::run() {
     }
     // open process showing std::err in console
 #ifdef WIN32
-    myPipe = _popen((myPythonTool->getCommand() + " 2>&1").c_str(), "r");
+    myPipe = _popen(StringUtils::transcodeToLocal(myPythonTool->getCommand() + " 2>&1").c_str(), "r");
 #else
     myPipe = popen((myPythonTool->getCommand() + " 2>&1").c_str(), "r");
 #endif

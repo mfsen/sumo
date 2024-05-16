@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -71,7 +71,7 @@ MFXDecalsTable::MFXDecalsTable(GUIDialog_ViewSettings* dialogViewSettingsParent,
     myColumnsFrame = new FXHorizontalFrame(this, GUIDesignAuxiliarFrame);
     // create add button
     myAddButton = GUIDesigns::buildFXButton(this, "", TL("Add decal"), TL("Add decal."),
-                               GUIIconSubSys::getIcon(GUIIcon::ADD), this, MID_DECALSTABLE_ADD, GUIDesignButtonIcon);
+                                            GUIIconSubSys::getIcon(GUIIcon::ADD), this, MID_DECALSTABLE_ADD, GUIDesignButtonIcon);
 }
 
 
@@ -794,16 +794,16 @@ MFXDecalsTable::Row::Row(MFXDecalsTable* table) :
             case ('b'): {
                 // create button for open decal
                 auto button = GUIDesigns::buildFXButton(table->myColumns.at(columnIndex)->getVerticalCellFrame(),
-                                           "", TL("Open decal"), TL("Open decal."),
-                                           GUIIconSubSys::getIcon(GUIIcon::OPEN), table, MID_DECALSTABLE_OPEN, GUIDesignButtonIcon);
+                                                        "", TL("Open decal"), TL("Open decal."),
+                                                        GUIIconSubSys::getIcon(GUIIcon::OPEN), table, MID_DECALSTABLE_OPEN, GUIDesignButtonIcon);
                 myCells.push_back(new Cell(table, button, columnIndex, numCells));
                 break;
             }
             case ('d'): {
                 // create button for delete decal
                 auto button = GUIDesigns::buildFXButton(table->myColumns.at(columnIndex)->getVerticalCellFrame(),
-                                            "", TL("Remove decal"), TL("Remove decal."),
-                                           GUIIconSubSys::getIcon(GUIIcon::REMOVE), table, MID_DECALSTABLE_REMOVE, GUIDesignButtonIcon);
+                                                        "", TL("Remove decal"), TL("Remove decal."),
+                                                        GUIIconSubSys::getIcon(GUIIcon::REMOVE), table, MID_DECALSTABLE_REMOVE, GUIDesignButtonIcon);
                 myCells.push_back(new Cell(table, button, columnIndex, numCells));
                 break;
             }

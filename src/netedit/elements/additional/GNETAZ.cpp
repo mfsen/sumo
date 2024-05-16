@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -25,14 +25,11 @@
 #include <netedit/GNEViewParent.h>
 #include <netedit/changes/GNEChange_Attribute.h>
 #include <netedit/frames/common/GNEMoveFrame.h>
-#include <netedit/frames/data/GNETAZRelDataFrame.h>
 #include <netedit/frames/demand/GNEVehicleFrame.h>
 #include <utils/gui/div/GLHelper.h>
 #include <utils/gui/div/GUIDesigns.h>
 #include <utils/gui/div/GUIParameterTableWindow.h>
 #include <utils/gui/globjects/GUIGLObjectPopupMenu.h>
-#include <utils/gui/div/GUIGlobalPostDrawing.h>
-#include <utils/gui/div/GUIGlobalPostDrawing.h>
 #include <utils/xml/NamespaceIDs.h>
 
 #include "GNETAZ.h"
@@ -97,7 +94,7 @@ GNETAZ::getMoveOperation() {
         return new GNEMoveOperation(this, myShape);
     } else {
         // calculate move shape operation
-        return calculateMoveShapeOperation(myShape, myNet->getViewNet()->getPositionInformation(), snap_radius, true, true);
+        return calculateMoveShapeOperation(this, myShape, true);
     }
 }
 
@@ -203,6 +200,21 @@ GNETAZ::fixAdditionalProblem() {
 }
 
 
+bool
+GNETAZ::checkDrawMoveContour() const {
+    // get edit modes
+    const auto& editModes = myNet->getViewNet()->getEditModes();
+    // check if we're in move mode
+    if (!myNet->getViewNet()->isMovingElement() && editModes.isCurrentSupermodeNetwork() &&
+            (editModes.networkEditMode == NetworkEditMode::NETWORK_MOVE) && myNet->getViewNet()->checkOverLockedElement(this, mySelected)) {
+        // only move the first element
+        return myNet->getViewNet()->getViewObjectsSelector().getGUIGlObjectFront() == this;
+    } else {
+        return false;
+    }
+}
+
+
 void
 GNETAZ::updateGeometry() {
     // just update geometry
@@ -243,7 +255,7 @@ GNETAZ::updateCenteringBoundary(const bool updateGrid) {
         myAdditionalBoundary.add(myTAZCenter);
     }
     // grow boundary
-    myAdditionalBoundary.grow(10);
+    myAdditionalBoundary.grow(5);
     // add object into net
     if (updateGrid) {
         myNet->addGLObjectIntoGrid(this);
@@ -290,59 +302,38 @@ GNETAZ::getPopUpMenu(GUIMainWindow& app, GUISUMOAbstractView& parent) {
 
 void
 GNETAZ::drawGL(const GUIVisualizationSettings& s) const {
-    // check if boundary has to be drawn
-    if (s.drawBoundaries) {
-        GLHelper::drawBoundary(getCenteringBoundary());
-    }
+    // draw boundaries
+    GLHelper::drawBoundary(s, getCenteringBoundary());
     // first check if poly can be drawn
     if (myNet->getViewNet()->getDemandViewOptions().showShapes() && GUIPolygon::checkDraw(s, this, this)) {
-        // check if draw start und end
-        const bool drawExtremeSymbols = myNet->getViewNet()->getEditModes().isCurrentSupermodeNetwork() &&
-                                        myNet->getViewNet()->getEditModes().networkEditMode == NetworkEditMode::NETWORK_MOVE;
-        // Obtain constants
+        // get exaggeration
         const double TAZExaggeration = getExaggeration(s);
-        const Position mousePosition = myNet->getViewNet()->getPositionInformation();
-        const bool drawFill = (myNet->getViewNet()->getEditModes().isCurrentSupermodeData() && myNet->getViewNet()->getDataViewOptions().TAZDrawFill()) ? true : getFill();
-        // get colors
-        const RGBColor color = GUIPolygon::setColor(s, this, this, drawUsingSelectColor(), -1);
-        const RGBColor invertedColor = color.invertedColor();
-        const RGBColor darkerColor = color.changedBrightness(-32);
-        // avoid draw invisible elements
-        if (color.alpha() != 0) {
-            // push name (needed for getGUIGlObjectsUnderCursor(...)
-            GLHelper::pushName(GNEAdditional::getGlID());
+        // get detail level
+        const auto d = s.getDetailLevel(TAZExaggeration);
+        // draw geometry only if we'rent in drawForObjectUnderCursor mode
+        if (!s.drawForViewObjectsHandler) {
+            // Obtain constants
+            const Position mousePosition = myNet->getViewNet()->getPositionInformation();
+            const bool drawFill = (myNet->getViewNet()->getEditModes().isCurrentSupermodeData() && myNet->getViewNet()->getDataViewOptions().TAZDrawFill()) ? true : getFill();
+            // get colors
+            const RGBColor color = GUIPolygon::setColor(s, this, this, drawUsingSelectColor(), -1);
+            const RGBColor darkerColor = color.changedBrightness(-32);
             // push layer matrix
             GLHelper::pushMatrix();
             // translate to front
             myNet->getViewNet()->drawTranslateFrontAttributeCarrier(this, getShapeLayer());
             // check if we're drawing a polygon or a polyline
             if (getFill() || myNet->getViewNet()->getDataViewOptions().TAZDrawFill()) {
-                if (s.drawForPositionSelection) {
-                    // check if mouse is within geometry
-                    if (myAdditionalGeometry.getShape().around(mousePosition)) {
-                        // push matrix
-                        GLHelper::pushMatrix();
-                        // move to mouse position
-                        glTranslated(mousePosition.x(), mousePosition.y(), 0);
-                        // set color
-                        GLHelper::setColor(color);
-                        // draw circle
-                        GLHelper::drawFilledCircle(1, s.getCircleResolution());
-                        // pop matrix
-                        GLHelper::popMatrix();
-                    }
-                } else {
-                    // draw inner polygon
-                    const int alphaOverride = myNet->getViewNet()->getDataViewOptions().TAZDrawFill() ? 128 : -1;
-                    GUIPolygon::drawInnerPolygon(s, this, this, myAdditionalGeometry.getShape(), 0, drawFill, drawUsingSelectColor(), alphaOverride, true);
-                }
+                // draw inner polygon
+                const int alphaOverride = myNet->getViewNet()->getDataViewOptions().TAZDrawFill() ? 128 : -1;
+                GUIPolygon::drawInnerPolygon(s, this, this, myAdditionalGeometry.getShape(), 0, drawFill, drawUsingSelectColor(), alphaOverride, true);
             } else {
                 // push matrix
                 GLHelper::pushMatrix();
                 // set color
                 GLHelper::setColor(color);
                 // draw geometry (polyline)
-                GUIGeometry::drawGeometry(s, myNet->getViewNet()->getPositionInformation(), myAdditionalGeometry, s.neteditSizeSettings.polylineWidth * TAZExaggeration);
+                GUIGeometry::drawGeometry(d, myAdditionalGeometry, s.neteditSizeSettings.polylineWidth * TAZExaggeration);
                 // pop matrix
                 GLHelper::popMatrix();
             }
@@ -355,21 +346,22 @@ GNETAZ::drawGL(const GUIVisualizationSettings& s) const {
                 // set color
                 GLHelper::setColor(darkerColor);
                 // draw polygon contour
-                GUIGeometry::drawGeometry(s, myNet->getViewNet()->getPositionInformation(), myAdditionalGeometry, s.neteditSizeSettings.polygonContourWidth * TAZExaggeration);
+                GUIGeometry::drawGeometry(d, myAdditionalGeometry, s.neteditSizeSettings.polygonContourWidth * TAZExaggeration);
                 // pop contour matrix
                 GLHelper::popMatrix();
                 // draw shape points only in Network supemode
-                if (s.drawMovingGeometryPoint(TAZExaggeration, s.neteditSizeSettings.polygonGeometryPointRadius) && myNet->getViewNet()->getEditModes().isCurrentSupermodeNetwork()) {
-                    // check move mode flag
+                if (myNet->getViewNet()->getEditModes().isCurrentSupermodeNetwork()) {
+                    // check if we're in move mode
                     const bool moveMode = (myNet->getViewNet()->getEditModes().networkEditMode == NetworkEditMode::NETWORK_MOVE);
+                    // get geometry point sizes
+                    const double geometryPointSize = s.neteditSizeSettings.polygonGeometryPointRadius * (moveMode ? 1 : 0.5);
                     // draw geometry points
-                    GUIGeometry::drawGeometryPoints(s, myNet->getViewNet()->getPositionInformation(), myAdditionalGeometry.getShape(), darkerColor, invertedColor,
-                                                    s.neteditSizeSettings.polygonGeometryPointRadius * (moveMode ? 1 : 0.5), TAZExaggeration,
-                                                    myNet->getViewNet()->getNetworkViewOptions().editingElevation(), drawExtremeSymbols);
-                    // draw moving hint points
-                    if (!myNet->getViewNet()->getLockManager().isObjectLocked(GLO_TAZ, isAttributeCarrierSelected()) && moveMode) {
-                        GUIGeometry::drawMovingHint(s, myNet->getViewNet()->getPositionInformation(), myAdditionalGeometry.getShape(), invertedColor,
-                                                    s.neteditSizeSettings.polygonGeometryPointRadius, TAZExaggeration);
+                    GUIGeometry::drawGeometryPoints(d, myAdditionalGeometry.getShape(), darkerColor, geometryPointSize, TAZExaggeration,
+                                                    myNet->getViewNet()->getNetworkViewOptions().editingElevation());
+                    // draw dotted contours for geometry points if we're in move mode
+                    if (moveMode) {
+                        myAdditionalContour.drawDottedContourGeometryPoints(s, d, this, myAdditionalGeometry.getShape(), geometryPointSize,
+                                TAZExaggeration, s.dottedContourSettings.segmentWidthSmall);
                     }
                 }
             }
@@ -382,37 +374,39 @@ GNETAZ::drawGL(const GUIVisualizationSettings& s) const {
             // set color
             GLHelper::setColor(darkerColor);
             // draw circle
-            GLHelper::drawFilledCircle(centerRadius, s.getCircleResolution());
+            GLHelper::drawFilledCircleDetailled(d, centerRadius);
             // move to front
             glTranslated(0, 0, 0.1);
             // set color
             GLHelper::setColor(color);
             // draw circle
-            GLHelper::drawFilledCircle(centerRadius * 0.8, s.getCircleResolution());
+            GLHelper::drawFilledCircleDetailled(d, centerRadius * 0.8);
             // pop center matrix
             GLHelper::popMatrix();
             // pop layer matrix
             GLHelper::popMatrix();
-            // pop name
-            GLHelper::popName();
             // draw lock icon
-            GNEViewNetHelper::LockIcon::drawLockIcon(this, getType(), getPositionInView(), TAZExaggeration);
+            GNEViewNetHelper::LockIcon::drawLockIcon(d, this, getType(), getPositionInView(), TAZExaggeration);
+            // draw name
+            drawName(myTAZCenter, s.scale, s.polyName, s.angle);
+            // check if draw poly type
+            if (s.polyType.show(this)) {
+                const Position p = myAdditionalGeometry.getShape().getPolygonCenter() + Position(0, -0.6 * s.polyType.size / s.scale);
+                GLHelper::drawTextSettings(s.polyType, getShapeType(), p, s.scale, s.angle);
+            }
+            // get contour width
+            const double contourWidth = (checkDrawFromContour() || checkDrawToContour()) ? s.dottedContourSettings.segmentWidthLarge : s.dottedContourSettings.segmentWidth;
+            // draw dotted contour
+            myAdditionalContour.drawDottedContours(s, d, this, contourWidth, true);
+            // draw TAZ Center dotted contour
+            myTAZCenterContour.drawDottedContours(s, d, this, contourWidth, true);
         }
-        // draw name
-        drawName(myTAZCenter, s.scale, s.polyName, s.angle);
-        // check if mouse is over element
-        mouseWithinGeometry(myAdditionalGeometry.getShape());
-        // draw dotted contours
-        drawDottedContours(s, TAZExaggeration);
-        // check if draw poly type
-        if (s.polyType.show(this)) {
-            const Position p = myAdditionalGeometry.getShape().getPolygonCenter() + Position(0, -0.6 * s.polyType.size / s.scale);
-            GLHelper::drawTextSettings(s.polyType, getShapeType(), p, s.scale, s.angle);
-        }
-        // draw child demand elements
-        for (const auto& demandElement : getChildDemandElements()) {
-            demandElement->drawGL(s);
-        }
+        // draw demand element children
+        drawDemandElementChildren(s);
+        // calculate contour
+        calculateContourPolygons(s, d, TAZExaggeration, true);
+        // calculate contour for TAZ Center
+        myTAZCenterContour.calculateContourCircleShape(s, d, this, myTAZCenter, s.neteditSizeSettings.polygonGeometryPointRadius, TAZExaggeration);
     }
 }
 
@@ -657,65 +651,6 @@ GNETAZ::updateTAZStatistic() {
 // ===========================================================================
 // private
 // ===========================================================================
-
-void
-GNETAZ::drawDottedContours(const GUIVisualizationSettings& s, const double TAZExaggeration) const {
-    // get TAZRelDataFrame
-    const auto TAZRelDataFrame = myNet->getViewNet()->getViewParent()->getTAZRelDataFrame();
-    // dotted contour for inspect
-    if (myNet->getViewNet()->isAttributeCarrierInspected(this)) {
-        GUIDottedGeometry::drawDottedContourClosedShape(s, GUIDottedGeometry::DottedContourType::INSPECT, myAdditionalGeometry.getShape(), 1);
-    }
-    // dotted contour for front
-    if (myNet->getViewNet()->getFrontAttributeCarrier() == this) {
-        GUIDottedGeometry::drawDottedContourClosedShape(s, GUIDottedGeometry::DottedContourType::FRONT, myAdditionalGeometry.getShape(), 1);
-    }
-    // delete contour
-    if (myNet->getViewNet()->drawDeleteContour(this, this)) {
-        GUIDottedGeometry::drawDottedContourClosedShape(s, GUIDottedGeometry::DottedContourType::REMOVE, myAdditionalGeometry.getShape(), 1);
-    }
-    // select contour
-    if (myNet->getViewNet()->drawSelectContour(this, this)) {
-        GUIDottedGeometry::drawDottedContourClosedShape(s, GUIDottedGeometry::DottedContourType::SELECT, myAdditionalGeometry.getShape(), 1);
-    }
-    // dotted contour for first TAZ
-    if (myNet->getViewNet()->getViewParent()->getTAZRelDataFrame()->getFirstTAZ() == this) {
-        GUIDottedGeometry::drawDottedContourClosedShape(s, GUIDottedGeometry::DottedContourType::FROMTAZ, myAdditionalGeometry.getShape(), 1, s.neteditSizeSettings.polylineWidth * TAZExaggeration);
-    }
-    // dotted contour for second TAZ
-    if (myNet->getViewNet()->getViewParent()->getTAZRelDataFrame()->getSecondTAZ() == this) {
-        GUIDottedGeometry::drawDottedContourClosedShape(s, GUIDottedGeometry::DottedContourType::TOTAZ, myAdditionalGeometry.getShape(), 1, s.neteditSizeSettings.polylineWidth * TAZExaggeration);
-    }
-    // check if we're selecting TAZs
-    if (myNet->getViewNet()->getEditModes().isCurrentSupermodeDemand() && (myNet->getViewNet()->getEditModes().demandEditMode == DemandEditMode::DEMAND_VEHICLE)) {
-        // check if we're creating a trip or flow over taz
-        const auto templateAC = myNet->getViewNet()->getViewParent()->getVehicleFrame()->getVehicleTagSelector()->getCurrentTemplateAC();
-        if (templateAC && ((templateAC->getTagProperty().getTag() == GNE_TAG_TRIP_TAZS) || (templateAC->getTagProperty().getTag() == GNE_TAG_TRIP_TAZS))) {
-            GUIDottedGeometry::drawDottedContourClosedShape(s, GUIDottedGeometry::DottedContourType::ORANGE, myAdditionalGeometry.getShape(), 1, s.neteditSizeSettings.polylineWidth * TAZExaggeration);
-        }
-    }
-    // now check if mouse is over TAZ
-    if (TAZRelDataFrame->shown() && (gPostDrawing.markedTAZ == nullptr) && ((TAZRelDataFrame->getFirstTAZ() == nullptr) || (TAZRelDataFrame->getSecondTAZ() == nullptr))) {
-        // get dotted contour type
-        const auto dottedContourType = (TAZRelDataFrame->getFirstTAZ() == nullptr) ? GUIDottedGeometry::DottedContourType::FROMTAZ : GUIDottedGeometry::DottedContourType::TOTAZ;
-        // draw depending if is closed
-        if (getFill() || myNet->getViewNet()->getDataViewOptions().TAZDrawFill()) {
-            if (myAdditionalGeometry.getShape().around(myNet->getViewNet()->getPositionInformation())) {
-                GUIDottedGeometry::drawDottedContourClosedShape(s, dottedContourType, myAdditionalGeometry.getShape(), 1);
-            }
-        } else {
-            // scale shape
-            auto scaledShape = myAdditionalGeometry.getShape();
-            scaledShape.scaleAbsolute(1);
-            // check if mouse is around scaled shape
-            if ((scaledShape.around(myNet->getViewNet()->getPositionInformation()) && (scaledShape.distance2D(myNet->getViewNet()->getPositionInformation()) <= 1.3)) ||
-                    (myAdditionalGeometry.getShape().around(myNet->getViewNet()->getPositionInformation()) && (myAdditionalGeometry.getShape().distance2D(myNet->getViewNet()->getPositionInformation()) <= 1))) {
-                GUIDottedGeometry::drawDottedContourClosedShape(s, dottedContourType, myAdditionalGeometry.getShape(), 1);
-            }
-        }
-    }
-}
-
 
 void
 GNETAZ::setAttribute(SumoXMLAttr key, const std::string& value) {

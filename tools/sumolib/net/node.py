@@ -1,5 +1,5 @@
 # Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-# Copyright (C) 2011-2023 German Aerospace Center (DLR) and others.
+# Copyright (C) 2011-2024 German Aerospace Center (DLR) and others.
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # https://www.eclipse.org/legal/epl-2.0/
@@ -133,7 +133,7 @@ class Node:
         if possProhibitorIndex < 0 or possProhibitedIndex < 0:
             return False
         ps = self._prohibits[possProhibitedIndex]
-        return ps[-(possProhibitorIndex - 1)] == '1'
+        return ps[-(possProhibitorIndex + 1)] == '1'
 
     def getCoord(self):
         return tuple(self._coord[:2])
@@ -208,3 +208,12 @@ class Node:
 
     def __repr__(self):
         return '<junction id="%s"/>' % self._id
+
+    def getMaxTLLinkIndex(self):
+        idx = []
+        if self.getType() == 'traffic_light':
+            for conn in self.getConnections():
+                idx.append(conn.getTLLinkIndex())
+            return (max(idx))
+        else:
+            return None

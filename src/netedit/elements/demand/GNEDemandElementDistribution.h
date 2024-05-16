@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -52,7 +52,7 @@ public:
     bool isValueValid(const GNEDemandElement* key, const double value) const;
 
     /// @brief get map with distribution keys and values
-    const std::map<const GNEDemandElement*, double> &getDistributionKeyValues() const;
+    const std::map<const GNEDemandElement*, double>& getDistributionKeyValues() const;
 
     /// @brief get list of possible keys sorted by ID
     std::map<std::string, GNEDemandElement*> getPossibleDistributionKeys(SumoXMLTag type) const;
@@ -78,10 +78,10 @@ public:
 private:
     /// @brief demand element
     GNEDemandElement* myDemandElement;
-    
+
     /// @brief map with distribution keys and values
     std::map<const GNEDemandElement*, double> myDistributionValues;
-    
+
     /// @brief add distribution (used in GNEDemandElementDistribution)
     void addDistributionKey(const GNEDemandElement* key, const double value);
 

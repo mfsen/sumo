@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-# Copyright (C) 2009-2023 German Aerospace Center (DLR) and others.
+# Copyright (C) 2009-2024 German Aerospace Center (DLR) and others.
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # https://www.eclipse.org/legal/epl-2.0/
@@ -41,8 +41,22 @@ netedit.changeStopType("stopTrainStop")
 netedit.changeDefaultValue(netedit.attrs.stopTrainStop.create.triggered, "join")
 
 # create stop
-netedit.leftClick(referencePosition, netedit.positions.demandElements.trainStop.x,
-                  netedit.positions.demandElements.trainStop.y)
+netedit.leftClick(referencePosition, netedit.positions.demandElements.trainStop.x +
+                  1, netedit.positions.demandElements.trainStop.y)
+
+# change triggered
+netedit.changeDefaultValue(netedit.attrs.stopTrainStop.create.join, ";;;")
+
+# create stop
+netedit.leftClick(referencePosition, netedit.positions.demandElements.trainStop.x +
+                  2, netedit.positions.demandElements.trainStop.y)
+
+# change triggered
+netedit.changeDefaultValue(netedit.attrs.stopTrainStop.create.join, "customJoin")
+
+# create stop
+netedit.leftClick(referencePosition, netedit.positions.demandElements.trainStop.x +
+                  3, netedit.positions.demandElements.trainStop.y)
 
 # Check undo redo
 netedit.checkUndoRedo(referencePosition)

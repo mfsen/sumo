@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-# Copyright (C) 2009-2023 German Aerospace Center (DLR) and others.
+# Copyright (C) 2009-2024 German Aerospace Center (DLR) and others.
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # https://www.eclipse.org/legal/epl-2.0/
@@ -38,14 +38,15 @@ netedit.containerMode()
 netedit.changeElement("containerFlow")
 
 # change container plan
-netedit.changeContainerPlan("tranship: containerStop", True)
+netedit.changeContainerPlan("tranship", True)
 
 # set invalid arrival pos
 netedit.changeDefaultValue(netedit.attrs.containerFlow.create.terminate, "dummyTerminate")
 
 # try to create flow with embedded route
 netedit.leftClick(referencePosition, netedit.positions.demandElements.edge0.x, netedit.positions.demandElements.edge0.y)
-netedit.leftClick(referencePosition, 270, 43)
+netedit.leftClick(referencePosition, netedit.positions.demandElements.containerStop.x,
+                  netedit.positions.demandElements.containerStop.y)
 
 # press enter to create flow with embedded route
 netedit.typeEnter()
@@ -61,7 +62,8 @@ netedit.changeDefaultValue(netedit.attrs.containerFlow.create.end, "dummy")
 
 # create flow with embedded route
 netedit.leftClick(referencePosition, netedit.positions.demandElements.edge0.x, netedit.positions.demandElements.edge0.y)
-netedit.leftClick(referencePosition, 270, 43)
+netedit.leftClick(referencePosition, netedit.positions.demandElements.containerStop.x,
+                  netedit.positions.demandElements.containerStop.y)
 
 # press enter to create flow with embedded route
 netedit.typeEnter()
@@ -77,7 +79,8 @@ netedit.changeDefaultValue(netedit.attrs.containerFlow.create.end, "20.5")
 
 # create flow with embedded route
 netedit.leftClick(referencePosition, netedit.positions.demandElements.edge0.x, netedit.positions.demandElements.edge0.y)
-netedit.leftClick(referencePosition, 270, 43)
+netedit.leftClick(referencePosition, netedit.positions.demandElements.containerStop.x,
+                  netedit.positions.demandElements.containerStop.y)
 
 # press enter to create flow with embedded route
 netedit.typeEnter()
@@ -87,7 +90,8 @@ netedit.changeDefaultValue(netedit.attrs.containerFlow.create.number, "dummy")
 
 # create flow with embedded route
 netedit.leftClick(referencePosition, netedit.positions.demandElements.edge0.x, netedit.positions.demandElements.edge0.y)
-netedit.leftClick(referencePosition, 270, 43)
+netedit.leftClick(referencePosition, netedit.positions.demandElements.containerStop.x,
+                  netedit.positions.demandElements.containerStop.y)
 
 # press enter to create flow with embedded route
 netedit.typeEnter()
@@ -103,7 +107,8 @@ netedit.changeDefaultValue(netedit.attrs.containerFlow.create.number, "20.5")
 
 # create flow with embedded route
 netedit.leftClick(referencePosition, netedit.positions.demandElements.edge0.x, netedit.positions.demandElements.edge0.y)
-netedit.leftClick(referencePosition, 270, 43)
+netedit.leftClick(referencePosition, netedit.positions.demandElements.containerStop.x,
+                  netedit.positions.demandElements.containerStop.y)
 
 # press enter to create flow with embedded route
 netedit.typeEnter()
@@ -113,7 +118,8 @@ netedit.changeDefaultValue(netedit.attrs.containerFlow.create.number, "51")
 
 # create flow with embedded route
 netedit.leftClick(referencePosition, netedit.positions.demandElements.edge0.x, netedit.positions.demandElements.edge0.y)
-netedit.leftClick(referencePosition, 270, 43)
+netedit.leftClick(referencePosition, netedit.positions.demandElements.containerStop.x,
+                  netedit.positions.demandElements.containerStop.y)
 
 # press enter to create flow with embedded route
 netedit.typeEnter()

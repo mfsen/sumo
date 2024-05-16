@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -139,7 +139,7 @@ public:
         /// @brief Button for move lane up
         MFXButtonTooltip* myValueLaneUpButton = nullptr;
 
-		/// @brief Button for move lane down
+        /// @brief Button for move lane down
         MFXButtonTooltip* myValueLaneDownButton = nullptr;
 
         /// @brief pointer to AC Parent
@@ -152,16 +152,16 @@ public:
         void buildValueElements(const bool attributeEnabled, const bool computed);
 
         /// @brief refresh Attribute elements
-        void refreshAttributeElements(const std::string &value, const bool attributeEnabled, const bool computed);
+        void refreshAttributeElements(const std::string& value, const bool attributeEnabled, const bool computed);
 
         /// @brief build value elements();
-        void refreshValueElements(const std::string &value,  const bool attributeEnabled, const bool computed, const bool forceRefreshAttribute);
+        void refreshValueElements(const std::string& value,  const bool attributeEnabled, const bool computed, const bool forceRefreshAttribute);
 
         /// @brief fill comboBox with discrete values
-        void fillComboBox(const std::string &value);
+        void fillComboBox(const std::string& value);
 
         /// @brief update move lane buttons
-        void updateMoveLaneButtons(const std::string &value);
+        void updateMoveLaneButtons(const std::string& value);
 
         /// @brief Invalidated copy constructor.
         AttributesEditorRow(AttributesEditorRow*) = delete;

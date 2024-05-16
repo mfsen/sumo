@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -50,7 +50,7 @@ public:
      */
     GNEChargingStation(const std::string& id, GNELane* lane, GNENet* net, const double startPos, const double endPos,
                        const std::string& name, double chargingPower, double efficiency, bool chargeInTransit, SUMOTime chargeDelay,
-                       const std::string &chargeType, const SUMOTime waitingTime, bool friendlyPosition, const Parameterised::Map& parameters);
+                       const std::string& chargeType, const SUMOTime waitingTime, bool friendlyPosition, const Parameterised::Map& parameters);
 
     /// @brief Destructor
     ~GNEChargingStation();
@@ -123,6 +123,9 @@ protected:
     /// @brief waiting time before start charging
     SUMOTime myWaitingTime = 0;
 
+    /// @brief parking area ID
+    std::string myParkingAreaID;
+
 private:
     /// @brief set attribute after validation
     void setAttribute(SumoXMLAttr key, const std::string& value);
@@ -133,5 +136,3 @@ private:
     /// @brief Invalidated assignment operator.
     GNEChargingStation& operator=(const GNEChargingStation&) = delete;
 };
-
-

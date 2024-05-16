@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -421,6 +421,7 @@ GNEOptionsDialogElements::InputFloat::onCmdSetOption(FXObject*, FXSelector, void
     } else {
         myGUIDialogOptions->myOptionsContainer.resetWritable();
         myGUIDialogOptions->myOptionsContainer.set(myName, myFloatTextField->getText().text());
+        myGUIDialogOptions->myOptionsModified = true;
     }
     return 1;
 }
@@ -456,7 +457,7 @@ GNEOptionsDialogElements::InputFilename::InputFilename(GNEOptionsDialog* GUIDial
         const std::string& name, const std::string& description, const std::string& defaultValue) :
     InputOption(GUIDialogOptions, parent, topic, name, description, defaultValue) {
     myOpenFilenameButton = GUIDesigns::buildFXButton(myContentFrame, "", "", TL("Select filename"),
-                                        GUIIconSubSys::getIcon(GUIIcon::OPEN), this, MID_GNE_SET_ATTRIBUTE_DIALOG, GUIDesignButtonIcon);
+                           GUIIconSubSys::getIcon(GUIIcon::OPEN), this, MID_GNE_SET_ATTRIBUTE_DIALOG, GUIDesignButtonIcon);
     myFilenameTextField = new FXTextField(myContentFrame, GUIDesignTextFieldNCol, this, MID_GNE_SET_ATTRIBUTE, GUIDesignTextField);
     updateOption();
 }

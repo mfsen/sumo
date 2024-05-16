@@ -47,7 +47,7 @@ element:
 | **id**         | id (string)   | The id of the calibrator                                                                                        |
 | edge           | id (string)   | The id of an edge for measuring and calibrating flow. (Either *edge* or *lane* must be specified)               |
 | lane           | id (string)   | The id of a lane for measuring and calibrating flow (Either *edge* or *lane* must be specified)                 |
-| **pos**        | float         | The position of the calibrator on the specified lane (currently ignored, see [\[1\]](https://github.com/eclipse/sumo/issues/1331))  |
+| **pos**        | float         | The position of the calibrator on the specified lane (currently ignored, see [\[1\]](https://github.com/eclipse-sumo/sumo/issues/1331))  |
 | period (alias freq) | float    | The time interval between calibration attempts. default is step-length. Setting a high value limits the maximum achievable flow  |
 | routeProbe     | id (string)   | The id of the [routeProbe](../Simulation/Output/RouteProbe.md) element from which to determine the route distribution for generated vehicles.|
 | jamThreshold    | float | A threshold value to detect and clear unexpected jamming if the mean edge speed drops below FLOAT * speedLimit. Range [0, 1]. Default: 0.5 (0.8 in meso)|
@@ -146,7 +146,7 @@ The normal behavior is to replace the type of the passing vehicles with the type
 
 If the traffic consists of multiple vehicle types (i.e. passenger cars and trucks) it may be desirable to either
 
-- modify only some of the observed types 
+- modify only some of the observed types
 - perform a dependent mapping: carType -> carType2, truckType -> truckType2
 
 Both can be accomplished by using the `vTypes` attribute of the calibrator to make it apply to a subset of types only.
@@ -154,11 +154,11 @@ For a dependent mapping, multiple calibrators (each with a different `vTypes` at
 
 ```xml
 <additional>
-  ... 
-  <calibrator id="forCars" edge="E1" pos="0" type="myCarType">
+  ...
+  <calibrator id="forCars" edge="E1" pos="0" vTypes="myCarType">
     <flow begin="0" end="1800" type="myCarType2"/>
   </calibrator>
-  <calibrator id="forTrucks" edge="E1" pos="0" type="myTruckType">
+  <calibrator id="forTrucks" edge="E1" pos="0" vTypes="myTruckType">
     <flow begin="0" end="1800" type="myTruckType2"/>
   </calibrator>
 </additional>
@@ -185,7 +185,7 @@ Example route-file input:
   <vType id="truck" maxSpeed="10" probability="30" vClass="truck"/>
 </vTypeDistribution>
 ```
-Example additional-file input: 
+Example additional-file input:
 ```xml
 <vTypeDistribution id="bad_weather">
   <vType id="car2" speedFactor="0.8" decel="3"/>

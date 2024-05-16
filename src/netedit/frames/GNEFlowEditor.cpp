@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -55,13 +55,13 @@ GNEFlowEditor::GNEFlowEditor(GNEViewNet* viewNet, GNEFrame* frameParent) :
     FXHorizontalFrame* auxiliarHorizontalFrame = new FXHorizontalFrame(getCollapsableFrame(), GUIDesignAuxiliarHorizontalFrame);
     auto terminatelabel = new FXLabel(auxiliarHorizontalFrame, "terminate", nullptr, GUIDesignLabelThickedFixed(100));
     terminatelabel->setTipText("Terminate attribute");
-    myTerminateComboBox = new MFXComboBoxIcon(auxiliarHorizontalFrame, GUIDesignComboBoxNCol, false, GUIDesignComboBoxSizeMedium,
-                                              this, MID_GNE_SET_ATTRIBUTE, GUIDesignComboBoxAttribute);
+    myTerminateComboBox = new MFXComboBoxIcon(auxiliarHorizontalFrame, GUIDesignComboBoxNCol, false, GUIDesignComboBoxVisibleItemsMedium,
+            this, MID_GNE_SET_ATTRIBUTE, GUIDesignComboBoxAttribute);
     // create comboBox for spacing
     mySpacingFrameComboBox = new FXHorizontalFrame(getCollapsableFrame(), GUIDesignAuxiliarHorizontalFrame);
     auto spacingAttribute = new FXLabel(mySpacingFrameComboBox, "spacing", nullptr, GUIDesignLabelThickedFixed(100));
     spacingAttribute->setTipText("Terminate attribute");
-    mySpacingComboBox = new MFXComboBoxIcon(mySpacingFrameComboBox, GUIDesignComboBoxNCol, false, GUIDesignComboBoxSizeMedium,
+    mySpacingComboBox = new MFXComboBoxIcon(mySpacingFrameComboBox, GUIDesignComboBoxNCol, false, GUIDesignComboBoxVisibleItemsMedium,
                                             this, MID_GNE_SET_ATTRIBUTE, GUIDesignComboBoxAttribute);
     // create textField for option A
     myTerminateFrameTextField = new FXHorizontalFrame(getCollapsableFrame(), GUIDesignAuxiliarHorizontalFrame);
@@ -523,8 +523,8 @@ GNEFlowEditor::refreshMultipleFlows() {
     if (end && number && terminateDifferent.empty() && spacingDifferent.empty()) {
         // set first comboBox
         myTerminateComboBox->setCurrentItem(2),
-        // hide second comboBox
-        mySpacingFrameComboBox->hide();
+                            // hide second comboBox
+                            mySpacingFrameComboBox->hide();
         // set label
         myTerminateLabel->setText(toString(SUMO_ATTR_END).c_str());
         mySpacingLabel->setText(toString(SUMO_ATTR_NUMBER).c_str());

@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2005-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2005-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -283,17 +283,14 @@ MSStoppingPlace::getAccessPos(const MSEdge* edge, SumoRNG* rng) const {
 }
 
 
-double
-MSStoppingPlace::getAccessDistance(const MSEdge* edge) const {
-    if (edge == &myLane.getEdge()) {
-        return 0.;
-    }
+const MSStoppingPlace::Access*
+MSStoppingPlace::getAccess(const MSEdge* edge) const {
     for (const auto& access : myAccessPos) {
         if (edge == &access.lane->getEdge()) {
-            return access.length;
+            return &access;
         }
     }
-    return -1.;
+    return nullptr;
 }
 
 
@@ -310,7 +307,7 @@ MSStoppingPlace::getColor() const {
 
 
 bool
-MSStoppingPlace::addAccess(MSLane* const lane, const double startPos, const double endPos, double length) {
+MSStoppingPlace::addAccess(MSLane* const lane, const double startPos, const double endPos, double length, const bool doors) {
     // prevent multiple accesses on the same lane
     for (const auto& access : myAccessPos) {
         if (lane == access.lane) {
@@ -322,7 +319,7 @@ MSStoppingPlace::addAccess(MSLane* const lane, const double startPos, const doub
         const Position stopPos = myLane.geometryPositionAtOffset((myBegPos + myEndPos) / 2.);
         length = accPos.distanceTo(stopPos);
     }
-    myAccessPos.push_back({lane, startPos, endPos, length});
+    myAccessPos.push_back({lane, startPos, endPos, length, doors});
     return true;
 }
 

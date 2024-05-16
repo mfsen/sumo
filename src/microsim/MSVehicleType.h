@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -77,7 +77,7 @@ public:
      * @param[in] what The parameter which one asks for
      * @return Whether the given parameter was set
      */
-    bool wasSet(int what) const {
+    bool wasSet(long long int what) const {
         return (myParameter.parametersSet & what) != 0;
     }
 
@@ -216,6 +216,14 @@ public:
     }
 
 
+    /** @brief Returns the parking access rights of this type
+     * @return The parking access rights
+     */
+    const std::vector<std::string>& getParkingBadges() const {
+        return myParameter.parkingBadges;
+    }
+
+
     /** @brief Returns this type's speed factor
      * @return The speed factor of this type
      */
@@ -325,6 +333,13 @@ public:
      */
     SUMOTime getBoardingDuration(const bool isPerson) const {
         return isPerson ? myParameter.boardingDuration : myParameter.loadingDuration;
+    }
+
+    /** @brief Get this person type's factor for loading/boarding duration
+     * @return The multiplier for the time a container / person needs to get loaded 
+     */
+    SUMOTime getBoardingFactor() const {
+        return myParameter.boardingFactor;
     }
 
 
@@ -514,6 +529,12 @@ public:
      * @param[in] color The new color of this type
      */
     void setColor(const RGBColor& color);
+
+
+    /** @brief Set a new value for parking access rights of this type
+     * @param[in] badges The new parking access rights of this type
+     */
+    void setParkingBadges(const std::vector<std::string>& badges);
 
 
     /** @brief Set a new value for this type's width

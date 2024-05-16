@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-# Copyright (C) 2007-2023 German Aerospace Center (DLR) and others.
+# Copyright (C) 2007-2024 German Aerospace Center (DLR) and others.
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # https://www.eclipse.org/legal/epl-2.0/
@@ -45,7 +45,7 @@ except ImportError as e:
 
 sys.path.append(os.path.join(os.path.dirname(sys.argv[0]), '..'))
 from sumolib import openz  # noqa
-from sumolib.miscutils import uMin, uMax, parseTime  # noqa
+from sumolib.miscutils import uMin, uMax, parseTime, short_names  # noqa
 from sumolib.options import ArgumentParser, RawDescriptionHelpFormatter  # noqa
 import sumolib.visualization.helpers  # noqa
 
@@ -54,11 +54,12 @@ RANK_ATTR = "@RANK"
 COUNT_ATTR = "@COUNT"
 DENS_ATTR = "@DENSITY"
 BOX_ATTR = "@BOX"
+FILE_ATTR = "@FILE"
 NONE_ATTR = "@NONE"
 NONE_ATTR_DEFAULT = 0
 ID_ATTR_DEFAULT = ""  # use filename instead
 
-POST_PROCESSING_ATTRS = [RANK_ATTR, COUNT_ATTR, BOX_ATTR, DENS_ATTR]
+POST_PROCESSING_ATTRS = [RANK_ATTR, COUNT_ATTR, BOX_ATTR, DENS_ATTR, FILE_ATTR]
 SYMBOLIC_ATTRS = POST_PROCESSING_ATTRS + [INDEX_ATTR]
 NON_DATA_ATTRS = SYMBOLIC_ATTRS + [NONE_ATTR]
 
@@ -206,22 +207,6 @@ def write_csv(data, fname):
                 f.write(" ".join(map(str, x)) + "\n")
             #  2 blank lines indicate a new data block in gnuplot
             f.write('\n\n')
-
-
-def short_names(filenames, noEmpty):
-    if len(filenames) == 1:
-        return filenames
-    reversedNames = [''.join(reversed(f)) for f in filenames]
-    prefix = os.path.commonprefix(filenames)
-    suffix = os.path.commonprefix(reversedNames)
-    prefixLen = len(prefix)
-    suffixLen = len(suffix)
-    shortened = [f[prefixLen:-suffixLen] for f in filenames]
-    if noEmpty and any([not f for f in shortened]):
-        # make longer to avoid empty file names
-        base = os.path.basename(prefix)
-        shortened = [base + f for f in shortened]
-    return shortened
 
 
 def onpick(event):
@@ -589,6 +574,10 @@ def main(options):
                     dataID = str(dataID) + "#" + suffix
             x = interpretValue(x)
             y = interpretValue(y)
+            if options.xattr == FILE_ATTR:
+                x = titleFileNames[fileIndex]
+            if options.yattr == FILE_ATTR:
+                y = titleFileNames[fileIndex]
             if isnumeric(x):
                 numericXCount += 1
                 x *= options.xfactor

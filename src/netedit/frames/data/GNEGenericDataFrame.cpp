@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -71,8 +71,8 @@ GNEGenericDataFrame::DataSetSelector::DataSetSelector(GNEGenericDataFrame* gener
     // create check button for new data set
     myNewDataSetCheckButton = new FXCheckButton(getCollapsableFrame(), TL("Create new dataSet"), this, MID_GNE_SELECT, GUIDesignCheckButton);
     // Create MFXComboBoxIcon
-    myDataSetsComboBox = new MFXComboBoxIcon(getCollapsableFrame(), GUIDesignComboBoxNCol, true, GUIDesignComboBoxSizeMedium,
-                                             this, MID_GNE_DATASET_SELECTED, GUIDesignComboBox);
+    myDataSetsComboBox = new MFXComboBoxIcon(getCollapsableFrame(), GUIDesignComboBoxNCol, true, GUIDesignComboBoxVisibleItemsMedium,
+            this, MID_GNE_DATASET_SELECTED, GUIDesignComboBox);
     // create new id label
     myHorizontalFrameNewID = new FXHorizontalFrame(getCollapsableFrame(), GUIDesignAuxiliarHorizontalFrame);
     new FXLabel(myHorizontalFrameNewID, "new dataSet ID", nullptr, GUIDesignLabelThickedFixed(100));
@@ -102,10 +102,10 @@ GNEGenericDataFrame::DataSetSelector::refreshDataSetSelector(const GNEDataSet* c
     // fill myDataSetsComboBox with all DataSets
     for (const auto& dataSet : myGenericDataFrameParent->getViewNet()->getNet()->getAttributeCarriers()->getDataSets()) {
         // check if we have to set currentItemIndex
-        if ((currentItemIndex == -1) && (dataSet == currentDataSet)) {
+        if ((currentItemIndex == -1) && (dataSet.second == currentDataSet)) {
             currentItemIndex = myDataSetsComboBox->getNumItems();
         }
-        myDataSetsComboBox->appendIconItem(dataSet->getID().c_str(), dataSet->getACIcon());
+        myDataSetsComboBox->appendIconItem(dataSet.second->getID().c_str(), dataSet.second->getACIcon());
     }
     // check if we have to set current element
     if (currentItemIndex != -1) {
@@ -394,8 +394,8 @@ GNEGenericDataFrame::AttributeSelector::AttributeSelector(GNEGenericDataFrame* g
     myMinMaxLabel(nullptr),
     myGenericDataTag(tag) {
     // Create MFXComboBoxIcon
-    myAttributesComboBox = new MFXComboBoxIcon(getCollapsableFrame(), GUIDesignComboBoxNCol, true, GUIDesignComboBoxSizeMedium,
-                                               this, MID_GNE_SELECT, GUIDesignComboBox);
+    myAttributesComboBox = new MFXComboBoxIcon(getCollapsableFrame(), GUIDesignComboBoxNCol, true, GUIDesignComboBoxVisibleItemsMedium,
+            this, MID_GNE_SELECT, GUIDesignComboBox);
     // build rainbow
     myMinMaxLabel = buildRainbow(this);
     // refresh interval selector
@@ -533,7 +533,7 @@ GNEGenericDataFrame::show() {
     myDataSetSelector->refreshDataSetSelector(nullptr);
     // check if there is an edge path creator
     if (myPathCreator) {
-        myPathCreator->showPathCreatorModule(myGenericDataTag, false, false);
+        myPathCreator->showPathCreatorModule(GNEAttributeCarrier::getTagProperty(myGenericDataTag), false);
     }
     // show frame
     GNEFrame::show();
@@ -545,7 +545,7 @@ GNEGenericDataFrame::hide() {
     if (myPathCreator) {
         // reset candidate edges
         for (const auto& edge : myViewNet->getNet()->getAttributeCarriers()->getEdges()) {
-            edge.second->resetCandidateFlags();
+            edge.second.second->resetCandidateFlags();
         }
     }
     // hide frame
@@ -559,7 +559,7 @@ GNEGenericDataFrame::updateFrameAfterUndoRedo() {
     myDataSetSelector->refreshDataSetSelector(nullptr);
     // check if there is an edge path creator
     if (myPathCreator) {
-        myPathCreator->showPathCreatorModule(myGenericDataTag, false, false);
+        myPathCreator->showPathCreatorModule(GNEAttributeCarrier::getTagProperty(myGenericDataTag), false);
     }
 }
 

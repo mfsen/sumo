@@ -1,39 +1,11 @@
-netedit/bugs/additionals/ticket3322/additionals.add.xml:14:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'instantInductionLoop', attribute 'period': The attribute 'period' is not allowed.
-netedit/bugs/additionals/ticket3879/additionals.add.xml:2:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'busStop', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
-netedit/bugs/additionals/ticket3879/additionals.add.xml:3:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'chargingStation', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
-netedit/bugs/additionals/ticket3879/additionals.add.xml:4:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'containerStop', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
-netedit/bugs/additionals/ticket3879/additionals.add.xml:5:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'inductionLoop', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
-netedit/bugs/additionals/ticket3879/additionals.add.xml:6:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'laneAreaDetector', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
-netedit/bugs/additionals/ticket3879/additionals.add.xml:7:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'entryExitDetector', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
-netedit/bugs/additionals/ticket3879/additionals.add.xml:8:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'detEntry', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
-netedit/bugs/additionals/ticket3879/additionals.add.xml:11:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'instantInductionLoop', attribute 'period': The attribute 'period' is not allowed.
-netedit/bugs/additionals/ticket3879/additionals.add.xml:11:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'instantInductionLoop', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
-netedit/bugs/additionals/ticket3879/additionals.add.xml:12:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'parkingArea', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
-netedit/bugs/additionals/ticket3879/additionals.add.xml:13:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'space', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
-netedit/bugs/additionals/ticket3879/additionals.add.xml:14:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'space', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
-netedit/bugs/additionals/ticket3879/additionals.add.xml:15:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'space', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
-netedit/bugs/additionals/ticket3879/additionals.add.xml:17:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'rerouter', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
-netedit/bugs/additionals/ticket3879/additionals.add.xml:18:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'variableSpeedSign', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
-netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:54:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'param', attribute 'kelat': The attribute 'kelat' is not allowed.
-netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:54:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'param': The attribute 'key' is required but missing.
-netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:55:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'param', attribute 'kelat': The attribute 'kelat' is not allowed.
-netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:55:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'param': The attribute 'key' is required but missing.
-netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:56:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'param', attribute 'kelat': The attribute 'kelat' is not allowed.
-netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:56:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'param': The attribute 'key' is required but missing.
-netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:59:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'param', attribute 'kelat': The attribute 'kelat' is not allowed.
-netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:59:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'param': The attribute 'key' is required but missing.
-netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:60:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'param', attribute 'kelat': The attribute 'kelat' is not allowed.
-netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:60:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'param': The attribute 'key' is required but missing.
-netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:61:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'param', attribute 'kelat': The attribute 'kelat' is not allowed.
-netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:61:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'param': The attribute 'key' is required but missing.
 netedit/additionalelements/access/load/friendlypos/additionals.add.xml:8:0:ERROR:SCHEMASV:SCHEMAV_CVC_ENUMERATION_VALID: Element 'access', attribute 'friendlyPos': [facet 'enumeration'] The value 'dummyFriendlyPos' is not an element of the set {'true', 'false', 'True', 'False', 'yes', 'no', 'on', 'off', '1', '0', 'x', '-'}.
 netedit/additionalelements/access/load/invalid_parent/additionals.add.xml:3:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'busStop': The attribute 'id' is required but missing.
 netedit/additionalelements/access/load/lane/additionals.add.xml:5:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'access': The attribute 'lane' is required but missing.
 netedit/additionalelements/access/load/length/additionals.add.xml:8:0:ERROR:SCHEMASV:SCHEMAV_CVC_DATATYPE_VALID_1_2_1: Element 'access', attribute 'length': 'dummyLenght' is not a valid value of the atomic type 'nonNegativeFloatType'.
 netedit/additionalelements/access/load/length/additionals.add.xml:11:0:ERROR:SCHEMASV:SCHEMAV_CVC_MININCLUSIVE_VALID: Element 'access', attribute 'length': [facet 'minInclusive'] The value '-30' is less than the minimum value allowed ('0').
 netedit/additionalelements/access/load/no_parent/additionals.add.xml:3:0:ERROR:SCHEMASV:SCHEMAV_ELEMENT_CONTENT: Element 'access': This element is not expected.
-netedit/additionalelements/access/load/pos/additionals.add.xml:5:0:ERROR:SCHEMASV:SCHEMAV_CVC_PATTERN_VALID: Element 'access', attribute 'pos': [facet 'pattern'] The value 'dummyPosition' is not accepted by the pattern '[-+]?((\d+\.?|(\d*\.\d+))([eE][-+]?\d+)?|Inf|inf|INF)'.
-netedit/additionalelements/access/load/pos/additionals.add.xml:8:0:ERROR:SCHEMASV:SCHEMAV_CVC_PATTERN_VALID: Element 'access', attribute 'pos': [facet 'pattern'] The value '' is not accepted by the pattern '[-+]?((\d+\.?|(\d*\.\d+))([eE][-+]?\d+)?|Inf|inf|INF)'.
+netedit/additionalelements/access/load/pos/additionals.add.xml:5:0:ERROR:SCHEMASV:SCHEMAV_CVC_DATATYPE_VALID_1_2_3: Element 'access', attribute 'pos': 'dummyPosition' is not a valid value of the union type 'accessPosType'.
+netedit/additionalelements/access/load/pos/additionals.add.xml:8:0:ERROR:SCHEMASV:SCHEMAV_CVC_DATATYPE_VALID_1_2_3: Element 'access', attribute 'pos': '' is not a valid value of the union type 'accessPosType'.
 netedit/additionalelements/basic/relative_positions/additionals.add.xml:13:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'instantInductionLoop', attribute 'period': The attribute 'period' is not allowed.
 netedit/additionalelements/busstop/load/color/additionals.add.xml:7:0:ERROR:SCHEMASV:SCHEMAV_CVC_DATATYPE_VALID_1_2_3: Element 'busStop', attribute 'color': 'dummyparkingLength' is not a valid value of the union type 'colorType'.
 netedit/additionalelements/busstop/load/color/additionals.add.xml:10:0:ERROR:SCHEMASV:SCHEMAV_CVC_DATATYPE_VALID_1_2_3: Element 'busStop', attribute 'color': '-7' is not a valid value of the union type 'colorType'.
@@ -305,16 +277,18 @@ netedit/additionalelements/rerouter/load/probability/additionals.add.xml:9:0:ERR
 netedit/additionalelements/rerouter/load/timetreshold/additionals.add.xml:5:0:ERROR:SCHEMASV:SCHEMAV_CVC_DATATYPE_VALID_1_2_1: Element 'rerouter', attribute 'timeThreshold': '' is not a valid value of the atomic type 'nonNegativeFloatType'.
 netedit/additionalelements/rerouter/load/timetreshold/additionals.add.xml:7:0:ERROR:SCHEMASV:SCHEMAV_CVC_DATATYPE_VALID_1_2_1: Element 'rerouter', attribute 'timeThreshold': 'dummyTreshold' is not a valid value of the atomic type 'nonNegativeFloatType'.
 netedit/additionalelements/rerouter/load/timetreshold/additionals.add.xml:9:0:ERROR:SCHEMASV:SCHEMAV_CVC_MININCLUSIVE_VALID: Element 'rerouter', attribute 'timeThreshold': [facet 'minInclusive'] The value '-30' is less than the minimum value allowed ('0').
+netedit/additionalelements/rerouter/load/optional/additionals.add.xml:3:0:ERROR:SCHEMASV:SCHEMAV_CVC_ENUMERATION_VALID: Element 'rerouter', attribute 'optional': [facet 'enumeration'] The value '' is not an element of the set {'true', 'false', 'True', 'False', 'yes', 'no', 'on', 'off', '1', '0', 'x', '-'}.
+netedit/additionalelements/rerouter/load/optional/additionals.add.xml:5:0:ERROR:SCHEMASV:SCHEMAV_CVC_ENUMERATION_VALID: Element 'rerouter', attribute 'optional': [facet 'enumeration'] The value 'dummyOff' is not an element of the set {'true', 'false', 'True', 'False', 'yes', 'no', 'on', 'off', '1', '0', 'x', '-'}.
 netedit/additionalelements/rerouterelements/closinglanereroute/load/lane/additionals.add.xml:5:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'closingLaneReroute': The attribute 'id' is required but missing.
 netedit/additionalelements/rerouterelements/closingreroute/load/edge/additionals.add.xml:5:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'closingReroute': The attribute 'id' is required but missing.
 netedit/additionalelements/rerouterelements/destprobreroute/load/edge/additionals.add.xml:5:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'destProbReroute': The attribute 'id' is required but missing.
 netedit/additionalelements/rerouterelements/destprobreroute/load/probability/additionals.add.xml:7:0:ERROR:SCHEMASV:SCHEMAV_CVC_DATATYPE_VALID_1_2_1: Element 'destProbReroute', attribute 'probability': 'dummyProb' is not a valid value of the atomic type 'nonNegativeFloatType'.
 netedit/additionalelements/rerouterelements/destprobreroute/load/probability/additionals.add.xml:9:0:ERROR:SCHEMASV:SCHEMAV_CVC_MININCLUSIVE_VALID: Element 'destProbReroute', attribute 'probability': [facet 'minInclusive'] The value '-30' is less than the minimum value allowed ('0').
 netedit/additionalelements/rerouterelements/interval/load/begin/additionals.add.xml:4:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'interval': The attribute 'begin' is required but missing.
-netedit/additionalelements/rerouterelements/interval/load/begin/additionals.add.xml:8:0:ERROR:SCHEMASV:SCHEMAV_CVC_DATATYPE_VALID_1_2_1: Element 'interval', attribute 'begin': 'dummyBegin' is not a valid value of the atomic type 'nonNegativeFloatType'.
-netedit/additionalelements/rerouterelements/interval/load/empty/additionals.add.xml:4:0:ERROR:SCHEMASV:SCHEMAV_ELEMENT_CONTENT: Element 'interval': Missing child element(s). Expected is one of ( closingReroute, closingLaneReroute, destProbReroute, routeProbReroute, parkingAreaReroute ).
+netedit/additionalelements/rerouterelements/interval/load/begin/additionals.add.xml:8:0:ERROR:SCHEMASV:SCHEMAV_CVC_DATATYPE_VALID_1_2_3: Element 'interval', attribute 'begin': 'dummyBegin' is not a valid value of the union type 'timeType'.
+netedit/additionalelements/rerouterelements/interval/load/empty/additionals.add.xml:4:0:ERROR:SCHEMASV:SCHEMAV_ELEMENT_CONTENT: Element 'interval': Missing child element(s). Expected is one of ( closingReroute, closingLaneReroute, destProbReroute, routeProbReroute, parkingAreaReroute, viaProbReroute ).
 netedit/additionalelements/rerouterelements/interval/load/end/additionals.add.xml:4:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'interval': The attribute 'end' is required but missing.
-netedit/additionalelements/rerouterelements/interval/load/end/additionals.add.xml:8:0:ERROR:SCHEMASV:SCHEMAV_CVC_DATATYPE_VALID_1_2_1: Element 'interval', attribute 'end': 'dummyEnd' is not a valid value of the atomic type 'nonNegativeFloatType'.
+netedit/additionalelements/rerouterelements/interval/load/end/additionals.add.xml:8:0:ERROR:SCHEMASV:SCHEMAV_CVC_DATATYPE_VALID_1_2_3: Element 'interval', attribute 'end': 'dummyEnd' is not a valid value of the union type 'timeType'.
 netedit/additionalelements/rerouterelements/parkingareareroute/load/parking/additionals.add.xml:8:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'parkingAreaReroute': The attribute 'id' is required but missing.
 netedit/additionalelements/rerouterelements/parkingareareroute/load/probability/additionals.add.xml:10:0:ERROR:SCHEMASV:SCHEMAV_CVC_DATATYPE_VALID_1_2_1: Element 'parkingAreaReroute', attribute 'probability': 'dummyProb' is not a valid value of the atomic type 'nonNegativeFloatType'.
 netedit/additionalelements/rerouterelements/parkingareareroute/load/probability/additionals.add.xml:12:0:ERROR:SCHEMASV:SCHEMAV_CVC_MININCLUSIVE_VALID: Element 'parkingAreaReroute', attribute 'probability': [facet 'minInclusive'] The value '-30' is less than the minimum value allowed ('0').
@@ -358,14 +332,43 @@ netedit/additionalelements/variablespeedsign/load/id/additionals.add.xml:3:0:ERR
 netedit/additionalelements/variablespeedsign/load/lanes/additionals.add.xml:3:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'variableSpeedSign': The attribute 'lanes' is required but missing.
 netedit/additionalelements/variablespeedsign/load/parameters/additionals.add.xml:9:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'param': The attribute 'key' is required but missing.
 netedit/additionalelements/variablespeedsign/load/parameters/additionals.add.xml:12:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'param': The attribute 'key' is required but missing.
+netedit/bugs/additionals/ticket3322/additionals.add.xml:14:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'instantInductionLoop', attribute 'period': The attribute 'period' is not allowed.
+netedit/bugs/additionals/ticket3879/additionals.add.xml:2:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'busStop', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
+netedit/bugs/additionals/ticket3879/additionals.add.xml:3:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'chargingStation', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
+netedit/bugs/additionals/ticket3879/additionals.add.xml:4:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'containerStop', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
+netedit/bugs/additionals/ticket3879/additionals.add.xml:5:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'inductionLoop', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
+netedit/bugs/additionals/ticket3879/additionals.add.xml:6:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'laneAreaDetector', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
+netedit/bugs/additionals/ticket3879/additionals.add.xml:7:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'entryExitDetector', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
+netedit/bugs/additionals/ticket3879/additionals.add.xml:8:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'detEntry', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
+netedit/bugs/additionals/ticket3879/additionals.add.xml:11:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'instantInductionLoop', attribute 'period': The attribute 'period' is not allowed.
+netedit/bugs/additionals/ticket3879/additionals.add.xml:11:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'instantInductionLoop', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
+netedit/bugs/additionals/ticket3879/additionals.add.xml:12:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'parkingArea', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
+netedit/bugs/additionals/ticket3879/additionals.add.xml:13:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'space', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
+netedit/bugs/additionals/ticket3879/additionals.add.xml:14:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'space', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
+netedit/bugs/additionals/ticket3879/additionals.add.xml:15:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'space', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
+netedit/bugs/additionals/ticket3879/additionals.add.xml:17:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'rerouter', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
+netedit/bugs/additionals/ticket3879/additionals.add.xml:18:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'variableSpeedSign', attribute 'blockMovement': The attribute 'blockMovement' is not allowed.
+netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:54:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'param', attribute 'kelat': The attribute 'kelat' is not allowed.
+netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:54:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'param': The attribute 'key' is required but missing.
+netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:55:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'param', attribute 'kelat': The attribute 'kelat' is not allowed.
+netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:55:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'param': The attribute 'key' is required but missing.
+netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:56:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'param', attribute 'kelat': The attribute 'kelat' is not allowed.
+netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:56:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'param': The attribute 'key' is required but missing.
+netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:59:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'param', attribute 'kelat': The attribute 'kelat' is not allowed.
+netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:59:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'param': The attribute 'key' is required but missing.
+netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:60:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'param', attribute 'kelat': The attribute 'kelat' is not allowed.
+netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:60:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'param': The attribute 'key' is required but missing.
+netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:61:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'param', attribute 'kelat': The attribute 'kelat' is not allowed.
+netedit/shapeelements/poigeo/inspect_selected/parameters/additionals.add.xml:61:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'param': The attribute 'key' is required but missing.
+sumo/devices/rerouting/personTrip/errors/access_invalid/input_additional.add.xml:3:0:ERROR:SCHEMASV:SCHEMAV_ELEMENT_CONTENT: Element 'access': This element is not expected.
 Error on parsing 'sumo/extended/calibrator/errors/invalid_flow/input_additional.add.xml'!
 Traceback (most recent call last):
-  File "/scr1/sumo/tests/../tools/build/schemaCheck.py", line 52, in validate
+  File "/scr1/sumo/tests/../tools/build_config/schemaCheck.py", line 52, in validate
     doc = etree.parse(f)
-  File "src/lxml/etree.pyx", line 3521, in lxml.etree.parse
-  File "src/lxml/parser.pxi", line 1859, in lxml.etree._parseDocument
-  File "src/lxml/parser.pxi", line 1885, in lxml.etree._parseDocumentFromURL
-  File "src/lxml/parser.pxi", line 1789, in lxml.etree._parseDocFromFile
+  File "src/lxml/etree.pyx", line 3536, in lxml.etree.parse
+  File "src/lxml/parser.pxi", line 1876, in lxml.etree._parseDocument
+  File "src/lxml/parser.pxi", line 1902, in lxml.etree._parseDocumentFromURL
+  File "src/lxml/parser.pxi", line 1805, in lxml.etree._parseDocFromFile
   File "src/lxml/parser.pxi", line 1177, in lxml.etree._BaseParser._parseDocFromFile
   File "src/lxml/parser.pxi", line 615, in lxml.etree._ParserContext._handleParseResultDoc
   File "src/lxml/parser.pxi", line 725, in lxml.etree._handleParseResult
@@ -382,8 +385,6 @@ sumo/extended/vaporizer/errors/id_empty/input_additional2.add.xml:3:0:ERROR:SCHE
 sumo/extended/vaporizer/errors/id_missing/input_additional2.add.xml:3:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'vaporizer': The attribute 'id' is required but missing.
 sumo/meta/xml_validation/input_additional.add.xml:1:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'additional', attribute 'blub': The attribute 'blub' is not allowed.
 sumo/meta/xml_validation_net/input_additional.add.xml:1:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_3_2_1: Element 'additional', attribute 'blub': The attribute 'blub' is not allowed.
-sumo/devices/rerouting/personTrip/errors/access_invalid/input_additional.add.xml:3:0:ERROR:SCHEMASV:SCHEMAV_ELEMENT_CONTENT: Element 'access': This element is not expected.
-sumo/devices/taxi/idling/taxistand/input_additional.add.xml:14:0:ERROR:SCHEMASV:SCHEMAV_CVC_DATATYPE_VALID_1_2_1: Element 'interval', attribute 'end': '1:0:0:0' is not a valid value of the atomic type 'nonNegativeFloatType'.
 sumo/output/e1/errors/file_missing/input_additional.add.xml:3:0:ERROR:SCHEMASV:SCHEMAV_CVC_COMPLEX_TYPE_4: Element 'e1Detector': The attribute 'file' is required but missing.
 sumo/output/e1/errors/freq_empty/input_additional.add.xml:3:0:ERROR:SCHEMASV:SCHEMAV_CVC_DATATYPE_VALID_1_2_1: Element 'e1Detector', attribute 'freq': '' is not a valid value of the atomic type 'positiveFloatType'.
 sumo/output/e1/errors/freq_false/input_additional.add.xml:3:0:ERROR:SCHEMASV:SCHEMAV_CVC_DATATYPE_VALID_1_2_1: Element 'e1Detector', attribute 'freq': 'sss' is not a valid value of the atomic type 'positiveFloatType'.

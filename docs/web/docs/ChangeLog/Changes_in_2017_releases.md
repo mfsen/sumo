@@ -255,7 +255,7 @@ title: Changes in the 2017 releases (versions 0.29.0, 0.30.0, 0.31.0 and 0.32.0)
 have a look at
 [Windows CMake](../Installing/Windows_Build.md#manual_cmake_configuration) for
 information on how to build SUMO on Windows with CMake. There are
-also helper scripts in preparation at [{{SUMO}}/tools/build]({{Source}}tools/build) for instance `tools/build/buildMSVS15Project.py`.
+also helper scripts in preparation at [{{SUMO}}/tools/build_config]({{Source}}tools/build_config) for instance `tools/build_config/buildMSVS15Project.py`.
 
 - Simulation
   - **chargingstations-output** now writes times as seconds rather
@@ -969,7 +969,7 @@ model](../Simulation/SublaneModel.md) is now 0.6m (down from
     is now scaled according to fraction of available green time. #2753
   - Fixed various issues related to inconsistent handling of net and
     gross time gaps. This was causing exaggerated speeds. The option
-    **--meso-taujf** {{DT_TIME}} now corresponds to the net time-gap (as do **--meso-taufj**, **--meso-tauff**). It's default
+    **--meso-taujf** {{DT_TIME}} now corresponds to the net time-gap (as do **--meso-taufj**, **--meso-tauff**). Its default
     value has been reduced from *2.0* to *1.73* correspondingly
     (reproducing the old behavior at 100km/h).
 

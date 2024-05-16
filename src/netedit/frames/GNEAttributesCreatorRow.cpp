@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -29,6 +29,7 @@
 #include <utils/gui/div/GUIDesigns.h>
 #include <utils/gui/windows/GUIAppEnum.h>
 #include <utils/common/SUMOVehicleClass.h>
+#include <utils/gui/images/POIIcons.h>
 
 #include "GNEAttributesCreatorRow.h"
 #include "GNEAttributesCreator.h"
@@ -72,7 +73,7 @@ GNEAttributesCreatorRow::GNEAttributesCreatorRow(GNEAttributesCreator* Attribute
     myValueTextField->hide();
     myValueCheckButton = new FXCheckButton(this, TL("Disabled"), this, MID_GNE_SET_ATTRIBUTE, GUIDesignCheckButton);
     myValueCheckButton->hide();
-    myValueComboBox = new MFXComboBoxIcon(this, GUIDesignComboBoxNCol, true, GUIDesignComboBoxSizeMedium,
+    myValueComboBox = new MFXComboBoxIcon(this, GUIDesignComboBoxNCol, true, GUIDesignComboBoxVisibleItemsMedium,
                                           this, MID_GNE_SET_ATTRIBUTE, GUIDesignComboBoxAttribute);
     myValueComboBox->hide();
     // only create if parent was created
@@ -212,7 +213,7 @@ GNEAttributesCreatorRow::refreshRow() {
             myAttributeColorButton->setTextColor(FXRGB(0, 0, 0));
             myAttributeColorButton->killFocus();
             myAttributeColorButton->show();
-        } else if (myAttrProperties.getAttr() == SUMO_ATTR_ALLOW) {
+        } else if (myAttrProperties.isSVCPermission() && (myAttrProperties.getAttr() != SUMO_ATTR_DISALLOW)) {
             // show allow button
             myAttributeAllowButton->setTextColor(FXRGB(0, 0, 0));
             myAttributeAllowButton->killFocus();
@@ -252,10 +253,22 @@ GNEAttributesCreatorRow::refreshRow() {
         } else if (myAttrProperties.isDiscrete()) {
             // fill textField
             myValueComboBox->clearItems();
-            for (const auto& item : myAttrProperties.getDiscreteValues()) {
-                myValueComboBox->appendIconItem(item.c_str());
+            // check if add POI icons
+            if (myAttrProperties.getAttr() == SUMO_ATTR_ICON) {
+                for (const auto& POIIcon : SUMOXMLDefinitions::POIIcons.getValues()) {
+                    myValueComboBox->appendIconItem(SUMOXMLDefinitions::POIIcons.getString(POIIcon).c_str(), POIIcons::getPOIIcon(POIIcon));
+                }
+            } else {
+                for (const auto& item : myAttrProperties.getDiscreteValues()) {
+                    myValueComboBox->appendIconItem(item.c_str());
+                }
             }
-            myValueComboBox->setCurrentItem(myValueComboBox->findItem(myAttributesCreatorParent->getCurrentTemplateAC()->getAttribute(myAttrProperties.getAttr()).c_str()));
+            auto index = myValueComboBox->findItem(myAttributesCreatorParent->getCurrentTemplateAC()->getAttribute(myAttrProperties.getAttr()).c_str());
+            if (index < 0) {
+                myValueComboBox->setCurrentItem(0);
+            } else {
+                myValueComboBox->setCurrentItem(index);
+            }
             if (myAttrProperties.hasDefaultValue() && (myAttrProperties.getDefaultValue() == myValueComboBox->getText().text())) {
                 myValueComboBox->setTextColor(FXRGB(128, 128, 128));
             } else {
@@ -378,7 +391,7 @@ GNEAttributesCreatorRow::onCmdSetAttribute(FXObject* obj, FXSelector, void*) {
                 myAttributesCreatorParent->getCurrentTemplateAC()->setAttribute(myAttrProperties.getAttr(), myValueComboBox->getText().text());
             }
             // special case for trigger stops (in the future will be changed)
-            if (myAttributesCreatorParent->getCurrentTemplateAC()->getTagProperty().isStop() && (myAttrProperties.getAttr() == SUMO_ATTR_TRIGGERED)) {
+            if (myAttributesCreatorParent->getCurrentTemplateAC()->getTagProperty().isVehicleStop() && (myAttrProperties.getAttr() == SUMO_ATTR_TRIGGERED)) {
                 // refresh entire GNEAttributesCreator
                 myAttributesCreatorParent->refreshAttributesCreator();
             }

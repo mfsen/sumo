@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -81,14 +81,14 @@ GNEDistributionFrame::DistributionEditor::DistributionEditor(GNEFrame* framePare
     auto staticTooltipMenu = myFrameParent->getViewNet()->getViewParent()->getGNEAppWindows()->getStaticTooltipMenu();
     // Create new distribution
     myCreateDistributionButton = new MFXButtonTooltip(getCollapsableFrame(), staticTooltipMenu, TL("New"),
-        GUIIconSubSys::getIcon(icon), this, MID_GNE_CREATE, GUIDesignButton);
-    myCreateDistributionButton->setTipText(TLF("Create new %", toString(myDistributionTag)).c_str()), 
-    // Delete distribution
-    myDeleteDistributionButton = new MFXButtonTooltip(getCollapsableFrame(), staticTooltipMenu, TL("Delete"),
-        GUIIconSubSys::getIcon(GUIIcon::MODEDELETE), this, MID_GNE_DELETE, GUIDesignButton);
-    myDeleteDistributionButton->setTipText(TLF("Delete current edited %", toString(myDistributionTag)).c_str()), 
-    // show editor
-    show();
+            GUIIconSubSys::getIcon(icon), this, MID_GNE_CREATE, GUIDesignButton);
+    myCreateDistributionButton->setTipText(TLF("Create new %", toString(myDistributionTag)).c_str()),
+                               // Delete distribution
+                               myDeleteDistributionButton = new MFXButtonTooltip(getCollapsableFrame(), staticTooltipMenu, TL("Delete"),
+                                       GUIIconSubSys::getIcon(GUIIcon::MODEDELETE), this, MID_GNE_DELETE, GUIDesignButton);
+    myDeleteDistributionButton->setTipText(TLF("Delete current edited %", toString(myDistributionTag)).c_str()),
+                               // show editor
+                               show();
 }
 
 
@@ -138,7 +138,7 @@ GNEDistributionFrame::DistributionEditor::onCmdDeleteDistribution(FXObject*, FXS
         undoList->end();
         // refresh selector
         myDistributionSelector->refreshDistributionSelector();
-            }
+    }
     return 1;
 }
 
@@ -161,8 +161,8 @@ GNEDistributionFrame::DistributionSelector::DistributionSelector(GNEFrame* frame
     MFXGroupBoxModule(frameParent, TL("Distribution selector")),
     myFrameParent(frameParent) {
     // Create MFXComboBoxIcon
-    myDistributionsComboBox = new MFXComboBoxIcon(getCollapsableFrame(), GUIDesignComboBoxNCol, true, GUIDesignComboBoxSizeMedium,
-                                                  this, MID_GNE_SET_TYPE, GUIDesignComboBox);
+    myDistributionsComboBox = new MFXComboBoxIcon(getCollapsableFrame(), GUIDesignComboBoxNCol, true, GUIDesignComboBoxVisibleItemsMedium,
+            this, MID_GNE_SET_TYPE, GUIDesignComboBox);
     // DistributionSelector is always shown
     show();
 }
@@ -238,13 +238,13 @@ GNEDistributionFrame::DistributionSelector::onCmdSelectDistribution(FXObject*, F
     const auto& distributions = viewNet->getNet()->getAttributeCarriers()->getDemandElements().at(myDistributionEditor->getDistributionTag());
     // Check if value of myTypeMatchBox correspond of an allowed additional tags
     for (const auto& distribution : distributions) {
-        if (distribution->getID() == myDistributionsComboBox->getText().text()) {
+        if (distribution.second->getID() == myDistributionsComboBox->getText().text()) {
             // set pointer
-            myCurrentDistribution = distribution;
+            myCurrentDistribution = distribution.second;
             // set color of myTypeMatchBox to black (valid)
             myDistributionsComboBox->setTextColor(FXRGB(0, 0, 0));
             // set myCurrentType as inspected element
-            viewNet->setInspectedAttributeCarriers({distribution});
+            viewNet->setInspectedAttributeCarriers({distribution.second});
             // show modules
             myAttributesEditor->showAttributeEditorModule(true);
             myDistributionValuesEditor->showDistributionValuesEditor();
@@ -290,7 +290,7 @@ GNEDistributionFrame::DistributionSelector::fillDistributionComboBox() {
     // fill with distributions sorted by ID
     std::map<std::string, GNEDemandElement*> distributions;
     for (const auto& distribution : ACs->getDemandElements().at(myDistributionEditor->getDistributionTag())) {
-        distributions[distribution->getID()] = distribution;
+        distributions[distribution.second->getID()] = distribution.second;
     }
     for (const auto& distribution : distributions) {
         myDistributionsComboBox->appendIconItem(distribution.first.c_str(), distribution.second->getACIcon());
@@ -313,14 +313,14 @@ GNEDistributionFrame::DistributionRow::DistributionRow(DistributionValuesEditor*
     // create label
     myIconLabel = new FXLabel(this, "", key->getACIcon(), GUIDesignLabelIconThick);
     // Create and hide MFXTextFieldTooltip for string attributes
-    myComboBoxKeys = new MFXComboBoxIcon(this, GUIDesignComboBoxNCol, true, GUIDesignComboBoxSizeMedium,
+    myComboBoxKeys = new MFXComboBoxIcon(this, GUIDesignComboBoxNCol, true, GUIDesignComboBoxVisibleItemsMedium,
                                          this, MID_GNE_SET_TYPE, GUIDesignComboBox);
     // Create and hide MFXTextFieldTooltip for string attributes
     myProbabilityTextField = new MFXTextFieldTooltip(this, staticTooltipMenu,
-        GUIDesignTextFieldNCol, this, MID_GNE_SET_ATTRIBUTE, GUIDesignTextFieldFixedRestricted(50, TEXTFIELD_REAL));
+            GUIDesignTextFieldNCol, this, MID_GNE_SET_ATTRIBUTE, GUIDesignTextFieldFixedRestricted(50, TEXTFIELD_REAL));
     // create delete buton
     myDeleteRowButton = new MFXButtonTooltip(this, staticTooltipMenu,
-        "", GUIIconSubSys::getIcon(GUIIcon::REMOVE), this, MID_GNE_BUTTON_REMOVE, GUIDesignButtonIcon);
+            "", GUIIconSubSys::getIcon(GUIIcon::REMOVE), this, MID_GNE_BUTTON_REMOVE, GUIDesignButtonIcon);
     myDeleteRowButton->setTipText(TL("Delete distribution value"));
     // only create if parent was created
     if (getParent()->id() && attributeEditorParent->myDistributionSelector->getCurrentDistribution()) {
@@ -352,7 +352,7 @@ GNEDistributionFrame::DistributionRow::refreshRow() {
     // refill combo Box with possible values
     myComboBoxKeys->clearItems();
     myComboBoxKeys->appendIconItem(myKey->getID().c_str());
-    for (const auto &possibleKey : possibleKeys) {
+    for (const auto& possibleKey : possibleKeys) {
         myComboBoxKeys->appendIconItem(possibleKey.first.c_str());
     }
     myComboBoxKeys->setCurrentItem(0);
@@ -379,7 +379,7 @@ GNEDistributionFrame::DistributionRow::onCmdSetKey(FXObject*, FXSelector, void*)
     // get current distribution
     auto currentDistribution = myDistributionValuesEditorParent->myDistributionSelector->getCurrentDistribution();
     // get ACs
-    const auto &ACs = myDistributionValuesEditorParent->getFrameParent()->getViewNet()->getNet()->getAttributeCarriers();
+    const auto& ACs = myDistributionValuesEditorParent->getFrameParent()->getViewNet()->getNet()->getAttributeCarriers();
     // continue if we have a distribution to edit
     if (currentDistribution == nullptr) {
         return 1;
@@ -402,7 +402,7 @@ GNEDistributionFrame::DistributionRow::onCmdSetKey(FXObject*, FXSelector, void*)
             currentDistribution->addDistributionKey(myKey, myProbability, undoList);
             // end undo list
             undoList->end();
-            // refresh all rows 
+            // refresh all rows
             myDistributionValuesEditorParent->refreshRows();
         }
     } else {
@@ -423,7 +423,7 @@ GNEDistributionFrame::DistributionRow::onCmdSetProbability(FXObject*, FXSelector
     }
     // get probability
     const std::string probabilityStr = myProbabilityTextField->getText().text();
-    const double probability = GNEAttributeCarrier::canParse<double>(probabilityStr)? GNEAttributeCarrier::parse<double>(probabilityStr) : -1;
+    const double probability = GNEAttributeCarrier::canParse<double>(probabilityStr) ? GNEAttributeCarrier::parse<double>(probabilityStr) : -1;
     // Check if set new probability
     if (probability >= 0) {
         // set new probability
@@ -548,7 +548,7 @@ GNEDistributionFrame::DistributionValuesEditor::remakeRows() {
 void
 GNEDistributionFrame::DistributionValuesEditor::refreshRows() {
     // refresh rows
-    for (const auto &row : myDistributionRows) {
+    for (const auto& row : myDistributionRows) {
         row->refreshRow();
     }
 }
@@ -564,7 +564,7 @@ void
 GNEDistributionFrame::DistributionValuesEditor::updateSumLabel() {
     // update probability
     double sumProbability = 0;
-    for (const auto &row : myDistributionRows) {
+    for (const auto& row : myDistributionRows) {
         sumProbability += row->getProbability();
     }
     mySumLabel->setText(toString(sumProbability).c_str());

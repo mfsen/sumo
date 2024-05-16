@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -50,17 +50,13 @@ const std::vector<SumoXMLTag> NamespaceIDs::polygons = {
     SUMO_TAG_POLY,
     SUMO_TAG_TAZ,
     GNE_TAG_JPS_WALKABLEAREA,
-    GNE_TAG_JPS_OBSTACLE,
-    GNE_TAG_JPS_WAITINGAREA,
-    GNE_TAG_JPS_SOURCE,
-    GNE_TAG_JPS_SINK
+    GNE_TAG_JPS_OBSTACLE
 };
 
 const std::vector<SumoXMLTag> NamespaceIDs::POIs = {
     SUMO_TAG_POI,
     GNE_TAG_POILANE,
-    GNE_TAG_POIGEO,
-    GNE_TAG_JPS_WAYPOINT
+    GNE_TAG_POIGEO
 };
 
 const std::vector<SumoXMLTag> NamespaceIDs::types = {

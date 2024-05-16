@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2006-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2006-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -93,13 +93,13 @@ public:
 
     /// @brief Set the current item
     long setCurrentItem(const FXString& text, FXbool notify = FALSE);
-    
+
     /// @brief Get the current item's index
     FXint getCurrentItem() const;
 
     /// @brief Replace the item at index
     FXint updateIconItem(FXint index, const FXString& text, FXIcon* icon = nullptr, FXColor bgColor = FXRGB(255, 255, 255), void* ptr = nullptr);
-    
+
     /// @brief insert icon item in the given position
     FXint insertIconItem(FXint index, const FXString& text, FXIcon* icon = nullptr, FXColor bgColor = FXRGB(255, 255, 255), void* ptr = nullptr);
 
@@ -147,7 +147,7 @@ public:
     long onFwdToText(FXObject*, FXSelector, void*);
     long onUpdFmText(FXObject*, FXSelector, void*);
     long onCmdFilter(FXObject*, FXSelector, void*);
-    
+
     /// @}
 
 protected:

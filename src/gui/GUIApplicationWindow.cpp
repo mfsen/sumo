@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -55,6 +55,7 @@
 #include <utils/gui/globjects/GUIShapeContainer.h>
 #include <utils/gui/images/GUITexturesHelper.h>
 #include <utils/gui/images/VClassIcons.h>
+#include <utils/gui/images/GUITextureSubSys.h>
 #include <utils/gui/settings/GUICompleteSchemeStorage.h>
 #include <utils/gui/settings/GUISettingsHandler.h>
 #include <utils/gui/shortcuts/GUIShortcutsSubSys.h>
@@ -133,6 +134,8 @@ FXDEFMAP(GUIApplicationWindow) GUIApplicationWindowMap[] = {
     FXMAPFUNC(SEL_COMMAND,  MID_DELAY_TOGGLE,                                           GUIApplicationWindow::onCmdDelayToggle),
     FXMAPFUNC(SEL_COMMAND,  MID_DEMAND_SCALE,                                           GUIApplicationWindow::onCmdDemandScale),
     FXMAPFUNC(SEL_COMMAND,  MID_CLEARMESSAGEWINDOW,                                     GUIApplicationWindow::onCmdClearMsgWindow),
+    FXMAPFUNC(SEL_COMMAND,  MID_HOTKEY_B_BREAKPOINT,                                    GUIApplicationWindow::onCmdBreakpoint),
+    FXMAPFUNC(SEL_COMMAND,  MID_HOTKEY_ALT_B_BREAKPOINT_EARLY,                          GUIApplicationWindow::onCmdBreakpointEarly),
     // Stats
     FXMAPFUNC(SEL_COMMAND,  MID_SHOWNETSTATS,       GUIApplicationWindow::onCmdShowStats),
     FXMAPFUNC(SEL_COMMAND,  MID_SHOWVEHSTATS,       GUIApplicationWindow::onCmdShowStats),
@@ -198,6 +201,8 @@ FXDEFMAP(GUIApplicationWindow) GUIApplicationWindowMap[] = {
     FXMAPFUNC(SEL_UPDATE,   MID_LANGUAGE_ES,    GUIApplicationWindow::onUpdChangeLanguage),
     FXMAPFUNC(SEL_COMMAND,  MID_LANGUAGE_FR,    GUIApplicationWindow::onCmdChangeLanguage),
     FXMAPFUNC(SEL_UPDATE,   MID_LANGUAGE_FR,    GUIApplicationWindow::onUpdChangeLanguage),
+    FXMAPFUNC(SEL_COMMAND,  MID_LANGUAGE_IT,    GUIApplicationWindow::onCmdChangeLanguage),
+    FXMAPFUNC(SEL_UPDATE,   MID_LANGUAGE_IT,    GUIApplicationWindow::onUpdChangeLanguage),
     FXMAPFUNC(SEL_COMMAND,  MID_LANGUAGE_ZH,    GUIApplicationWindow::onCmdChangeLanguage),
     FXMAPFUNC(SEL_UPDATE,   MID_LANGUAGE_ZH,    GUIApplicationWindow::onUpdChangeLanguage),
     FXMAPFUNC(SEL_COMMAND,  MID_LANGUAGE_ZHT,   GUIApplicationWindow::onCmdChangeLanguage),
@@ -240,6 +245,8 @@ GUIApplicationWindow::GUIApplicationWindow(FXApp* a, const std::string& configPa
     myLastStepEventMillis(SysUtils::getCurrentMillis() - MIN_DRAW_DELAY) {
     // init icons
     GUIIconSubSys::initIcons(a);
+    // init Textures
+    GUITextureSubSys::initTextures(a);
     // init cursors
     GUICursorSubSys::initCursors(a);
     // disable tooltips
@@ -261,11 +268,6 @@ GUIApplicationWindow::dependentBuild(const bool isLibsumo) {
         return;
     }
     hadDependentBuild = true;
-    // set language
-    if (gLanguage == "C") {
-        gLanguage = getApp()->reg().readStringEntry("gui", "language", "C");
-        MsgHandler::setupI18n(gLanguage);
-    }
     setTarget(this);
     setSelector(MID_WINDOW);
     // build menu bar
@@ -371,7 +373,9 @@ GUIApplicationWindow::create() {
     const std::string& onlineMaps = getApp()->reg().readStringEntry("gui", "onlineMaps", "");
     for (const std::string& entry : StringTokenizer(onlineMaps, "\n").getVector()) {
         const std::vector<std::string> split = StringTokenizer(entry, "\t").getVector();
-        myOnlineMaps[split[0]] = split[1];
+        if (split.size() == 2) {
+            myOnlineMaps[split[0]] = split[1];
+        }
     }
     if (myOnlineMaps.empty()) {
         myOnlineMaps["GeoHack"] = "https://geohack.toolforge.org/geohack.php?params=%lat;%lon_scale:1000";
@@ -495,6 +499,12 @@ GUIApplicationWindow::fillMenuBar() {
     mySelectLanesMenuCascade->setHelpText(TL("Opens a menu for selecting a vehicle class by which to selected lanes."));
     new FXMenuSeparator(myEditMenu);
     GUIDesigns::buildFXMenuCommandShortcut(myEditMenu,
+                                           TL("Set Breakpoint"), "B", TL("Sets a breakpoint at the current simulation step"),
+                                           GUIIconSubSys::getIcon(GUIIcon::APP_BREAKPOINTS), this, MID_HOTKEY_B_BREAKPOINT);
+    GUIDesigns::buildFXMenuCommandShortcut(myEditMenu,
+                                           TL("Set Breakpoint with offset"), "Alt+B", TL("Sets a breakpoint at the current simulation step + offset configured in application settings"),
+                                           GUIIconSubSys::getIcon(GUIIcon::APP_BREAKPOINTS), this, MID_HOTKEY_ALT_B_BREAKPOINT_EARLY);
+    GUIDesigns::buildFXMenuCommandShortcut(myEditMenu,
                                            TL("Edit Breakpoints"), "Ctrl+B", TL("Opens a dialog for editing breakpoints."),
                                            GUIIconSubSys::getIcon(GUIIcon::APP_BREAKPOINTS), this, MID_HOTKEY_CTRL_B_EDITBREAKPOINT_OPENDATAELEMENTS);
     GUIDesigns::buildFXMenuCommandShortcut(myEditMenu,
@@ -510,8 +520,8 @@ GUIApplicationWindow::fillMenuBar() {
     myLoadDemandInNetedit = GUIDesigns::buildFXMenuCheckbox(myEditMenu, TL("Load demand in netedit"), TL("Load demand in netedit."), this, MID_TOOLBAREDIT_LOADDEMAND);
     myLoadDemandInNetedit->setCheck(FALSE);
     myOpenInNetedit = GUIDesigns::buildFXMenuCommandShortcut(myEditMenu,
-                                                             TL("Open in netedit"), "Ctrl+T", TL("Opens current simulation in NETEDIT."),
-                                                             GUIIconSubSys::getIcon(GUIIcon::NETEDIT_MINI), this, MID_HOTKEY_CTRL_T_OPENNETEDIT_OPENSUMO);
+                      TL("Open in netedit"), "Ctrl+T", TL("Opens current simulation in NETEDIT."),
+                      GUIIconSubSys::getIcon(GUIIcon::NETEDIT_MINI), this, MID_HOTKEY_CTRL_T_OPENNETEDIT_OPENSUMO);
     // build settings menu
     mySettingsMenu = new FXMenuPane(this);
     GUIDesigns::buildFXMenuTitle(myMenuBar, TL("&Settings"), nullptr, mySettingsMenu);
@@ -1392,6 +1402,22 @@ GUIApplicationWindow::onCmdDemandScale(FXObject*, FXSelector, void*) {
 long
 GUIApplicationWindow::onCmdClearMsgWindow(FXObject*, FXSelector, void*) {
     myMessageWindow->clear();
+    return 1;
+}
+
+
+long
+GUIApplicationWindow::onCmdBreakpoint(FXObject*, FXSelector, void*) {
+    // see updateTimeLCD for the DELTA_T
+    addBreakpoint(SIMSTEP - DELTA_T);
+    return 1;
+}
+
+
+long
+GUIApplicationWindow::onCmdBreakpointEarly(FXObject*, FXSelector, void*) {
+    // see updateTimeLCD for the DELTA_T
+    addBreakpoint(SIMSTEP - DELTA_T + GUIMessageWindow::getBreakPointOffset());
     return 1;
 }
 
@@ -2394,6 +2420,18 @@ GUIApplicationWindow::setBreakpoints(const std::vector<SUMOTime>& breakpoints) {
         myRunThread->getBreakpoints().assign(breakpoints.begin(), breakpoints.end());
         myRunThread->getBreakpointLock().unlock();
         updateChildren(MID_TIMELINK_BREAKPOINT);
+    }
+}
+
+
+void
+GUIApplicationWindow::addBreakpoint(SUMOTime time) {
+    std::vector<SUMOTime> breakpoints = retrieveBreakpoints();
+    if (std::find(breakpoints.begin(), breakpoints.end(), time) == breakpoints.end()) {
+        breakpoints.push_back(time);
+        std::sort(breakpoints.begin(), breakpoints.end());
+        setBreakpoints(breakpoints);
+        setStatusBarText(TLF("Set breakpoint at %", time2string(time)));
     }
 }
 

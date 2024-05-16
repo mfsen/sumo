@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2006-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2006-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -95,7 +95,7 @@ MFXTextFieldSearch::onPaint(FXObject*, FXSelector, void* ptr) {
         dc.fillRectangle(xx - 2, height - border - padbottom - 1, 5, 1);
     }
     // draw icon
-    dc.drawIcon(icon, 3, border + padtop + (height - padbottom - padtop - (border<<1) - ICON_SIZE) / 2);
+    dc.drawIcon(icon, 3, border + padtop + (height - padbottom - padtop - (border << 1) - ICON_SIZE) / 2);
     return 1;
 }
 

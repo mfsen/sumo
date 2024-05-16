@@ -21,7 +21,7 @@ title: Tutorials
 The SUMO User Conference is an anual event organized by the German Aerospace Center (DLR) in Berlin. Since 2015, each conference begins with a SUMO tutorial session. Below you can find the tutorial material (slide deck and input files). Since 2019, the tutorials have also been recorded on video.
 
 ## Files
-* [SUMO 2015](https://sumo.dlr.de/daily/sumo2015_tutorial.zip): network editing with xml patch, persons, 
+* [SUMO 2015](https://sumo.dlr.de/daily/sumo2015_tutorial.zip): network editing with xml patch, persons,
 * [SUMO 2016](https://sumo.dlr.de/daily/sumo2016_tutorial.zip): network editing, meso, containers, [New Features 2016 (Slides)](https://sumo.dlr.de/daily/SUMO2016_new_features.pdf)
 * [SUMO 2017](https://sumo.dlr.de/daily/sumo2017_tutorial.zip): network editing, randomTrips, calibrators (xml only), public transport (obsolete)
 * [SUMO 2018](https://sumo.dlr.de/daily/sumo2018_tutorial.zip): fixing intermodal junctions, calibrators in netedit, junction model parameters, editing shapes
@@ -30,6 +30,7 @@ The SUMO User Conference is an anual event organized by the German Aerospace Cen
 * [SUMO 2021](https://sumo.dlr.de/daily/sumo2021_tutorial.zip): traffic light layout, indirect left turn, TAZ, OD-traffic, GTFS
 * [SUMO 2022](https://sumo.dlr.de/daily/sumo2022_tutorial.zip): network editing, flows, opposite driving, pedestrian crossings, parking search
 * [SUMO 2023](https://sumo.dlr.de/daily/sumo2023_tutorial.zip): graphical diff, personFlow, plotting tools, analyzing repeated runs
+* [SUMO 2024](https://sumo.dlr.de/daily/sumo2024_tutorial.zip): Debugging simulation warnings, pedestrian models, flying taxis
 
 ## Videos
 
@@ -66,7 +67,7 @@ These tutorials use the [Python-TraCI Library](../TraCI/Interfacing_TraCI_from_P
 # Other
 
 ## Curso de Simulação em Mobilidade
-[Udemy tutorial](https://www.udemy.com/ferramenta-de-microssimulacao-de-trafego-sumo/learn/v4/overview) in Portuguese courtesy of Ednardo Ferreira.
+[Udemy tutorial](https://www.udemy.com/course/ferramenta-de-microssimulacao-de-trafego-sumo/) in Portuguese courtesy of Ednardo Ferreira.
 
 ## ITSC 2015
 
@@ -88,7 +89,7 @@ These tutorials use the [Python-TraCI Library](../TraCI/Interfacing_TraCI_from_P
 
 # Further Sources for Examples
 ## Using Examples from the Test Suite
-SUMO comes with a large set of tests, just browse them at [{{SUMO}}/tests](https://github.com/eclipse/sumo/blob/main/tests). They are set up to be running by using a testing environment, but it is also possible to extract them and execute using [sumo](../sumo.md) and/or the other tools of the package. In order to do so you can either [download the complete sumo package](../Downloads.md#all-inclusive-tarball) or use the [online test extraction](https://sumo.dlr.de/extractTest.php). In the online tool you enter the path to the test you like (e.g. [{{SUMO}}/tests/sumo/extended/rerouter/use_routing_device](https://github.com/eclipse/sumo/blob/main/tests/sumo/extended/rerouter/use_routing_device) into the form and get a zip containing all the files.
+SUMO comes with a large set of tests, just browse them at [{{SUMO}}/tests](https://github.com/eclipse-sumo/sumo/blob/main/tests). They are set up to be running by using a testing environment, but it is also possible to extract them and execute using [sumo](../sumo.md) and/or the other tools of the package. In order to do so you can either [download the complete sumo package](../Downloads.md#all-inclusive-tarball) or use the [online test extraction](https://sumo.dlr.de/extractTest.php). In the online tool you enter the path to the test you like (e.g. [{{SUMO}}/tests/sumo/extended/rerouter/use_routing_device](https://github.com/eclipse-sumo/sumo/blob/main/tests/sumo/extended/rerouter/use_routing_device) into the form and get a zip containing all the files.
 
 If you have downloaded and unzipped the all inclusive package, you do not need the online form. Just go into the folder and execute the "extractTest.py" script. For example, you may get the same example of using rerouters as following:
 

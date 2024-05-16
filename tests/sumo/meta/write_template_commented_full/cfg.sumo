@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2023-09-01 11:05:24 by Eclipse SUMO sumo Version v1_17_0+2470-b55cba8942c
+<!-- generated on 2024-05-08 19:06:19 by Eclipse SUMO sumo Version v1_20_0+0051-b8e19735240
 -->
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
@@ -303,6 +303,12 @@
         <!-- Write internal state values with the given precision (default 2) -->
         <save-state.precision value="2" type="INT"/>
 
+        <!-- The filename to output the JuPedSim network as WKT -->
+        <pedestrian.jupedsim.wkt value="" type="FILE"/>
+
+        <!-- Whether to output JuPedSim network as WKT using geo-coordinates (lon/lat) -->
+        <pedestrian.jupedsim.wkt.geo value="false" type="BOOL"/>
+
     </output>
 
     <time>
@@ -522,11 +528,32 @@
         <!-- The update interval of the JuPedSim simulation (in seconds) -->
         <pedestrian.jupedsim.step-length value="0.01" type="TIME"/>
 
-        <!-- The distance to the destination point considered as arrival (in meters) -->
+        <!-- The distance to accept the JuPedSim arrival point (in meters) -->
         <pedestrian.jupedsim.exit-tolerance value="1" type="FLOAT"/>
+
+        <!-- The submodel to use in JuPedSim (currently only &apos;CollisionFreeSpeed&apos;) -->
+        <pedestrian.jupedsim.model value="CollisionFreeSpeed" type="STR"/>
+
+        <!-- The neighbor repulsion strength of the JuPedSim model -->
+        <pedestrian.jupedsim.strength-neighbor-repulsion value="8" type="FLOAT"/>
+
+        <!-- The neighbor repulsion range of the JuPedSim model (in meters) -->
+        <pedestrian.jupedsim.range-neighbor-repulsion value="0.1" type="FLOAT"/>
+
+        <!-- The geometry repulsion strength of the JuPedSim model -->
+        <pedestrian.jupedsim.strength-geometry-repulsion value="5" type="FLOAT"/>
+
+        <!-- The geometry repulsion range of the JuPedSim model (in meters) -->
+        <pedestrian.jupedsim.range-geometry-repulsion value="0.02" type="FLOAT"/>
 
         <!-- Tolerance to apply when matching pedestrian and vehicle positions on boarding at individual stops -->
         <ride.stop-tolerance value="10" type="FLOAT"/>
+
+        <!-- Maximum distance when mapping input coordinates (fromXY etc.) to the road network -->
+        <mapmatch.distance value="100" type="FLOAT"/>
+
+        <!-- Match positions to junctions instead of edges -->
+        <mapmatch.junctions value="false" type="BOOL"/>
 
         <!-- Use FLOAT as a factor on walking speed against vehicle traffic direction -->
         <persontrip.walk-opposite-factor value="1" type="FLOAT"/>
@@ -608,6 +635,9 @@
 
         <!-- Use zones (districts) as routing start- and endpoints -->
         <device.rerouting.with-taz value="false" synonymes="device.routing.with-taz with-taz" type="BOOL"/>
+
+        <!-- Set routing flags (8 ignores temporary blockages) -->
+        <device.rerouting.mode value="0" type="STR"/>
 
         <!-- Use weight files given with option --weight-files for initializing edge weights -->
         <device.rerouting.init-with-loaded-weights value="false" type="BOOL"/>
@@ -792,11 +822,14 @@
         <!-- Time to wait for a rescue vehicle on the road side when the battery is empty -->
         <device.stationfinder.rescueTime value="1800" type="TIME"/>
 
-        <!-- Additional battery buffer for unexpected traffic situation when estimating the battery need -->
+        <!-- How to deal with a vehicle which has to stop due to low battery: [none, remove, tow] -->
+        <device.stationfinder.rescueAction value="remove" type="STR"/>
+
+        <!-- Scale battery need with this factor to account for unexpected traffic situations -->
         <device.stationfinder.reserveFactor value="1.1" type="FLOAT"/>
 
         <!-- Battery percentage to go into rescue mode -->
-        <device.stationfinder.emptyThreshold value="5" type="FLOAT"/>
+        <device.stationfinder.emptyThreshold value="0.05" type="FLOAT"/>
 
         <!-- Search radius in travel time seconds -->
         <device.stationfinder.radius value="180" type="TIME"/>
@@ -805,13 +838,19 @@
         <device.stationfinder.repeat value="60" type="TIME"/>
 
         <!-- The maximum charging speed of the vehicle battery -->
-        <device.stationfinder.maxChargePower value="1000" type="FLOAT"/>
+        <device.stationfinder.maxChargePower value="100000" type="FLOAT"/>
 
         <!-- Type of energy transfer -->
         <device.stationfinder.chargeType value="charging" type="STR"/>
 
         <!-- After this waiting time vehicle searches for a new station when the initial one is blocked -->
         <device.stationfinder.waitForCharge value="600" type="TIME"/>
+
+        <!-- Target state of charge after which the vehicle stops charging -->
+        <device.stationfinder.saturatedChargeLevel value="0.8" type="FLOAT"/>
+
+        <!-- State of charge the vehicle begins searching for charging stations -->
+        <device.stationfinder.needToChargeLevel value="0.4" type="FLOAT"/>
 
         <!-- The probability for a vehicle to have a &apos;battery&apos; device -->
         <device.battery.probability value="-1" type="FLOAT"/>
@@ -1011,6 +1050,9 @@
         <!-- Set the distance at which other drivers react to the blue light and siren sound -->
         <device.bluelight.reactiondist value="25" type="FLOAT"/>
 
+        <!-- Reduce the minGap for reacting vehicles by the given factor -->
+        <device.bluelight.mingapfactor value="1" type="FLOAT"/>
+
     </bluelight_device>
 
     <fcd_device>
@@ -1151,6 +1193,21 @@
 
     </friction_device>
 
+    <fcd_replay_device>
+        <!-- The probability for a vehicle to have a &apos;fcd-replay&apos; device -->
+        <device.fcd-replay.probability value="-1" type="FLOAT"/>
+
+        <!-- Assign a &apos;fcd-replay&apos; device to named vehicles -->
+        <device.fcd-replay.explicit value="" synonymes="device.fcd-replay.knownveh" type="STR[]"/>
+
+        <!-- The &apos;fcd-replay&apos; devices are set deterministic using a fraction of 1000 -->
+        <device.fcd-replay.deterministic value="false" type="BOOL"/>
+
+        <!-- FCD file to read -->
+        <device.fcd-replay.file value="" type="FILE"/>
+
+    </fcd_replay_device>
+
     <traci_server>
         <!-- Enables TraCI Server if set -->
         <remote-port value="0" type="INT"/>
@@ -1271,9 +1328,6 @@
 
         <!-- The aggregation period for value tracker windows -->
         <tracker-interval value="1" type="TIME"/>
-
-        <!-- Start with an OpenSceneGraph view instead of the regular 2D view -->
-        <osg-view value="false" type="BOOL"/>
 
         <!-- Enable overlay for screen recognition -->
         <gui-testing value="false" type="BOOL"/>

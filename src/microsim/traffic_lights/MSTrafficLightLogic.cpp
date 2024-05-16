@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -97,6 +97,7 @@ MSTrafficLightLogic::SwitchCommand::deschedule(MSTrafficLightLogic* tlLogic) {
         myAssumedNextSwitch = -1;
     }
 }
+
 
 SUMOTime
 MSTrafficLightLogic::SwitchCommand::shiftTime(SUMOTime currentTime, SUMOTime execTime, SUMOTime newTime) {
@@ -200,9 +201,7 @@ MSTrafficLightLogic::init(NLDetectorBuilder&) {
         }
         for (int j = 0; j < (int)foundGreen.size(); ++j) {
             if (!foundGreen[j]) {
-                if (getLogicType() != TrafficLightType::NEMA) {
-                    WRITE_WARNINGF(TL("Missing green phase in tlLogic '%', program '%' for tl-index %."), getID(), getProgramID(), j);
-                }
+                WRITE_WARNINGF(TL("Missing green phase in tlLogic '%', program '%' for tl-index %."), getID(), getProgramID(), j);
                 break;
             }
         }
@@ -266,9 +265,9 @@ MSTrafficLightLogic::init(NLDetectorBuilder&) {
                                         if (minor.find(p->getState()[tlu]) != std::string::npos
                                                 && minor.find(p->getState()[tlv]) != std::string::npos) {
                                             WRITE_WARNING(TLF("Program '%' at tlLogic '%' is incompatible with logic at junction '%' (mutual conflict between link indices %,% tl indices %,% phase %).\n"
-                                                            "  To avoid deadlock/collisions, either: rebuild the signal plan with a newer version of netconvert/netedit\n"
-                                                            "  or rebuild the network with option '--tls.ignore-internal-junction-jam' or include the program when building.",
-                                                         getProgramID(), getID(), junction->getID(), u, v, tlu, tlv, phaseIndex));
+                                                              "  To avoid deadlock/collisions, either: rebuild the signal plan with a newer version of netconvert/netedit\n"
+                                                              "  or rebuild the network with option '--tls.ignore-internal-junction-jam' or include the program when building.",
+                                                              getProgramID(), getID(), junction->getID(), u, v, tlu, tlv, phaseIndex));
                                             // only one warning per program
                                             foundProblem = true;
                                             break;

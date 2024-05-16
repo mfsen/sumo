@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -47,7 +47,7 @@ public:
                       const std::string& colName = "", const bool isFixed = false, double baseValue = 0,
                       RGBColor bgColor = RGBColor::WHITE,
                       GUIIcon icon = GUIIcon::EMPTY) :
-        myName(name), 
+        myName(name),
         myTranslatedName(translatedName),
         myIsInterpolated(!isFixed),
         myIsFixed(isFixed),
@@ -58,10 +58,10 @@ public:
     }
 
     GUIPropertyScheme(const std::string& name, const T& baseColor,
-        const std::string& colName = "", const bool isFixed = false, double baseValue = 0,
-        RGBColor bgColor = RGBColor::WHITE,
-        GUIIcon icon = GUIIcon::EMPTY) :
-        myName(name), 
+                      const std::string& colName = "", const bool isFixed = false, double baseValue = 0,
+                      RGBColor bgColor = RGBColor::WHITE,
+                      GUIIcon icon = GUIIcon::EMPTY) :
+        myName(name),
         myTranslatedName(name),
         myIsInterpolated(!isFixed),
         myIsFixed(isFixed),

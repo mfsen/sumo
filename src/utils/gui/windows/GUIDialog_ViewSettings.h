@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -217,6 +217,11 @@ public:
      */
     void setCurrentScheme(const std::string&);
 
+    void hide() {
+        saveWindowPos();
+        FXTopWindow::hide();
+    }
+
 protected:
     /// @brief The parent view (which settings are changed)
     GUISUMOAbstractView* myParent = nullptr;
@@ -294,8 +299,8 @@ protected:
     FXCheckButton* myLaneColorRainbowCheck2 = nullptr;
     FXRealSpinner* myLaneColorRainbowThreshold2 = nullptr;
     FXButton* myJunctionColorRainbow = nullptr;
-    MFXComboBoxIcon* myParamKey = nullptr;
-    MFXComboBoxIcon* myScalingParamKey = nullptr;
+    FXComboBox* myParamKey = nullptr;
+    FXComboBox* myScalingParamKey = nullptr;
     MFXComboBoxIcon* myMeanDataID = nullptr;
 
     /// @brief ... lane scaler
@@ -317,6 +322,7 @@ protected:
     FXCheckButton* myShowLaneDirection = nullptr;
     FXCheckButton* myShowSublanes = nullptr;
     FXCheckButton* mySpreadSuperposed = nullptr;
+    FXCheckButton* myDisableHideByZoom = nullptr;
     FXRealSpinner* myLaneWidthUpscaleDialer = nullptr;
     FXRealSpinner* myLaneMinWidthDialer = nullptr;
 
@@ -346,9 +352,9 @@ protected:
     FXCheckButton* myShowParkingInfo = nullptr;
     /*FXCheckButton* myShowLaneChangePreference = nullptr;*/
 
-    MFXComboBoxIcon* myVehicleParamKey = nullptr;
-    MFXComboBoxIcon* myVehicleScalingParamKey = nullptr;
-    MFXComboBoxIcon* myVehicleTextParamKey = nullptr;
+    FXComboBox* myVehicleParamKey = nullptr;
+    FXComboBox* myVehicleScalingParamKey = nullptr;
+    FXComboBox* myVehicleTextParamKey = nullptr;
 
     /// @brief Persons
     MFXComboBoxIcon* myPersonColorMode, *myPersonShapeDetail = nullptr;
@@ -357,6 +363,8 @@ protected:
     std::vector<FXRealSpinner*> myPersonThresholds;
     std::vector<FXButton*> myPersonButtons;
     FXCheckButton* myPersonColorInterpolation = nullptr;
+    FXCheckButton* myShowPedestrianNetwork = nullptr;
+    FXColorWell* myPedestrianNetworkColor = nullptr;
 
     /// @brief Containers
     MFXComboBoxIcon* myContainerColorMode, *myContainerShapeDetail = nullptr;
@@ -382,7 +390,7 @@ protected:
     std::vector<FXRealSpinner*> myPOIThresholds;
     std::vector<FXButton*> myPOIButtons;
     FXCheckButton* myPOIColorInterpolation = nullptr;
-    MFXComboBoxIcon* myPOITextParamKey = nullptr;
+    FXComboBox* myPOITextParamKey = nullptr;
     FXSpinner* myPoiDetail = nullptr;
 
     /// @brief Polygons
@@ -400,7 +408,7 @@ protected:
     std::vector<FXRealSpinner*> myDataThresholds;
     std::vector<FXButton*> myDataButtons;
     FXCheckButton* myDataColorInterpolation = nullptr;
-    MFXComboBoxIcon* myDataParamKey = nullptr;
+    FXComboBox* myDataParamKey = nullptr;
     FXRealSpinner* myEdgeRelationUpscaleDialer = nullptr;
     FXRealSpinner* myTazRelationUpscaleDialer = nullptr;
     FXButton* myDataColorRainbow = nullptr;
@@ -429,10 +437,10 @@ protected:
     FXCheckButton* myDither = nullptr;
     FXCheckButton* myFPS = nullptr;
     FXCheckButton* myDrawBoundaries = nullptr;
-    FXCheckButton* myForceDrawForPositionSelection = nullptr;
     FXCheckButton* myForceDrawForRectangleSelection = nullptr;
     FXCheckButton* myDisableDottedContours = nullptr;
     FXButton* myRecalculateBoundaries = nullptr;
+    FXRealSpinner* myComboRows = nullptr;
 
     /// @brief name panels
     NamePanel* myEdgeNamePanel = nullptr;

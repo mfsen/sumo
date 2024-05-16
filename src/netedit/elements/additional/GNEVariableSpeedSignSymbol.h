@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -36,6 +36,9 @@ class GNEBusStop;
 class GNEVariableSpeedSignSymbol : public GNEAdditional {
 
 public:
+    /// @brief default Constructor
+    GNEVariableSpeedSignSymbol(GNENet* net);
+
     /**@brief Constructor
      * @param[in] id The storage of gl-ids to get the one for this lane representation from
      * @param[in] VSSParent VariableSpeedSign of this Variable Speed Sign Symbol belongs
@@ -67,6 +70,14 @@ public:
 
     /// @brief fix additional problem (must be reimplemented in all detector children)
     void fixAdditionalProblem();
+
+    /// @}
+
+    /// @name Function related with contour drawing
+    /// @{
+
+    /// @brief check if draw move contour (red)
+    bool checkDrawMoveContour() const;
 
     /// @}
 
@@ -143,6 +154,10 @@ public:
     /// @}
 
 private:
+    /// @brief draw VSS symbol
+    void drawVSSSymbol(const GUIVisualizationSettings& s, const GUIVisualizationSettings::Detail d,
+                       const double exaggeration) const;
+
     /// @brief set attribute after validation
     void setAttribute(SumoXMLAttr key, const std::string& value);
 

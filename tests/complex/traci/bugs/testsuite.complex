@@ -127,6 +127,9 @@ ticket10212b
 # bestlanes must be updated after changing vClass
 ticket11117
 
+# no sim loaded
+ticket11215
+
 # moveXY after aborting stop with setStop
 ticket11870
 
@@ -142,3 +145,6 @@ ticket13053
 
 # missing vehicle type in save state
 ticket13384
+
+# follower overtakes leader slowing down to a non-official stop (v=0)
+ticket13710

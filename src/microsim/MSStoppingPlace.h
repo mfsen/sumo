@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2005-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2005-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -63,6 +63,7 @@ public:
         const double startPos;
         const double endPos;
         const double length;
+        const bool useDoors;
     };
 
     /** @brief Constructor
@@ -198,7 +199,7 @@ public:
     void removeTransportable(const MSTransportable* p);
 
     /// @brief adds an access point to this stop
-    virtual bool addAccess(MSLane* const lane, const double startPos, const double endPos, double length);
+    virtual bool addAccess(MSLane* const lane, const double startPos, const double endPos, double length, const bool doors);
 
     /// @brief lanes and positions connected to this stop
     const std::vector<Access>& getAllAccessPos() const {
@@ -208,8 +209,8 @@ public:
     /// @brief the position on the given edge which is connected to this stop, -1 on failure
     double getAccessPos(const MSEdge* edge, SumoRNG* rng = nullptr) const;
 
-    /// @brief the distance from the access on the given edge to the stop, -1 on failure
-    double getAccessDistance(const MSEdge* edge) const;
+    /// @brief the access on the given edge to the stop, nullptr if there is none
+    const Access* getAccess(const MSEdge* edge) const;
 
     const std::string& getMyName() const;
 

@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -115,8 +115,8 @@ GUIDesigns::buildFXMenuCommandRecentFile(FXComposite* p, const std::string& text
 
 
 FXLabel*
-GUIDesigns::buildFXLabel(FXComposite* p, const std::string& text, const std::string& tip, const std::string& help, FXIcon* ic, 
-                         FXuint opts, FXint x, FXint y, FXint w , FXint h, FXint pl, FXint pr, FXint pt, FXint pb) {
+GUIDesigns::buildFXLabel(FXComposite* p, const std::string& text, const std::string& tip, const std::string& help, FXIcon* ic,
+                         FXuint opts, FXint x, FXint y, FXint w, FXint h, FXint pl, FXint pr, FXint pt, FXint pb) {
     FXLabel* label = new FXLabel(p, text.c_str(), ic, opts, x, y, w, h, pl, pr, pt, pb);
     label->setTipText(tip.c_str());
     label->setHelpText(help.c_str());
@@ -136,7 +136,7 @@ GUIDesigns::buildFXButton(FXComposite* p, const std::string& text, const std::st
 
 FXRadioButton*
 GUIDesigns::buildFXRadioButton(FXComposite* p, const std::string& text, const std::string& tip, const std::string& help, FXObject* tgt,
-                               FXSelector sel, FXuint opts, FXint x, FXint y, FXint w, FXint h, FXint pl,FXint pr,FXint pt,FXint pb) {
+                               FXSelector sel, FXuint opts, FXint x, FXint y, FXint w, FXint h, FXint pl, FXint pr, FXint pt, FXint pb) {
     FXRadioButton* radioButton = new FXRadioButton(p, text.c_str(), tgt, sel, opts, x, y, w, h, pl, pr, pt, pb);
     radioButton->setTipText(tip.c_str());
     radioButton->setHelpText(help.c_str());

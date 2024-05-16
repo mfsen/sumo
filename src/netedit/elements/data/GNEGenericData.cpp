@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -67,6 +67,12 @@ GNEGenericData::getGUIGlObject() {
 }
 
 
+const GUIGlObject*
+GNEGenericData::getGUIGlObject() const {
+    return this;
+}
+
+
 GNEDataInterval*
 GNEGenericData::getDataIntervalParent() const {
     return myDataIntervalParent;
@@ -95,6 +101,62 @@ GNEGenericData::drawAttribute(const PositionVector& shape) const {
             }
         }
     }
+}
+
+
+bool
+GNEGenericData::checkDrawFromContour() const {
+    return false;
+}
+
+
+bool
+GNEGenericData::checkDrawToContour() const {
+    return false;
+}
+
+
+bool
+GNEGenericData::checkDrawRelatedContour() const {
+    return false;
+}
+
+
+bool
+GNEGenericData::checkDrawOverContour() const {
+    return false;
+}
+
+
+bool
+GNEGenericData::checkDrawDeleteContour() const {
+    // get edit modes
+    const auto& editModes = myNet->getViewNet()->getEditModes();
+    // check if we're in delete mode
+    if (editModes.isCurrentSupermodeData() && (editModes.dataEditMode == DataEditMode::DATA_DELETE)) {
+        return myNet->getViewNet()->checkOverLockedElement(this, mySelected);
+    } else {
+        return false;
+    }
+}
+
+
+bool
+GNEGenericData::checkDrawSelectContour() const {
+    // get edit modes
+    const auto& editModes = myNet->getViewNet()->getEditModes();
+    // check if we're in select mode
+    if (editModes.isCurrentSupermodeData() && (editModes.dataEditMode == DataEditMode::DATA_SELECT)) {
+        return myNet->getViewNet()->checkOverLockedElement(this, mySelected);
+    } else {
+        return false;
+    }
+}
+
+
+bool
+GNEGenericData::checkDrawMoveContour() const {
+    return false;
 }
 
 
@@ -188,30 +250,6 @@ GNEGenericData::updateGLObject() {
 bool
 GNEGenericData::isPathElementSelected() const {
     return mySelected;
-}
-
-
-double
-GNEGenericData::getPathElementDepartValue() const {
-    return 0;
-}
-
-
-Position
-GNEGenericData::getPathElementDepartPos() const {
-    return Position();
-}
-
-
-double
-GNEGenericData::getPathElementArrivalValue() const {
-    return 0;
-}
-
-
-Position
-GNEGenericData::getPathElementArrivalPos() const {
-    return Position();
 }
 
 

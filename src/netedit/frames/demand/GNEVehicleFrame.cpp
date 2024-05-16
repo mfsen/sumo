@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -128,7 +128,7 @@ GNEVehicleFrame::GNEVehicleFrame(GNEViewParent* viewParent, GNEViewNet* viewNet)
     myVehicleTagSelector = new GNETagSelector(this, GNETagProperties::TagType::VEHICLE, SUMO_TAG_TRIP);
 
     // Create vehicle type selector and set DEFAULT_VTYPE_ID as default element
-    myTypeSelector = new DemandElementSelector(this, SUMO_TAG_VTYPE, viewNet->getNet()->getAttributeCarriers()->retrieveDemandElement(SUMO_TAG_VTYPE, DEFAULT_VTYPE_ID));
+    myTypeSelector = new GNEDemandElementSelector(this, SUMO_TAG_VTYPE, GNETagProperties::TagType::VEHICLE);
 
     // Create vehicle parameters
     myVehicleAttributes = new GNEAttributesCreator(this);
@@ -162,11 +162,11 @@ void
 GNEVehicleFrame::hide() {
     // reset edge candidates
     for (const auto& edge : myViewNet->getNet()->getAttributeCarriers()->getEdges()) {
-        edge.second->resetCandidateFlags();
+        edge.second.second->resetCandidateFlags();
     }
     // reset junctioncandidates
     for (const auto& junction : myViewNet->getNet()->getAttributeCarriers()->getJunctions()) {
-        junction.second->resetCandidateFlags();
+        junction.second.second->resetCandidateFlags();
     }
     // hide frame
     GNEFrame::hide();
@@ -174,7 +174,7 @@ GNEVehicleFrame::hide() {
 
 
 bool
-GNEVehicleFrame::addVehicle(const GNEViewNetHelper::ObjectsUnderCursor& objectsUnderCursor, const GNEViewNetHelper::MouseButtonKeyPressed& mouseButtonKeyPressed) {
+GNEVehicleFrame::addVehicle(const GNEViewNetHelper::ViewObjectsSelector& viewObjects, const GNEViewNetHelper::MouseButtonKeyPressed& mouseButtonKeyPressed) {
     // check template AC
     if (myVehicleTagSelector->getCurrentTemplateAC() == nullptr) {
         return false;
@@ -210,17 +210,17 @@ GNEVehicleFrame::addVehicle(const GNEViewNetHelper::ObjectsUnderCursor& objectsU
     // add VType
     myVehicleBaseObject->addStringAttribute(SUMO_ATTR_TYPE, myTypeSelector->getCurrentDemandElement()->getID());
     // set route or edges depending of vehicle type
-    if (myVehicleTagSelector->getCurrentTemplateAC()->getTagProperty().overRoute()) {
-        return buildVehicleOverRoute(vehicleTag, objectsUnderCursor.getDemandElementFront());
-    } else if (addEdge && objectsUnderCursor.getEdgeFront()) {
+    if (myVehicleTagSelector->getCurrentTemplateAC()->getTagProperty().vehicleRoute()) {
+        return buildVehicleOverRoute(vehicleTag, viewObjects.getDemandElementFront());
+    } else if (addEdge && viewObjects.getEdgeFront()) {
         // add clicked edge in GNEPathCreator
-        return myPathCreator->addEdge(objectsUnderCursor.getEdgeFront(), mouseButtonKeyPressed.shiftKeyPressed(), mouseButtonKeyPressed.controlKeyPressed());
-    } else if (addJunction && objectsUnderCursor.getJunctionFront()) {
+        return myPathCreator->addEdge(viewObjects.getEdgeFront(), mouseButtonKeyPressed.shiftKeyPressed(), mouseButtonKeyPressed.controlKeyPressed());
+    } else if (addJunction && viewObjects.getJunctionFront()) {
         // add clicked junction in GNEPathCreator
-        return myPathCreator->addJunction(objectsUnderCursor.getJunctionFront());
-    } else if (addTAZ && objectsUnderCursor.getTAZFront()) {
+        return myPathCreator->addJunction(viewObjects.getJunctionFront());
+    } else if (addTAZ && viewObjects.getTAZFront()) {
         // add clicked TAZ in GNEPathCreator
-        return myPathCreator->addTAZ(objectsUnderCursor.getTAZFront());
+        return myPathCreator->addTAZ(viewObjects.getTAZFront());
     } else {
         return false;
     }
@@ -233,7 +233,7 @@ GNEVehicleFrame::getVehicleTagSelector() const {
 }
 
 
-DemandElementSelector*
+GNEDemandElementSelector*
 GNEVehicleFrame::getTypeSelector() const {
     return myTypeSelector;
 }
@@ -260,9 +260,9 @@ GNEVehicleFrame::tagSelected() {
         // show vehicle type selector modul
         myTypeSelector->showDemandElementSelector();
         // show path creator modul
-        myPathCreator->showPathCreatorModule(myVehicleTagSelector->getCurrentTemplateAC()->getTagProperty().getTag(), false, false);
+        myPathCreator->showPathCreatorModule(myVehicleTagSelector->getCurrentTemplateAC()->getTagProperty(), false);
         // check if show path legend
-        if (myVehicleTagSelector->getCurrentTemplateAC()->getTagProperty().overEmbeddedRoute()) {
+        if (myVehicleTagSelector->getCurrentTemplateAC()->getTagProperty().vehicleRouteEmbedded()) {
             myPathLegend->hidePathLegendModule();
         } else {
             myPathLegend->showPathLegendModule();
@@ -289,15 +289,9 @@ GNEVehicleFrame::demandElementSelected() {
         // set current VTypeClass in pathCreator
         myPathCreator->setVClass(myTypeSelector->getCurrentDemandElement()->getVClass());
         // show path creator module
-        myPathCreator->showPathCreatorModule(myVehicleTagSelector->getCurrentTemplateAC()->getTagProperty().getTag(), false, false);
+        myPathCreator->showPathCreatorModule(myVehicleTagSelector->getCurrentTemplateAC()->getTagProperty(), false);
         // show help creation
         myHelpCreation->showHelpCreation();
-        // show warning if we have selected a vType oriented to pedestrians or containers
-        if (myTypeSelector->getCurrentDemandElement()->getVClass() == SVC_PEDESTRIAN) {
-            WRITE_WARNING(TL("VType with vClass == 'pedestrian' is oriented to pedestrians"));
-        } else if (myTypeSelector->getCurrentDemandElement()->getVClass() == SVC_IGNORING) {
-            WRITE_WARNING(TL("VType with vClass == 'ignoring' is oriented to containers"));
-        }
     } else {
         // hide all moduls if selected item isn't valid
         myVehicleAttributes->hideAttributesCreatorModule();

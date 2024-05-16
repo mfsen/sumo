@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -206,7 +206,7 @@ GNEMoveFrame::ShiftEdgeSelectedGeometry::ShiftEdgeSelectedGeometry(GNEMoveFrame*
     myShiftValueTextField->setText("0");
     // create apply button
     myApplyZValue = GUIDesigns::buildFXButton(getCollapsableFrame(), TL("Apply shift value"), "", TL("Shift edge geometry orthogonally to driving direction for all selected edges"),
-                                 GUIIconSubSys::getIcon(GUIIcon::MODEMOVE), this, MID_GNE_APPLY, GUIDesignButton);
+                    GUIIconSubSys::getIcon(GUIIcon::MODEMOVE), this, MID_GNE_APPLY, GUIDesignButton);
 }
 
 
@@ -286,12 +286,12 @@ GNEMoveFrame::ChangeZInSelection::ChangeZInSelection(GNEMoveFrame* moveFramePare
     myZValueTextField->setText("0");
     // Create all options buttons
     myAbsoluteValue = GUIDesigns::buildFXRadioButton(getCollapsableFrame(), TL("Absolute value"), "", TL("Set Z value as absolute"),
-                                        this, MID_CHOOSEN_OPERATION, GUIDesignRadioButton);
+                      this, MID_CHOOSEN_OPERATION, GUIDesignRadioButton);
     myRelativeValue = GUIDesigns::buildFXRadioButton(getCollapsableFrame(), TL("Relative value"), "", TL("Set Z value as relative"),
-                                        this, MID_CHOOSEN_OPERATION, GUIDesignRadioButton);
+                      this, MID_CHOOSEN_OPERATION, GUIDesignRadioButton);
     // create apply button
     myApplyButton = GUIDesigns::buildFXButton(getCollapsableFrame(), TL("Apply Z value"), "", TL("Apply Z value to all selected junctions"),
-                                 GUIIconSubSys::getIcon(GUIIcon::ACCEPT), this, MID_GNE_APPLY, GUIDesignButton);
+                    GUIIconSubSys::getIcon(GUIIcon::ACCEPT), this, MID_GNE_APPLY, GUIDesignButton);
     // set absolute value as default
     myAbsoluteValue->setCheck(true);
     // set info label
@@ -558,8 +558,8 @@ GNEMoveFrame::ShiftShapeGeometry::ShiftShapeGeometry(GNEMoveFrame* moveFramePare
     myShiftValueYTextField->setText("0");
     // create apply button
     GUIDesigns::buildFXButton(this,
-                 TL("Shift shape geometry"), "", TL("Shift shape geometry orthogonally to driving direction for all selected shapes"),
-                 GUIIconSubSys::getIcon(GUIIcon::MODEMOVE), this, MID_GNE_APPLY, GUIDesignButton);
+                              TL("Shift shape geometry"), "", TL("Shift shape geometry orthogonally to driving direction for all selected shapes"),
+                              GUIIconSubSys::getIcon(GUIIcon::MODEMOVE), this, MID_GNE_APPLY, GUIDesignButton);
 }
 
 
@@ -680,8 +680,8 @@ GNEMoveFrame::~GNEMoveFrame() {}
 
 void
 GNEMoveFrame::processClick(const Position& /*clickedPosition*/,
-                           const GNEViewNetHelper::ObjectsUnderCursor& /*objectsUnderCursor*/,
-                           const GNEViewNetHelper::ObjectsUnderCursor& /*objectsUnderGrippedCursor*/) {
+                           const GNEViewNetHelper::ViewObjectsSelector& /*viewObjects*/,
+                           const GNEViewNetHelper::ViewObjectsSelector& /*objectsUnderGrippedCursor*/) {
     // currently unused
 }
 

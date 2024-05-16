@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-# Copyright (C) 2009-2023 German Aerospace Center (DLR) and others.
+# Copyright (C) 2009-2024 German Aerospace Center (DLR) and others.
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # https://www.eclipse.org/legal/epl-2.0/
@@ -49,13 +49,13 @@ netedit.leftClick(referencePosition, netedit.positions.demandElements.parkingAre
                   netedit.positions.demandElements.parkingArea.y)
 
 # change value
-netedit.modifyAttribute(netedit.attrs.stopParking.inspect.actType, "dummy", False)
+netedit.modifyAttribute(netedit.attrs.stopParkingArea.inspect.actType, "dummy", False)
 
 # change value
-netedit.modifyAttribute(netedit.attrs.stopParking.inspect.actType, "", False)
+netedit.modifyAttribute(netedit.attrs.stopParkingArea.inspect.actType, "", False)
 
 # change value
-netedit.modifyAttribute(netedit.attrs.stopParking.inspect.actType, "singing", False)
+netedit.modifyAttribute(netedit.attrs.stopParkingArea.inspect.actType, "singing", False)
 
 # Check undo redo
 netedit.checkUndoRedo(referencePosition)

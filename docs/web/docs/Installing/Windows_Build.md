@@ -29,7 +29,7 @@ may also [download pre-build Windows binaries](../Downloads.md).
 
 ![](../images/VSInstall.png)
 
-- Clone https://github.com/eclipse/sumo or open your existing local SUMO folder
+- Clone https://github.com/eclipse-sumo/sumo or open your existing local SUMO folder
 - Go to team explorer
   - Choose Manage Connections, then "Local Git"->Clone https://github.com/DLR-TS/SUMOLibraries
 - Now be patient until CMake starts configuring
@@ -40,7 +40,7 @@ may also [download pre-build Windows binaries](../Downloads.md).
 
 CMake settings can easily be modified, loaded and saved using *Project -> CMake Settings* in Visual Studio.
 
-![](../images/vs_cmake_settings.png)   
+![](../images/vs_cmake_settings.png)
 Editing the CMake settings using Visual Studio
 
 ### Optional but still recommended steps
@@ -53,7 +53,7 @@ Editing the CMake settings using Visual Studio
   - Test start a python script and add association
   - Add Python to the path (also the Scripts dir), find it at `C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python37_64`
   - Install pyautogui, scipy, rtree, pyproj, lxml following the instructions https://docs.microsoft.com/en-us/visualstudio/python/tutorial-working-with-python-in-visual-studio-step-05-installing-packages?view=vs-2019
-- If not, use `pip install tools\requirements.txt`, possibly with the `--user` option if you don't have admin rights
+- If not, use `pip install -r tools\requirements.txt`, possibly with the `--user` option if you don't have admin rights
 
 - (after 30 days) Setup a Microsoft account (if you do not already have one) and register your Visual Studio
 
@@ -64,7 +64,7 @@ If you need a different python version or want to test with multiple Pythons you
 If you want to build SUMO in Debug mode, then you will need the *Python Debug binaries*. The Python interepreter that comes with Visual Studio doesn't install these libraries by default (at least in the case of Visual Studio Community 2022); you need to install the *Data Science stack* in addition to the *Python and C++ development stacks* mentionned above. More precisely, the component you need is called *Python native development tools*, make sure you check the correct box.
 
 If you want to clone / checkout a special SUMO version, you can of course do it from the command line (if you have installed the command line tools)
-using `git clone --recursive https://github.com/eclipse/sumo` or download and extract a source package, see [Downloads](../Downloads.md).
+using `git clone --recursive https://github.com/eclipse-sumo/sumo` or download and extract a source package, see [Downloads](../Downloads.md).
 
 The command for the [Libraries](#libraries) is: `git clone --recursive https://github.com/DLR-TS/SUMOLibraries`. If you do not place the libraries in the same folder as SUMO, you will need to set the **SUMO_LIBRARIES** environment variable to the directory.
 
@@ -90,7 +90,7 @@ this repository and define an environment variable `SUMO_LIBRARIES`
 pointing to the resulting directory. They are build using Visual Studio
 2019, but may be used with earlier and later versions as well. You may
 need to install the Visual C++ 2019 Runtime Distributable for running
-SUMO (tested with Visual Studio 2019). 
+SUMO (tested with Visual Studio 2019).
 
 For details on building your
 own and also on how to use different versions and additional libraries
@@ -128,13 +128,13 @@ pip install -r tools\requirements.txt
 
 Visual guide:
 
-![](../images/CMakeConfiguration1.png)   
+![](../images/CMakeConfiguration1.png)
 Selecting Solution (Visual Studio, Eclipse, etc.) in the CMake gui
 
-![](../images/CMakeConfiguration4.png)   
+![](../images/CMakeConfiguration4.png)
 Libraries successfully configured
 
-![](../images/CMakeConfiguration5.png)   
+![](../images/CMakeConfiguration5.png)
 Generated solution
 
 ### Method 2: Via CMake command line
@@ -170,10 +170,10 @@ If you want to compile using CLang in Windows, just add "ClangCL" in CMake's "Op
   - Python libraries can be specified manually (e.g.
     <PythonFolder\>\\libs\\python<version\>.lib)
 
-![](../images/CMakeConfiguration6.png)   
+![](../images/CMakeConfiguration6.png)
 Python library fields in the CMake Cache
 
-![](../images/CMakePython1.png)   
+![](../images/CMakePython1.png)
 Two different Python versions at the same time
 
 ### Linker reports something similar to "LINK : fatal error LNK1104: cannot open file 'C:\\Program.obj'"
@@ -191,9 +191,9 @@ this, unless you are building from the [source code
 repository](../FAQ.md#how_do_i_access_the_code_repository). In
 this case you should probably install Python. Even if Python is
 installed the file associations may be broken which causes the
-generation of `src/version.h` via the `tools/build/version.py` script to fail. Either
+generation of `src/version.h` via the `tools/build_config/version.py` script to fail. Either
 repair your file associations or undefine **HAVE_VERSION_H** in
-`src/windows_config.h`.
+`src/config.h.cmake`.
 
 If you did install Python correctly, double check that it passes
 [command line

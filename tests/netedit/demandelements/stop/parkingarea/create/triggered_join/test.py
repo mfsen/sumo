@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-# Copyright (C) 2009-2023 German Aerospace Center (DLR) and others.
+# Copyright (C) 2009-2024 German Aerospace Center (DLR) and others.
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # https://www.eclipse.org/legal/epl-2.0/
@@ -38,11 +38,25 @@ netedit.stopMode()
 netedit.changeStopType("stopParkingArea")
 
 # change triggered
-netedit.changeDefaultValue(netedit.attrs.stopParking.create.triggered, "join")
+netedit.changeDefaultValue(netedit.attrs.stopParkingArea.create.triggered, "join")
 
 # create stop
-netedit.leftClick(referencePosition, netedit.positions.demandElements.parkingArea.x,
-                  netedit.positions.demandElements.parkingArea.y)
+netedit.leftClick(referencePosition, netedit.positions.demandElements.parkingArea.x +
+                  1, netedit.positions.demandElements.parkingArea.y)
+
+# change triggered
+netedit.changeDefaultValue(netedit.attrs.stopParkingArea.create.join, ";;;")
+
+# create stop
+netedit.leftClick(referencePosition, netedit.positions.demandElements.parkingArea.x +
+                  2, netedit.positions.demandElements.parkingArea.y)
+
+# change triggered
+netedit.changeDefaultValue(netedit.attrs.stopParkingArea.create.join, "customJoin")
+
+# create stop
+netedit.leftClick(referencePosition, netedit.positions.demandElements.parkingArea.x +
+                  3, netedit.positions.demandElements.parkingArea.y)
 
 # Check undo redo
 netedit.checkUndoRedo(referencePosition)

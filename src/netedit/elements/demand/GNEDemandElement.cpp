@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -22,10 +22,16 @@
 #include <netedit/GNEViewNet.h>
 #include <netedit/GNEViewParent.h>
 #include <netedit/frames/common/GNESelectorFrame.h>
+#include <netedit/frames/demand/GNEVehicleFrame.h>
+#include <netedit/frames/demand/GNEPersonFrame.h>
+#include <netedit/frames/demand/GNEPersonPlanFrame.h>
+#include <netedit/frames/demand/GNEContainerFrame.h>
+#include <netedit/frames/demand/GNEContainerPlanFrame.h>
 #include <utils/gui/div/GLHelper.h>
 #include <utils/gui/div/GUIParameterTableWindow.h>
 #include <utils/gui/globjects/GUIGLObjectPopupMenu.h>
 #include <utils/gui/div/GUIDesigns.h>
+#include <utils/gui/div/GUIGlobalViewObjectsHandler.h>
 
 #include "GNEDemandElement.h"
 #include "GNERouteHandler.h"
@@ -75,6 +81,12 @@ GNEDemandElement::removeGeometryPoint(const Position /*clickedPosition*/, GNEUnd
 
 GUIGlObject*
 GNEDemandElement::getGUIGlObject() {
+    return this;
+}
+
+
+const GUIGlObject*
+GNEDemandElement::getGUIGlObject() const {
     return this;
 }
 
@@ -145,6 +157,100 @@ GNEDemandElement::getDemandElementGeometry() const {
 }
 
 
+bool
+GNEDemandElement::checkDrawFromContour() const {
+    return false;
+}
+
+
+bool
+GNEDemandElement::checkDrawToContour() const {
+    return false;
+}
+
+
+bool
+GNEDemandElement::checkDrawRelatedContour() const {
+    return false;
+}
+
+
+bool
+GNEDemandElement::checkDrawOverContour() const {
+    // get modes
+    const auto& modes = myNet->getViewNet()->getEditModes();
+    // get frames
+    const auto& personFramePlanSelector = myNet->getViewNet()->getViewParent()->getPersonFrame()->getPlanSelector();
+    const auto& personPlanFramePlanSelector = myNet->getViewNet()->getViewParent()->getPersonPlanFrame()->getPlanSelector();
+    const auto& containerFramePlanSelector = myNet->getViewNet()->getViewParent()->getContainerFrame()->getPlanSelector();
+    const auto& containerPlanFramePlanSelector = myNet->getViewNet()->getViewParent()->getContainerPlanFrame()->getPlanSelector();
+    // special case for Route
+    if (myTagProperty.getTag() == SUMO_TAG_ROUTE) {
+        // get vehicle frame
+        const auto& vehicleFrame = myNet->getViewNet()->getViewParent()->getVehicleFrame();
+        // check if we're in vehicle mode
+        if (vehicleFrame->shown()) {
+            // get current vehicle template
+            const auto& vehicleTemplate = vehicleFrame->getVehicleTagSelector()->getCurrentTemplateAC();
+            // check if vehicle can be placed over route
+            if (vehicleTemplate && vehicleTemplate->getTagProperty().vehicleRoute()) {
+                return myNet->getViewNet()->getViewObjectsSelector().getGUIGlObjectFront() == this;
+            }
+        } else if (modes.isCurrentSupermodeDemand()) {
+            // check if we're in person or personPlan modes
+            if (((modes.demandEditMode == DemandEditMode::DEMAND_PERSON) && personFramePlanSelector->markRoutes()) ||
+                    ((modes.demandEditMode == DemandEditMode::DEMAND_PERSONPLAN) && personPlanFramePlanSelector->markRoutes()) ||
+                    ((modes.demandEditMode == DemandEditMode::DEMAND_CONTAINER) && containerFramePlanSelector->markRoutes()) ||
+                    ((modes.demandEditMode == DemandEditMode::DEMAND_CONTAINERPLAN) && containerPlanFramePlanSelector->markRoutes())) {
+                return myNet->getViewNet()->getViewObjectsSelector().getGUIGlObjectFront() == this;
+            }
+        }
+    }
+    return false;
+}
+
+
+bool
+GNEDemandElement::checkDrawDeleteContour() const {
+    // get edit modes
+    const auto& editModes = myNet->getViewNet()->getEditModes();
+    // check if we're in delete mode
+    if (editModes.isCurrentSupermodeDemand() && (editModes.demandEditMode == DemandEditMode::DEMAND_DELETE)) {
+        return myNet->getViewNet()->checkOverLockedElement(this, mySelected);
+    } else {
+        return false;
+    }
+}
+
+
+bool
+GNEDemandElement::checkDrawSelectContour() const {
+    // get edit modes
+    const auto& editModes = myNet->getViewNet()->getEditModes();
+    // check if we're in select mode
+    if (editModes.isCurrentSupermodeDemand() && (editModes.demandEditMode == DemandEditMode::DEMAND_SELECT)) {
+        return myNet->getViewNet()->checkOverLockedElement(this, mySelected);
+    } else {
+        return false;
+    }
+}
+
+
+bool
+GNEDemandElement::checkDrawMoveContour() const {
+    // get edit modes
+    const auto& editModes = myNet->getViewNet()->getEditModes();
+    // check if we're in select mode
+    if (!myNet->getViewNet()->isMovingElement() && editModes.isCurrentSupermodeDemand() &&
+            (editModes.demandEditMode == DemandEditMode::DEMAND_MOVE) && myNet->getViewNet()->checkOverLockedElement(this, mySelected)) {
+        // only move the first element
+        return myNet->getViewNet()->getViewObjectsSelector().getGUIGlObjectFront() == this;
+    } else {
+        return false;
+    }
+}
+
+
 void
 GNEDemandElement::openDemandElementDialog() {
     throw InvalidArgument(getTagStr() + " doesn't have a demand element dialog");
@@ -196,7 +302,7 @@ GNEDemandElement::getParameterWindow(GUIMainWindow& app, GUISUMOAbstractView&) {
 
 
 bool
-GNEDemandElement::isGLObjectLocked() {
+GNEDemandElement::isGLObjectLocked() const {
     if (myNet->getViewNet()->getEditModes().isCurrentSupermodeDemand()) {
         return myNet->getViewNet()->getLockManager().isObjectLocked(getType(), isAttributeCarrierSelected());
     } else {
@@ -214,12 +320,12 @@ GNEDemandElement::markAsFrontElement() {
 void
 GNEDemandElement::deleteGLObject() {
     // we need an special checks due hierarchies
-    if (myTagProperty.isPersonPlan() || myTagProperty.isContainerPlan()) {
+    if (myTagProperty.isPlan()) {
         // get person/container plarent
-        GNEDemandElement* parent = getParentDemandElements().front();
+        GNEDemandElement* planParent = getParentDemandElements().front();
         // if this is the last person/container plan element, remove parent instead plan
-        if (parent->getChildDemandElements().size() == 1) {
-            parent->deleteGLObject();
+        if (planParent->getChildDemandElements().size() == 1) {
+            planParent->deleteGLObject();
         } else {
             myNet->deleteDemandElement(this, myNet->getViewNet()->getUndoList());
         }
@@ -255,126 +361,6 @@ GNEDemandElement::isPathElementSelected() const {
     return mySelected;
 }
 
-
-double
-GNEDemandElement::getPathElementDepartValue() const {
-    // get previous person Plan
-    const GNEDemandElement* previousPersonPlan = getParentDemandElements().at(0)->getPreviousChildDemandElement(this);
-    // check if this is the first person plan
-    if (previousPersonPlan) {
-        if (previousPersonPlan->getParentAdditionals().size() > 0) {
-            if (previousPersonPlan->getTagProperty().isStopPerson()) {
-                // calculate busStop end
-                const double endPos = previousPersonPlan->getParentAdditionals().front()->getAttributeDouble(SUMO_ATTR_ENDPOS);
-                // check endPos
-                if (endPos < 0.3) {
-                    return endPos;
-                } else {
-                    return (endPos - 0.3);
-                }
-            } else {
-                // use busStop center
-                return previousPersonPlan->getParentAdditionals().front()->getAttributeDouble(SUMO_ATTR_CENTER);
-            }
-        } else {
-            // use arrival pos
-            return previousPersonPlan->getAttributeDouble(SUMO_ATTR_ARRIVALPOS);
-        }
-    } else {
-        // use pedestrian departPos
-        return getParentDemandElements().at(0)->getAttributeDouble(SUMO_ATTR_DEPARTPOS);
-    }
-}
-
-
-Position
-GNEDemandElement::getPathElementDepartPos() const {
-    // get previous person Plan
-    const GNEDemandElement* previousPersonPlan = getParentDemandElements().at(0)->getPreviousChildDemandElement(this);
-    // check if this is the first person plan
-    if (previousPersonPlan) {
-        if (previousPersonPlan->getParentAdditionals().size() > 0) {
-            if (previousPersonPlan->getTagProperty().isStopPerson()) {
-                // get busStop
-                const GNEAdditional* busStop = previousPersonPlan->getParentAdditionals().front();
-                // get length
-                const double length = busStop->getAdditionalGeometry().getShape().length2D();
-                // check length
-                if (length < 0.3) {
-                    return busStop->getAdditionalGeometry().getShape().back();
-                } else {
-                    return busStop->getAdditionalGeometry().getShape().positionAtOffset2D(length - 0.3);
-                }
-            } else {
-                // use busStop center
-                return previousPersonPlan->getParentAdditionals().front()->getAdditionalGeometry().getShape().getLineCenter();
-            }
-        } else {
-            // use arrival pos
-            return previousPersonPlan->getAttributePosition(SUMO_ATTR_ARRIVALPOS);
-        }
-    } else if (getParentJunctions().size() > 0) {
-        return getParentJunctions().front()->getNBNode()->getPosition();
-    } else {
-        // use pedestrian departPos
-        return getParentDemandElements().at(0)->getAttributePosition(SUMO_ATTR_DEPARTPOS);
-    }
-}
-
-
-double
-GNEDemandElement::getPathElementArrivalValue() const {
-    // check if this person plan ends in a busStop
-    if (getParentAdditionals().size() > 0) {
-        // get next person Plan
-        const GNEDemandElement* nextPersonPlan = getParentDemandElements().at(0)->getNextChildDemandElement(this);
-        // continue depending if is an stop or a person plan
-        if (nextPersonPlan && ((nextPersonPlan->getTagProperty().getTag() == GNE_TAG_STOPPERSON_BUSSTOP) || (nextPersonPlan->getTagProperty().getTag() == GNE_TAG_STOPPERSON_TRAINSTOP))) {
-            // calculate busStop end
-            const double endPos = getParentAdditionals().front()->getAttributeDouble(SUMO_ATTR_ENDPOS);
-            // check endPos
-            if (endPos < 0.3) {
-                return getParentAdditionals().front()->getAttributeDouble(SUMO_ATTR_ENDPOS);
-            } else {
-                return getParentAdditionals().front()->getAttributeDouble(SUMO_ATTR_ENDPOS) - 0.3;
-            }
-        } else {
-            return getParentAdditionals().front()->getAttributeDouble(SUMO_ATTR_CENTER);
-        }
-    } else {
-        return getAttributeDouble(SUMO_ATTR_ARRIVALPOS);
-    }
-}
-
-
-Position
-GNEDemandElement::getPathElementArrivalPos() const {
-    // check if this person plan ends in a busStop
-    if (getParentAdditionals().size() > 0) {
-        // get next person Plan
-        const GNEDemandElement* nextPersonPlan = getParentDemandElements().at(0)->getNextChildDemandElement(this);
-        // continue depending if is an stop or a person plan
-        if (nextPersonPlan && ((nextPersonPlan->getTagProperty().getTag() == GNE_TAG_STOPPERSON_BUSSTOP) || (nextPersonPlan->getTagProperty().getTag() == GNE_TAG_STOPPERSON_TRAINSTOP))) {
-            // get busStop
-            const GNEAdditional* busStop = nextPersonPlan->getParentAdditionals().front();
-            // get length
-            const double length = busStop->getAdditionalGeometry().getShape().length2D();
-            // check length
-            if (length < 0.3) {
-                return busStop->getAdditionalGeometry().getShape().back();
-            } else {
-                return busStop->getAdditionalGeometry().getShape().positionAtOffset2D(length - 0.3);
-            }
-        } else {
-            return getParentAdditionals().front()->getAdditionalGeometry().getShape().getLineCenter();
-        }
-    } else if (getParentJunctions().size() > 0) {
-        return getParentJunctions().back()->getNBNode()->getPosition();
-    } else {
-        return getAttributePosition(SUMO_ATTR_ARRIVALPOS);
-    }
-}
-
 // ---------------------------------------------------------------------------
 // GNEDemandElement - protected methods
 // ---------------------------------------------------------------------------
@@ -392,7 +378,7 @@ GNEDemandElement::isValidDemandElementID(const std::string& value) const {
 
 
 bool
-GNEDemandElement::isValidDemandElementID(const std::vector<SumoXMLTag> &tags, const std::string& value) const {
+GNEDemandElement::isValidDemandElementID(const std::vector<SumoXMLTag>& tags, const std::string& value) const {
     if (value == getID()) {
         return true;
     } else if (SUMOXMLDefinitions::isValidVehicleID(value)) {
@@ -421,7 +407,8 @@ GNEDemandElement*
 GNEDemandElement::getTypeParent() const {
     if (getParentDemandElements().size() < 1) {
         throw InvalidArgument("This demand element doesn't have a type parent");
-    } else if (!getParentDemandElements().at(0)->getTagProperty().isType()) {
+    } else if (!getParentDemandElements().at(0)->getTagProperty().isType()
+               && !getParentDemandElements().at(0)->getTagProperty().isTypeDist()) {
         throw InvalidArgument("The first parent isn't a type");
     } else if (getParentDemandElements().at(0)->getTagProperty().getTag() == SUMO_TAG_VTYPE) {
         return getParentDemandElements().at(0);
@@ -430,16 +417,16 @@ GNEDemandElement::getTypeParent() const {
         const auto typeDistributionID = getParentDemandElements().at(0)->getID();
         // obtain all types with the given typeDistribution sorted by ID
         std::map<std::string, GNEDemandElement*> sortedTypes;
-        for (const auto &type : myNet->getAttributeCarriers()->getDemandElements().at(SUMO_TAG_VTYPE)) {
-            if (type->getAttribute(GNE_ATTR_VTYPE_DISTRIBUTION) == typeDistributionID) {
-                sortedTypes[type->getID()] = type;
+        for (const auto& type : myNet->getAttributeCarriers()->getDemandElements().at(SUMO_TAG_VTYPE)) {
+            if (type.second->getAttribute(GNE_ATTR_VTYPE_DISTRIBUTION) == typeDistributionID) {
+                sortedTypes[type.second->getID()] = type.second;
             }
         }
         // return first type, or default vType
         if (sortedTypes.size() > 0) {
             return sortedTypes.begin()->second;
-        } else if (myNet->getAttributeCarriers()->getDemandElements().size() > 0){
-            return *myNet->getAttributeCarriers()->getDemandElements().at(SUMO_TAG_VTYPE).begin();
+        } else if (myNet->getAttributeCarriers()->getDemandElements().size() > 0) {
+            return myNet->getAttributeCarriers()->getDemandElements().at(SUMO_TAG_VTYPE).begin()->second;
         } else {
             throw InvalidArgument("no vTypes");
         }
@@ -461,7 +448,7 @@ GNEDemandElement::getRouteParent() const {
 
 std::vector<GNEDemandElement*>
 GNEDemandElement::getInvalidStops() const {
-    if (myTagProperty.isStop() || myTagProperty.isWaypoint()) {
+    if (myTagProperty.isVehicleStop()) {
         // get stops
         std::vector<GNEDemandElement*> invalidStops;
         // get edge stop index
@@ -629,12 +616,12 @@ GNEDemandElement::getEdgeStopIndex() const {
         // continue depending of parent
         if (parent->getTagProperty().hasAttribute(SUMO_ATTR_EDGES)) {
             pathEdges = parent->getParentEdges();
-        } else if (parent->getTagProperty().overRoute()) {
+        } else if (parent->getTagProperty().vehicleRoute()) {
             // get route edges
             if (parent->getParentDemandElements().size() > 1) {
                 pathEdges = parent->getParentDemandElements().at(1)->getParentEdges();
             }
-        } else if (parent->getTagProperty().overEmbeddedRoute()) {
+        } else if (parent->getTagProperty().vehicleRouteEmbedded()) {
             // get embedded route edges
             pathEdges = parent->getChildDemandElements().front()->getParentEdges();
         } else {
@@ -655,7 +642,7 @@ GNEDemandElement::getEdgeStopIndex() const {
         }
         // get all parent's stops and waypoints sorted by position
         for (const auto& demandElement : parent->getChildDemandElements()) {
-            if (demandElement->getTagProperty().isStop() || demandElement->getTagProperty().isWaypoint()) {
+            if (demandElement->getTagProperty().isVehicleStop()) {
                 // get stop/waypoint edge
                 GNEEdge* edge = nullptr;
                 if (demandElement->getParentAdditionals().size() > 0) {
@@ -728,9 +715,9 @@ GNEDemandElement::getDistributionParents() const {
     }
     // check if the current element is in the distributions
     std::vector<std::string> distributionParents;
-    for (const auto &distribution : myNet->getAttributeCarriers()->getDemandElements().at(tagDistribution)) {
-        if (distribution->keyExists(this)) {
-            distributionParents.push_back(distribution->getID());
+    for (const auto& distribution : myNet->getAttributeCarriers()->getDemandElements().at(tagDistribution)) {
+        if (distribution.second->keyExists(this)) {
+            distributionParents.push_back(distribution.second->getID());
         }
     }
     return toString(distributionParents);
@@ -742,11 +729,11 @@ GNEDemandElement::buildMenuCommandRouteLength(GUIGLObjectPopupMenu* ret) const {
     std::vector<GNEEdge*> edges;
     if (myTagProperty.isRoute()) {
         edges = getParentEdges();
-    } else if (myTagProperty.overRoute()) {
+    } else if (myTagProperty.vehicleRoute()) {
         edges = getParentDemandElements().at(1)->getParentEdges();
-    } else if (myTagProperty.overEmbeddedRoute()) {
+    } else if (myTagProperty.vehicleRouteEmbedded()) {
         edges = getChildDemandElements().front()->getParentEdges();
-    } else if (myTagProperty.overFromToEdges()) {
+    } else if (myTagProperty.vehicleEdges()) {
         edges = getParentEdges();
     }
     // calculate path

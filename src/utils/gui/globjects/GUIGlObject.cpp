@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -39,7 +39,7 @@
 #include <utils/gui/div/GLObjectValuePassConnector.h>
 #include <utils/gui/div/GUIDesigns.h>
 #include <utils/geom/GeomHelper.h>
-#include <utils/gui/div/GUIGlobalPostDrawing.h>
+#include <utils/gui/div/GUIGlobalViewObjectsHandler.h>
 
 #include "GUIGlObject.h"
 #include "GUIGlObjectStorage.h"
@@ -102,12 +102,8 @@ StringBijection<GUIGlObjectType>::Entry GUIGlObject::GUIGlObjectTypeNamesInitial
     {"polygon",                 GLO_POLYGON},
     {"poi",                     GLO_POI},
     //
-    {"jps.walkableArea",        GLO_JPS_WALKABLEAREA},
-    {"jps.obstacle",            GLO_JPS_OBSTACLE},
-    {"jps.waitingArea",         GLO_JPS_WAITINGAREA},
-    {"jps.source",              GLO_JPS_SOURCE},
-    {"jps.sink",                GLO_JPS_SINK},
-    {"jps.Waypoint",            GLO_JPS_WAYPOINT},
+    {"jupedsim.walkable_area",  GLO_JPS_WALKABLEAREA},
+    {"jupedsim.obstacle",       GLO_JPS_OBSTACLE},
     //
     {"routeElement",            GLO_ROUTEELEMENT},
     {"vType",                   GLO_VTYPE},
@@ -121,8 +117,7 @@ StringBijection<GUIGlObjectType>::Entry GUIGlObject::GUIGlObjectTypeNamesInitial
     {"tranship",                GLO_TRANSHIP},
     //
     {"stop",                    GLO_STOP},
-    {"stopPerson",              GLO_STOP_PERSON},
-    {"stopContainer",           GLO_STOP_CONTAINER},
+    {"stopPlan",                GLO_STOP_PLAN},
     //
     {"vehicle",                 GLO_VEHICLE},
     {"trip",                    GLO_TRIP},
@@ -143,7 +138,7 @@ StringBijection<GUIGlObjectType>::Entry GUIGlObject::GUIGlObjectTypeNamesInitial
     {"textName",                GLO_TEXTNAME},
     {"frontElement",            GLO_FRONTELEMENT},
     {"geometryPoint",           GLO_GEOMETRYPOINT},
-    {"dottedContour",           GLO_DOTTEDCONTOUR_INSPECTED},
+    {"dottedContour",           GLO_DOTTEDCONTOUR},
     {"temporalShape",           GLO_TEMPORALSHAPE},
     {"rectangleSelection",      GLO_RECTANGLESELECTION},
     {"testElement",             GLO_TESTELEMENT},
@@ -154,6 +149,7 @@ StringBijection<GUIGlObjectType>::Entry GUIGlObject::GUIGlObjectTypeNamesInitial
 
 StringBijection<GUIGlObjectType> GUIGlObject::TypeNames(GUIGlObjectTypeNamesInitializer, GLO_MAX);
 const GUIGlID GUIGlObject::INVALID_ID = 0;
+const double GUIGlObject::INVALID_PRIORITY(-std::numeric_limits<double>::max());
 
 // ===========================================================================
 // method definitions
@@ -163,8 +159,7 @@ GUIGlObject::GUIGlObject(GUIGlObjectType type, const std::string& microsimID, FX
     myGlID(GUIGlObjectStorage::gIDStorage.registerObject(this)),
     myGLObjectType(type),
     myMicrosimID(microsimID),
-    myIcon(icon),
-    myAmBlocked(false) {
+    myIcon(icon) {
     // make sure that reserved GLO_ADDITIONALELEMENT isn't used
     assert(myGLObjectType != GLO_ADDITIONALELEMENT);
     myFullName = createFullName();
@@ -204,7 +199,7 @@ GUIGlObject::getTypeParameterWindow(GUIMainWindow& app, GUISUMOAbstractView& par
 
 
 bool
-GUIGlObject::isGLObjectLocked() {
+GUIGlObject::isGLObjectLocked() const {
     // by default unlocked
     return false;
 }
@@ -418,76 +413,6 @@ GUIGlObject::buildAdditionalsPopupOptions(GUIMainWindow& app, GUIGLObjectPopupMe
     if (type != "") {
         GUIDesigns::buildFXMenuCommand(ret, TLF("type: %", type).c_str(), nullptr, nullptr, 0);
         new FXMenuSeparator(ret);
-    }
-}
-
-
-bool
-GUIGlObject::mouseWithinGeometry(const Position center, const double radius) const {
-    if (gPostDrawing.mousePos.distanceSquaredTo2D(center) <= (radius * radius)) {
-        gPostDrawing.addElementUnderCursor(this);
-        return true;
-    } else {
-        return false;
-    }
-}
-
-
-bool
-GUIGlObject::mouseWithinGeometry(const PositionVector shape) const {
-    if (shape.around(gPostDrawing.mousePos)) {
-        gPostDrawing.addElementUnderCursor(this);
-        return true;
-    } else {
-        return false;
-    }
-}
-
-
-bool
-GUIGlObject::mouseWithinGeometry(const PositionVector shape, const double width) const {
-    if (shape.distance2D(gPostDrawing.mousePos) <= width) {
-        gPostDrawing.addElementUnderCursor(this);
-        return true;
-    } else {
-        return false;
-    }
-}
-
-
-bool
-GUIGlObject::mouseWithinGeometry(const PositionVector shape, const double width, GUIGlObject* parent) const {
-    if (shape.distance2D(gPostDrawing.mousePos) <= width) {
-        gPostDrawing.addElementUnderCursor(parent);
-        return true;
-    } else {
-        return false;
-    }
-}
-
-
-bool
-GUIGlObject::mouseWithinGeometry(const Position& pos, const double width, const double height,
-                                 const double offsetX, const double offsetY, const double rot) const {
-    // create shape
-    PositionVector shape;
-    // make rectangle
-    shape.push_back(Position(0 + width, 0 + height));
-    shape.push_back(Position(0 + width, 0 - height));
-    shape.push_back(Position(0 - width, 0 - height));
-    shape.push_back(Position(0 - width, 0 + height));
-    // move shape
-    shape.add(offsetX, offsetY, 0);
-    // rotate shape
-    shape.rotate2D(DEG2RAD((rot * -1) + 90));
-    // move to position
-    shape.add(pos);
-    // check if mouse is within new geometry
-    if (shape.around(gPostDrawing.mousePos)) {
-        gPostDrawing.addElementUnderCursor(this);
-        return true;
-    } else {
-        return false;
     }
 }
 

@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -116,11 +116,11 @@ public:
         void setDistribution(GNEDemandElement* distribution);
 
         /// @brief current distribution
-        GNEDemandElement *getCurrentDistribution() const;
-        
+        GNEDemandElement* getCurrentDistribution() const;
+
         /// @brief refresh distribution IDs (only call when user change ID in internal attributes)
         void refreshDistributionIDs();
-        
+
         /// @brief refresh modul
         void refreshDistributionSelector();
 
@@ -173,7 +173,7 @@ public:
     public:
         /// @brief constructor for key-probability attributes
         DistributionRow(DistributionValuesEditor* attributeEditorParent,
-            const GNEDemandElement* key, const double probability);
+                        const GNEDemandElement* key, const double probability);
 
         /// @brief destroy DistributionRow (but don't delete)
         void destroy();
@@ -285,10 +285,10 @@ public:
 
         /// @brief distribution editor
         DistributionEditor* myDistributionEditor;
-        
+
         /// @brief distribution selector
         DistributionSelector* myDistributionSelector;
-        
+
         /// @brief attributes editor
         GNEFrameAttributeModules::AttributesEditor* myAttributesEditor;
 

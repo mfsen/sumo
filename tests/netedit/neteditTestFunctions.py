@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-# Copyright (C) 2009-2023 German Aerospace Center (DLR) and others.
+# Copyright (C) 2009-2024 German Aerospace Center (DLR) and others.
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # https://www.eclipse.org/legal/epl-2.0/
@@ -343,7 +343,7 @@ def getReferenceMatch(neProcess, makeScrenshot):
         # wait for reference
         time.sleep(DELAY_REFERENCE)
     # capture screen and search reference
-        positionOnScreen = pyautogui.locateOnScreen(_REFERENCE_PNG, minSearchTime=3)
+        positionOnScreen = pyautogui.locateOnScreen(_REFERENCE_PNG, minSearchTime=3, confidence=0.95)
     except Exception as e:
         # we cannot specify the exception here because some versions of pyautogui use one and some don't
         print(e)

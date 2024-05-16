@@ -23,14 +23,6 @@ set(COMPILE_DEFINITIONS "" CACHE STRING "Macros or defines to add when compiling
 set(JUPEDSIM_CUSTOMDIR "" CACHE PATH "Custom install location of jupedsim")
 set(PROJECT_NAME "SUMO" CACHE STRING "Project/Solution name")
 
-# disable warnings
-option(DISABLEWARNING_C5264 "'const' variable is not used" ON)
-option(DISABLEWARNING_C5267 "definition of implicit operator/constructor/destructor is deprecated" ON)
-option(DISABLEWARNING_C4355 "'this' : used in base member initializer list" ON)
-option(DISABLEWARNING_C4266 "'function' : no override available for virtual member function from base 'type'" ON)
-option(DISABLEWARNING_C4127 "conditional expression is constant" ON)
-option(DISABLEWARNING_C26495 "'variable' is uninitialized. Always initialize a member variable" ON)
-
 # Set a default build type if none was specified
 # you may use -DCMAKE_BUILD_TYPE:STRING=Debug from the command line
 set(default_build_type "Release")
@@ -44,9 +36,9 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "RelWithDebInfo")
 endif ()
 
+cmake_minimum_required(VERSION 3.5)
 project("${PROJECT_NAME}" CXX C)
 set(PACKAGE_VERSION "git")
-cmake_minimum_required(VERSION 3.4)
 
 # Check if libraries have to be found, depending on SUMO_LIBRARIES
 set(SUMO_LIBRARIES "$ENV{SUMO_LIBRARIES}" CACHE PATH "Location of SUMOLibraries dependencies")
@@ -83,7 +75,7 @@ if (CCACHE_SUPPORT)
 endif()
 
 set(CMAKE_COLOR_MAKEFILE ON)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/build/cmake_modules/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/build_config/cmake_modules/")
 
 set(ENABLED_FEATURES "${CMAKE_SYSTEM} ${CMAKE_SYSTEM_PROCESSOR} ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION} ${CMAKE_BUILD_TYPE}")
 
@@ -127,25 +119,90 @@ if (GNU_COMPILER OR CLANG_COMPILER)
         set(ENABLED_FEATURES "${ENABLED_FEATURES} Coverage")
     endif ()
 elseif (MSVC)
-    # check if disable warnings
+    # disable warnings (all versions)
+    option(DISABLEWARNING_C5264 "'const' variable is not used" ON)
+    option(DISABLEWARNING_C5267 "definition of implicit operator/constructor/destructor is deprecated" ON)
+    option(DISABLEWARNING_C4355 "'this' : used in base member initializer list" ON)
+    option(DISABLEWARNING_C4266 "'function' : no override available for virtual member function from base 'type'" ON)
+    option(DISABLEWARNING_C4127 "conditional expression is constant" ON)
+    option(DISABLEWARNING_C26495 "'variable' is uninitialized. Always initialize a member variable" ON)
+    # Specific warnings from MSVC15
+    if (MSVC_VERSION LESS 2000)
+        option(DISABLEWARNING_C4619 "there is no warning number xxxx" ON)
+        option(DISABLEWARNING_C4774 "format string expected not string literal" ON)
+        option(DISABLEWARNING_C4571 "structured exceptions (SEH) are no longer caught" ON)
+        option(DISABLEWARNING_C4820 "bytes padding added after data member" ON)
+        option(DISABLEWARNING_C4668 "macro not defined as a preprocessor macro, replacing with '0'" ON)
+        option(DISABLEWARNING_C4710 "function not inlined" ON)
+        option(DISABLEWARNING_C4625 "copy constructor was implicitly defined as deleted" ON)
+        option(DISABLEWARNING_C4626 "assignment operator was implicitly defined as deleted" ON)
+        option(DISABLEWARNING_C5026 "move constructor was implicitly defined as deleted" ON)
+        option(DISABLEWARNING_C5027 "move assignment was implicitly defined as deleted" ON)
+    endif()
+    # 5264
     if (DISABLEWARNING_C5264)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd5264")
-    endif ()
+    endif (DISABLEWARNING_C5264)
+    # 5267
     if (DISABLEWARNING_C5267)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd5267")
-    endif ()
+    endif (DISABLEWARNING_C5267)
+    # 4355
     if (DISABLEWARNING_C4355)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4355")
-    endif ()
+    endif (DISABLEWARNING_C4355)
+    # 4266
     if (DISABLEWARNING_C4266)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4266")
-    endif ()
+    endif (DISABLEWARNING_C4266)
+    # 4127
     if (DISABLEWARNING_C4127)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4127")
-    endif ()
+    endif (DISABLEWARNING_C4127)
+    # 26495
     if (DISABLEWARNING_C26495)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd26495")
-    endif ()
+    endif (DISABLEWARNING_C26495)
+    # 4619
+    if (DISABLEWARNING_C4619)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4619")
+    endif (DISABLEWARNING_C4619)
+    # 4774
+    if (DISABLEWARNING_C4774)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4774")
+    endif (DISABLEWARNING_C4774)
+    # 4571
+    if (DISABLEWARNING_C4571)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4571")
+    endif (DISABLEWARNING_C4571)
+    # 4820
+    if (DISABLEWARNING_C4820)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4820")
+    endif (DISABLEWARNING_C4820)
+    # 4668
+    if (DISABLEWARNING_C4668)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4668")
+    endif (DISABLEWARNING_C4668)
+    # 4710
+    if (DISABLEWARNING_C4710)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4710")
+    endif (DISABLEWARNING_C4710)
+    # 4625
+    if (DISABLEWARNING_C4625)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4625")
+    endif (DISABLEWARNING_C4625)
+    # 4626
+    if (DISABLEWARNING_C4626)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4626")
+    endif (DISABLEWARNING_C4626)
+    # 5026
+    if (DISABLEWARNING_C5026)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd5026")
+    endif (DISABLEWARNING_C5026)
+    # 5027
+    if (DISABLEWARNING_C5027)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd5027")
+    endif (DISABLEWARNING_C5027)
     # enabling /WX is not possible due to warnings in external headers
     if (CMAKE_BUILD_TYPE STREQUAL "Debug")
         # this is a workaround to disable lots of warnings for replacing /W3 with /W4 in VS 2019
@@ -177,12 +234,11 @@ endif ()
 # special debug flags
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
 if (CLANG_COMPILER)
-    if (WIN32) 
-        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=undefined,integer,unsigned-integer-overflow -fsanitize-blacklist=${CMAKE_SOURCE_DIR}/build/clang_sanitize_blacklist.txt")
-        # set iterator de bug level in 0
+    if (WIN32)
+        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=undefined,integer -fsanitize-blacklist=${CMAKE_SOURCE_DIR}/build_config/clang_sanitize_blacklist.txt")
         add_compile_definitions(_ITERATOR_DEBUG_LEVEL=0)
     else ()
-        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=undefined,address,integer,unsigned-integer-overflow -fno-omit-frame-pointer -fsanitize-blacklist=${CMAKE_SOURCE_DIR}/build/clang_sanitize_blacklist.txt")
+        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=undefined,address,integer -fno-omit-frame-pointer -fsanitize-blacklist=${CMAKE_SOURCE_DIR}/build_config/clang_sanitize_blacklist.txt")
     endif ()
 endif ()
 
@@ -261,6 +317,14 @@ execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import build; import pip; build
 if (APPLE)
     # we know that openGL is deprecated for newer MacOS
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGL_SILENCE_DEPRECATION")
+
+    # Xcode 15 on macOS sonoma complains about duplicate libraries for the linker, so we disable the warning for xcode >= 15
+    if (CLANG_COMPILER)
+        string(REGEX MATCH "^[0-9]+" ClangMajorVersion "${CMAKE_CXX_COMPILER_VERSION}")
+        if (ClangMajorVersion GREATER_EQUAL 15)
+            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-no_warn_duplicate_libraries")
+        endif()
+    endif()
 
     # Recommendation, also add a "brew --prefix" custom command to detect a homebrew build environment
     execute_process(COMMAND brew --prefix RESULT_VARIABLE DETECT_BREW OUTPUT_VARIABLE BREW_PREFIX ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
@@ -492,7 +556,7 @@ if (CHECK_OPTIONAL_LIBS)
         find_package(GEOS)
         if (GEOS_FOUND)
             include_directories(SYSTEM ${GEOS_INCLUDE_DIR})
-            set(JPS_VERSION "${jupedsim_VERSION_MINOR}0${jupedsim_VERSION_PATCH}")
+            set(JPS_VERSION "${jupedsim_VERSION_MAJOR}${jupedsim_VERSION_MINOR}${jupedsim_VERSION_PATCH}")
             set(ENABLED_FEATURES "${ENABLED_FEATURES} JuPedSim")
             message(STATUS "Found JuPedSim: ${jupedsim_DIR} ${jupedsim_VERSION}")
         else (GEOS_FOUND)
@@ -553,7 +617,7 @@ endif ()
 install(DIRECTORY data/ DESTINATION ${DATA_PATH}data)
 install(DIRECTORY tools/ DESTINATION ${DATA_PATH}tools
         USE_SOURCE_PERMISSIONS
-        PATTERN "build/sumo" EXCLUDE  # needed for the scikit build
+        PATTERN "build_config/sumo" EXCLUDE  # needed for the scikit build
         PATTERN "calibration" EXCLUDE
         PATTERN "lisum-core" EXCLUDE
         PATTERN "lisum-gui" EXCLUDE
@@ -575,21 +639,25 @@ install(EXPORT SUMOConfig DESTINATION ${DATA_PATH}cmake NAMESPACE SUMO::)
 if (NOT ${PYTHON_SETUPTOOLS_MISSING})
     set(TOOLS_DIR "${CMAKE_SOURCE_DIR}/tools")
     if (${PYTHON_BUILD_MISSING})
-        install(CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} build/setup-sumolib.py clean --all install --root=\$ENV{DESTDIR}/ --prefix=${CMAKE_INSTALL_PREFIX} --optimize=1 WORKING_DIRECTORY ${TOOLS_DIR})"
+        install(CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} build_config/setup-sumolib.py clean --all install --root=\$ENV{DESTDIR}/ --prefix=${CMAKE_INSTALL_PREFIX} --optimize=1 WORKING_DIRECTORY ${TOOLS_DIR})"
                 COMPONENT pysumolib)
-        install(CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} build/setup-traci.py clean --all install --root=\$ENV{DESTDIR}/ --prefix=${CMAKE_INSTALL_PREFIX} --optimize=1 WORKING_DIRECTORY ${TOOLS_DIR})"
+        install(CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} build_config/setup-traci.py clean --all install --root=\$ENV{DESTDIR}/ --prefix=${CMAKE_INSTALL_PREFIX} --optimize=1 WORKING_DIRECTORY ${TOOLS_DIR})"
                 COMPONENT pytraci)
     else ()
-        install(CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} ./build/version.py ./build/setup-sumolib.py ./setup.py COMMAND ${PYTHON_EXECUTABLE} -m pip install --root=\$ENV{DESTDIR}/ --prefix=${CMAKE_INSTALL_PREFIX} . WORKING_DIRECTORY ${TOOLS_DIR})"
-                COMPONENT pysumolib)
-        install(CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} ./build/version.py ./build/setup-traci.py ./setup.py COMMAND ${PYTHON_EXECUTABLE} -m pip install --root=\$ENV{DESTDIR}/ --prefix=${CMAKE_INSTALL_PREFIX} . WORKING_DIRECTORY ${TOOLS_DIR})"
+        add_custom_target(pure_wheels ALL
+                          COMMAND ${PYTHON_EXECUTABLE} ./build_config/version.py ./build_config/setup-sumolib.py ./setup.py
+                          COMMAND ${PYTHON_EXECUTABLE} -m build --wheel . -o ${CMAKE_CURRENT_BINARY_DIR}
+                          COMMAND ${PYTHON_EXECUTABLE} ./build_config/version.py ./build_config/setup-traci.py ./setup.py
+                          COMMAND ${PYTHON_EXECUTABLE} -m build --wheel . -o ${CMAKE_CURRENT_BINARY_DIR}
+                          WORKING_DIRECTORY ${TOOLS_DIR})
+        install(CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} -m pip install --root=\$ENV{DESTDIR}/ --prefix=${CMAKE_INSTALL_PREFIX} -f ${CMAKE_BINARY_DIR} --no-index traci)"
                 COMPONENT pytraci)
     endif ()
 endif ()
 
 if (SUMO_LIBRARIES AND WIN32)
     # filter release DLLs
-    execute_process(COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/build/filterDebugDLL.py ${SUMO_LIBRARIES_DLL}
+    execute_process(COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/build_config/filterDebugDLL.py ${SUMO_LIBRARIES_DLL}
                     OUTPUT_VARIABLE SUMO_LIBRARIES_RELEASE_DLL)
     # copy debug dlls
     foreach(DLL_PATH ${SUMO_LIBRARIES_DLL} ${GTEST_DLL})
@@ -640,7 +708,7 @@ find_package(Gettext)
 if (Gettext_FOUND)
     set(I18N_DATA ${CMAKE_SOURCE_DIR}/data/locale/tr/LC_MESSAGES/sumo.mo)
     add_custom_command(OUTPUT ${I18N_DATA}
-                       COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/build/i18n.py -m
+                       COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/build_config/i18n.py -m
                        DEPENDS ${CMAKE_SOURCE_DIR}/data/po/tr_gui.po)
 else ()
     message(WARNING "Gettext tools not found, translation files will not be generated.")
@@ -655,7 +723,7 @@ if (MVN_EXECUTABLE AND Java_FOUND)
         get_filename_component(JAVA_BIN ${Java_JAVAC_EXECUTABLE} DIRECTORY)
         get_filename_component(JAVA_HOME ${JAVA_BIN} DIRECTORY)
         set(MVN_COMMAND_PREFIX ${CMAKE_COMMAND} -E env JAVA_HOME=${JAVA_HOME})
-#        set(MVN_REPO "-Dmaven.repo.local=${CMAKE_BINARY_DIR}/m2")
+        set(MVN_REPO "-Dmaven.repo.local=${CMAKE_BINARY_DIR}/m2")
     endif ()
     add_custom_target(traas
         COMMAND ${MVN_COMMAND_PREFIX} ${MVN_EXECUTABLE} ${MVN_REPO} --batch-mode -f tools/contributed/traas/pom.xml clean install
@@ -684,7 +752,7 @@ set_property(TARGET doxygen PROPERTY EXCLUDE_FROM_DEFAULT_BUILD TRUE)
 set_property(TARGET doxygen PROPERTY FOLDER "doc")
 
 add_custom_target(userdoc
-    COMMAND ../../tools/build/buildPyDoc.py -p ../pydoc -c
+    COMMAND ../../tools/build_config/buildPyDoc.py -p ../pydoc -c
     COMMAND mkdocs build -d ../userdoc
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/docs/web)
 set_property(TARGET userdoc PROPERTY EXCLUDE_FROM_DEFAULT_BUILD TRUE)
@@ -759,7 +827,7 @@ if (GTEST_FOUND)
     add_subdirectory(unittest)
 endif ()
 if (TEXTTEST_EXECUTABLE AND EXISTS ${CMAKE_SOURCE_DIR}/tests/runCiTests.bat)
-    add_test(texttest ${CMAKE_SOURCE_DIR}/tests/runCiTests.bat ${TEXTTEST_EXECUTABLE})
+    add_test(NAME texttest COMMAND ${CMAKE_SOURCE_DIR}/tests/runCiTests.bat ${TEXTTEST_EXECUTABLE} $<CONFIG>)
 else ()
     find_program(TEXTTEST_FOUND "texttest")
     if (TEXTTEST_FOUND AND EXISTS ${CMAKE_SOURCE_DIR}/tests/runTests.sh)
@@ -803,7 +871,7 @@ if (GIT_FOUND)
         COMMAND ln -s ../../userdoc/images sumo-${PACKAGE_VERSION}/docs/web/docs/images
         COMMAND tar -czf sumo_${PACKAGE_VERSION}.orig.tar.gz --exclude "*.jar" sumo-${PACKAGE_VERSION}
         COMMAND mkdir sumo-${PACKAGE_VERSION}/sumo-gui-macos
-        COMMAND cp -a build/macos/*/*.app sumo-${PACKAGE_VERSION}/sumo-gui-macos
+        COMMAND cp -a build_config/macos/*/*.app sumo-${PACKAGE_VERSION}/sumo-gui-macos
         COMMAND zip -rq sumo-gui-macos-${PACKAGE_VERSION}.zip sumo-${PACKAGE_VERSION}/sumo-gui-macos/*.app
         COMMAND rm -rf sumo-${PACKAGE_VERSION} sumo-${PACKAGE_VERSION}.zip
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2023-07-25 15:29:36 by Eclipse SUMO netedit Version v1_18_0+0529-4ea5ddd7168
+<!-- generated on 2023-11-09 16:45:21 by Eclipse SUMO netedit Version v1_19_0+0034-128786327d5
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/neteditConfiguration.xsd">
 
     <input>
-        <additional-files value="/home/palcraft/.texttest/tmp/netedit.gui.25Jul152304.79456/netedit.gui/demandelements/stop/trainstop/inspect/line/additionals.add.xml"/>
-        <route-files value="/home/palcraft/.texttest/tmp/netedit.gui.25Jul152304.79456/netedit.gui/demandelements/stop/trainstop/inspect/line/routes.rou.xml"/>
-        <data-files value="/home/palcraft/.texttest/tmp/netedit.gui.25Jul152304.79456/netedit.gui/demandelements/stop/trainstop/inspect/line/datas.dat.xml"/>
-        <sumo-net-file value="/home/palcraft/.texttest/tmp/netedit.gui.25Jul152304.79456/netedit.gui/demandelements/stop/trainstop/inspect/line/net.net.xml"/>
+        <additional-files value="/home/palcraft/.texttest/tmp/netedit.gui.09Nov163821.86046/netedit.gui/demandelements/stop/trainstop/inspect/line/additionals.add.xml"/>
+        <route-files value="/home/palcraft/.texttest/tmp/netedit.gui.09Nov163821.86046/netedit.gui/demandelements/stop/trainstop/inspect/line/routes.rou.xml"/>
+        <data-files value="/home/palcraft/.texttest/tmp/netedit.gui.09Nov163821.86046/netedit.gui/demandelements/stop/trainstop/inspect/line/datas.dat.xml"/>
+        <sumo-net-file value="/home/palcraft/.texttest/tmp/netedit.gui.09Nov163821.86046/netedit.gui/demandelements/stop/trainstop/inspect/line/net.net.xml"/>
     </input>
 
     <output>
-        <output-file value="/home/palcraft/.texttest/tmp/netedit.gui.25Jul152304.79456/netedit.gui/demandelements/stop/trainstop/inspect/line/net.net.xml"/>
+        <output-file value="/home/palcraft/.texttest/tmp/netedit.gui.09Nov163821.86046/netedit.gui/demandelements/stop/trainstop/inspect/line/net.net.xml"/>
     </output>
 
     <processing>
@@ -37,22 +37,22 @@
     </netedit>
 
     <visualisation>
-        <gui-settings-file value="/home/palcraft/.texttest/tmp/netedit.gui.25Jul152304.79456/netedit.gui/demandelements/stop/trainstop/inspect/line/gui-settings.xml"/>
+        <gui-settings-file value="/home/palcraft/.texttest/tmp/netedit.gui.09Nov163821.86046/netedit.gui/demandelements/stop/trainstop/inspect/line/gui-settings.xml"/>
         <window-size value="1280, 720"/>
         <window-pos value="50,50"/>
         <gui-testing value="true"/>
-        <gui-testing.setting-output value="/home/palcraft/.texttest/tmp/netedit.gui.25Jul152304.79456/netedit.gui/demandelements/stop/trainstop/inspect/line/guisettingsoutput.xml"/>
+        <gui-testing.setting-output value="/home/palcraft/.texttest/tmp/netedit.gui.09Nov163821.86046/netedit.gui/demandelements/stop/trainstop/inspect/line/guisettingsoutput.xml"/>
     </visualisation>
 
     <report>
         <no-warnings value="true"/>
-        <error-log value="/home/palcraft/.texttest/tmp/netedit.gui.25Jul152304.79456/netedit.gui/demandelements/stop/trainstop/inspect/line/log.txt"/>
+        <error-log value="/home/palcraft/.texttest/tmp/netedit.gui.09Nov163821.86046/netedit.gui/demandelements/stop/trainstop/inspect/line/log.txt"/>
     </report>
 
 </configuration>
 -->
 
-<net version="1.16" junctionCornerDetail="5" limitTurnSpeed="5.50" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/net_file.xsd">
+<net version="1.20" junctionCornerDetail="5" limitTurnSpeed="5.50" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/net_file.xsd">
 
     <location netOffset="-10.00,-20.00" convBoundary="0.00,10.00,60.00,40.00" origBoundary="-10000000000.00,-10000000000.00,10000000000.00,10000000000.00" projParameter="!"/>
 

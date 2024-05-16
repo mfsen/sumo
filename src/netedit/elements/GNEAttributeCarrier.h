@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -91,8 +91,43 @@ public:
     /// @brief get GUIGlObject associated with this AttributeCarrier
     virtual GUIGlObject* getGUIGlObject() = 0;
 
+    /// @brief get GUIGlObject associated with this AttributeCarrier (constant)
+    virtual const GUIGlObject* getGUIGlObject() const = 0;
+
     /// @brief update pre-computed geometry information
     virtual void updateGeometry() = 0;
+
+    /// @}
+
+    /// @name Function related with contourdrawing (can be implemented in children)
+    /// @{
+
+    /// @brief check if draw inspect contour (black/white)
+    bool checkDrawInspectContour() const;
+
+    /// @brief check if draw front contour (green/blue)
+    bool checkDrawFrontContour() const;
+
+    /// @brief check if draw from contour (green)
+    virtual bool checkDrawFromContour() const = 0;
+
+    /// @brief check if draw from contour (magenta)
+    virtual bool checkDrawToContour() const = 0;
+
+    /// @brief check if draw related contour (cyan)
+    virtual bool checkDrawRelatedContour() const = 0;
+
+    /// @brief check if draw over contour (orange)
+    virtual bool checkDrawOverContour() const = 0;
+
+    /// @brief check if draw delete contour (pink/white)
+    virtual bool checkDrawDeleteContour() const = 0;
+
+    /// @brief check if draw select contour (blue)
+    virtual bool checkDrawSelectContour() const = 0;
+
+    /// @brief check if draw move contour (red)
+    virtual bool checkDrawMoveContour() const = 0;
 
     /// @}
 
@@ -355,8 +390,8 @@ private:
     /// @brief fill person plan rides
     static void fillPersonPlanRides();
 
-    /// @brief fill stopPerson elements
-    static void fillStopPersonElements();
+    /// @brief fill person stop elements
+    static void fillPersonStopElements();
 
     /// @brief fill container elements
     static void fillContainerElements();
@@ -369,6 +404,9 @@ private:
 
     /// @brief fill container stop elements
     static void fillContainerStopElements();
+
+    /// @brief fill common POI attributes
+    static void fillPOIAttributes(SumoXMLTag currentTag);
 
     /// @brief fill common vehicle attributes (used by vehicles, trips, routeFlows and flows)
     static void fillCommonVehicleAttributes(SumoXMLTag currentTag);
@@ -393,6 +431,27 @@ private:
 
     /// @brief fill stop person attributes
     static void fillCommonStopAttributes(SumoXMLTag currentTag, const bool waypoint);
+
+    /// @brief fill plan from-to attribute
+    static void fillPlanParentAttributes(SumoXMLTag currentTag);
+
+    /// @brief fill person trip common attributes
+    static void fillPersonTripCommonAttributes(SumoXMLTag currentTag);
+
+    /// @brief fill walk common attributes
+    static void fillWalkCommonAttributes(SumoXMLTag currentTag);
+
+    /// @brief fill ride common attributes
+    static void fillRideCommonAttributes(SumoXMLTag currentTag);
+
+    /// @brief fill transport common attributes
+    static void fillTransportCommonAttributes(SumoXMLTag currentTag);
+
+    /// @brief fill ride common attributes
+    static void fillTranshipCommonAttributes(SumoXMLTag currentTag);
+
+    /// @brief fill plan stop common attributes
+    static void fillPlanStopCommonAttributes(SumoXMLTag currentTag);
 
     /// @brief fill Data elements
     static void fillDataElements();

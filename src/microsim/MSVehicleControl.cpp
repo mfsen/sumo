@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -469,7 +469,7 @@ MSVehicleControl::getPedestrianTypes(void) const {
     for (auto const& e : myVTypeDict)
         if (e.second->getVehicleClass() == SUMOVehicleClass::SVC_PEDESTRIAN) {
             pedestrianTypes.push_back(e.second);
-        } 
+        }
     return pedestrianTypes;
 }
 
@@ -565,12 +565,13 @@ MSVehicleControl::getTeleportCount() const {
 
 
 void
-MSVehicleControl::adaptIntermodalRouter(MSNet::MSIntermodalRouter& router) const {
+MSVehicleControl::adaptIntermodalRouter(MSTransportableRouter& router) const {
     for (const SUMOVehicle* const veh : myPTVehicles) {
         // add single vehicles with line attribute which are not part of a flow
         ConstMSRoutePtr const route = MSRoute::dictionary(veh->getParameter().routeid);
         router.getNetwork()->addSchedule(veh->getParameter(), route == nullptr ? nullptr : &route->getStops());
     }
 }
+
 
 /****************************************************************************/

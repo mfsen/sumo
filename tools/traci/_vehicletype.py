@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-# Copyright (C) 2008-2023 German Aerospace Center (DLR) and others.
+# Copyright (C) 2008-2024 German Aerospace Center (DLR) and others.
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # https://www.eclipse.org/legal/epl-2.0/
@@ -309,14 +309,14 @@ class VTypeDomain(Domain):
         """
         self._setCmd(tc.VAR_EMISSIONCLASS, typeID, "s", clazz)
 
-    def setShapeClass(self, typeID, clazz):
+    def setShapeClass(self, typeID, shapeClass):
         """setShapeClass(string, string) -> None
 
         Sets the shape class of this type.
         If called in the context of a person or vehicle, it will change the value just for the single instance.
         Use the respective object ID as typeID value in said context.
         """
-        self._setCmd(tc.VAR_SHAPECLASS, typeID, "s", clazz)
+        self._setCmd(tc.VAR_SHAPECLASS, typeID, "s", shapeClass)
 
     def setWidth(self, typeID, width):
         """setWidth(string, double) -> None

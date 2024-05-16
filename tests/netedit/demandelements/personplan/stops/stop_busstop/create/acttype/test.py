@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-# Copyright (C) 2009-2023 German Aerospace Center (DLR) and others.
+# Copyright (C) 2009-2024 German Aerospace Center (DLR) and others.
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # https://www.eclipse.org/legal/epl-2.0/
@@ -35,11 +35,12 @@ netedit.supermodeDemand()
 netedit.personMode()
 
 # change person plan
-netedit.changePersonPlan("walk: edge", False)
+netedit.changePersonPlan("walk", False)
 
 # create route using one edge
 netedit.leftClick(referencePosition, netedit.positions.demandElements.edge0.x, netedit.positions.demandElements.edge0.y)
-netedit.leftClick(referencePosition, 280, 60)
+netedit.leftClick(referencePosition, netedit.positions.demandElements.busStop.x,
+                  netedit.positions.demandElements.busStop.y)
 
 # press enter to create route
 netedit.typeEnter()
@@ -47,33 +48,29 @@ netedit.typeEnter()
 # go to person plan mode
 netedit.personPlanMode()
 
-# select person
-netedit.leftClick(referencePosition, netedit.positions.demandElements.person.x,
-                  netedit.positions.demandElements.person.y)
+# go to StopPlanStoppingPlace mode
+netedit.changePersonPlanMode("stop")
 
-# go to personStopBusStop mode
-netedit.changePersonPlanMode("stopPerson: busStop")
-
-# create personStopBusStop
-netedit.leftClick(referencePosition, 180, 50)
+# create StopPlanStoppingPlace
+netedit.leftClick(referencePosition, netedit.positions.demandElements.busStop.x,
+                  netedit.positions.demandElements.busStop.y)
 
 # set invalid person number
-netedit.changeDefaultValue(netedit.attrs.personStopBusStop.create.actType, "dummy")
+netedit.changeDefaultValue(netedit.attrs.stopPlanStoppingPlace.create.actType, "dummy")
 
-# create personStopBusStop
-netedit.leftClick(referencePosition, 180, 50)
+# create StopPlanStoppingPlace
+netedit.leftClick(referencePosition, netedit.positions.demandElements.busStop.x,
+                  netedit.positions.demandElements.busStop.y)
 
 # set invalid person number
-netedit.changeDefaultValue(netedit.attrs.personStopBusStop.create.actType, "singing")
+netedit.changeDefaultValue(netedit.attrs.stopPlanStoppingPlace.create.actType, "singing")
 
-# create personStopBusStop
-netedit.leftClick(referencePosition, 180, 50)
+# create StopPlanStoppingPlace
+netedit.leftClick(referencePosition, netedit.positions.demandElements.busStop.x,
+                  netedit.positions.demandElements.busStop.y)
 
 # Check undo redo
 netedit.checkUndoRedo(referencePosition)
-
-# press enter to create route
-netedit.typeEnter()
 
 # Check undo redo
 netedit.checkUndoRedo(referencePosition)

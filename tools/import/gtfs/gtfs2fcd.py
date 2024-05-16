@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-# Copyright (C) 2010-2023 German Aerospace Center (DLR) and others.
+# Copyright (C) 2010-2024 German Aerospace Center (DLR) and others.
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # https://www.eclipse.org/legal/epl-2.0/
@@ -41,7 +41,7 @@ def add_options():
     op.add_argument("-r", "--region", default="gtfs", category="input",
                     help="define the region to process")
     op.add_argument("--gtfs", category="input", required=True, type=op.data_file,
-                    help="define gtfs zip file to load (mandatory)")
+                    help="define gtfs zip file to load (mandatory)", fix_path=True)
     op.add_argument("--date", category="input", required=True, help="define the day to import, format: 'YYYYMMDD'")
     op.add_argument("--fcd", category="input", type=op.data_file,
                     help="directory to write / read the generated FCD files to / from")
@@ -77,7 +77,7 @@ def time2sec(s):
 
 
 def get_merged_data(options):
-    gtfsZip = zipfile.ZipFile(sumolib.openz(options.gtfs, mode="rb", tryGZip=False))
+    gtfsZip = zipfile.ZipFile(sumolib.openz(options.gtfs, mode="rb", tryGZip=False, printErrors=True))
     routes, trips_on_day, shapes, stops, stop_times = gtfs2osm.import_gtfs(options, gtfsZip)
     gtfsZip.fp.close()
 
@@ -133,9 +133,9 @@ def main(options):
         tripFile[mode] = io.open(filePrefix + '.rou.xml', 'w', encoding="utf8")
         tripFile[mode].write(u"<routes>\n")
     timeIndex = 0
-    for _, trip_data in full_data_merged.groupby(['route_id']):
+    for _, trip_data in full_data_merged.groupby('route_id'):
         seqs = {}
-        for trip_id, data in trip_data.groupby(['trip_id']):
+        for trip_id, data in trip_data.groupby('trip_id'):
             stopSeq = []
             buf = u""
             offset = 0

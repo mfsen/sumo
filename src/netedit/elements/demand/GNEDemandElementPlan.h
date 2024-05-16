@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -30,6 +30,10 @@
 
 class SUMOVehicleParameter;
 class GNEDemandElement;
+class GNEEdge;
+class GNEJunction;
+class GNEAdditional;
+class GNERoute;
 
 // ===========================================================================
 // class definitions
@@ -37,15 +41,84 @@ class GNEDemandElement;
 
 class GNEDemandElementPlan {
 
+public:
+    /// @brief get the walk tag and icon for the combination
+    static std::pair<SumoXMLTag, GUIIcon> getWalkTagIcon(const std::vector<GNEEdge*>& consecutiveEdges,
+            const GNEDemandElement* route, const GNEEdge* fromEdge, const GNEEdge* toEdge,
+            const GNEAdditional* fromTAZ, const GNEAdditional* toTAZ, const GNEJunction* fromJunction,
+            const GNEJunction* toJunction, const GNEAdditional* fromBusStop, const GNEAdditional* toBusStop,
+            const GNEAdditional* fromTrainStop, const GNEAdditional* toTrainStop);
+
+    /// @brief get the personTrip tag and icon for the combination
+    static std::pair<SumoXMLTag, GUIIcon> getPersonTripTagIcon(const GNEEdge* fromEdge, const GNEEdge* toEdge,
+            const GNEAdditional* fromTAZ, const GNEAdditional* toTAZ, const GNEJunction* fromJunction,
+            const GNEJunction* toJunction, const GNEAdditional* fromBusStop, const GNEAdditional* toBusStop,
+            const GNEAdditional* fromTrainStop, const GNEAdditional* toTrainStop);
+
+    /// @brief get the ride tag and icon for the combination
+    static std::pair<SumoXMLTag, GUIIcon> getRideTagIcon(const GNEEdge* fromEdge, const GNEEdge* toEdge,
+            const GNEAdditional* fromBusStop, const GNEAdditional* toBusStop,
+            const GNEAdditional* fromTrainStop, const GNEAdditional* toTrainStop);
+
+    /// @brief get the transport tag and icon for the combination
+    static std::pair<SumoXMLTag, GUIIcon> getTransportTagIcon(const GNEEdge* fromEdge, const GNEEdge* toEdge,
+            const GNEAdditional* fromContainerStop, const GNEAdditional* toContainerStop);
+
+    /// @brief get the tranship tag and icon for the combination
+    static std::pair<SumoXMLTag, GUIIcon> getTranshipTagIcon(const std::vector<GNEEdge*>& consecutiveEdges,
+            const GNEEdge* fromEdge, const GNEEdge* toEdge, const GNEAdditional* fromContainerStop,
+            const GNEAdditional* toContainerStop);
+
+    /// @brief get the person stop tag and icon for the combination
+    static std::pair<SumoXMLTag, GUIIcon> getPersonStopTagIcon(const GNEEdge* edge, const GNEAdditional* busStop,
+            const GNEAdditional* trainStop);
+
+    /// @brief get the container stop tag and icon for the combination
+    static std::pair<SumoXMLTag, GUIIcon> getContainerStopTagIcon(const GNEEdge* edge, const GNEAdditional* containerStop);
+
 protected:
+    /// @brief variable used for draw contours
+    GNEContour myPlanContour;
+
     /// @brief constructor
-    GNEDemandElementPlan(GNEDemandElement* planElement, double arrivalPosition);
+    GNEDemandElementPlan(GNEDemandElement* planElement, const double departPosition, const double arrivalPosition);
+
+    /**@brief get move operation
+     * @note returned GNEMoveOperation can be nullptr
+     */
+    GNEMoveOperation* getPlanMoveOperation();
+
+    /// @brief write plan element common attributes
+    void writeLocationAttributes(OutputDevice& device) const;
+
+    /// @brief write initial stop stage if plan starts at a stopping place
+    void writeOriginStop(OutputDevice& device) const;
+
+    /// @brief Returns an own popup-menu
+    GUIGLObjectPopupMenu* getPlanPopUpMenu(GUIMainWindow& app, GUISUMOAbstractView& parent);
+
+    /// @name path functions
+    /// @{
+
+    /// @brief get first plan path lane
+    GNELane* getFirstPlanPathLane() const;
+
+    /// @brief get last plan path lane
+    GNELane* getLastPlanPathLane() const;
+
+    /// @brief compute plan pathElement
+    void computePlanPathElement();
+
+    /// @}
 
     /// @name geometry functions
     /// @{
 
     /// @brief update pre-computed geometry information
     void updatePlanGeometry();
+
+    /// @brief get centering boundaryt
+    Boundary getPlanCenteringBoundary() const;
 
     /// @brief Returns position of additional in view
     Position getPlanPositionInView() const;
@@ -78,46 +151,58 @@ protected:
 
     /// @brief get plan Hierarchy Name (Used in AC Hierarchy)
     std::string getPlanHierarchyName() const;
-    
+
     /// @}
 
     /// @name drawing functions
     /// @{
 
     /// @brief check if person plan can be drawn
-    bool drawPersonPlan() const;
+    bool checkDrawPersonPlan() const;
 
     /// @brief check if container plan can be drawn
-    bool drawContainerPlan() const;
+    bool checkDrawContainerPlan() const;
 
     /// @brief draw plan
-    void drawPlanGL(const GUIVisualizationSettings& s, const RGBColor& planColor) const;
+    void drawPlanGL(const bool drawPlan, const GUIVisualizationSettings& s, const RGBColor& planColor, const RGBColor& planSelectedColor) const;
 
-    /// @brief draw person plan partial lane
-    void drawPlanPartial(const bool drawPlan, const GUIVisualizationSettings& s, const GNELane* lane, const GNEPathManager::Segment* segment, const double offsetFront,
-                         const double personPlanWidth, const RGBColor& planColor) const;
+    /// @brief draw plan partial lane
+    void drawPlanLanePartial(const bool drawPlan, const GUIVisualizationSettings& s, const GNEPathManager::Segment* segment, const double offsetFront,
+                             const double planWidth, const RGBColor& planColor, const RGBColor& planSelectedColor) const;
 
-    /// @brief draw person plan partial junction
-    void drawPlanPartial(const bool drawPlan, const GUIVisualizationSettings& s, const GNELane* fromLane, const GNELane* toLane, const GNEPathManager::Segment* segment,
-                         const double offsetFront, const double personPlanWidth, const RGBColor& planColor) const;
+    /// @brief draw plan partial junction
+    void drawPlanJunctionPartial(const bool drawPlan, const GUIVisualizationSettings& s, const GNEPathManager::Segment* segment, const double offsetFront,
+                                 const double planWidth, const RGBColor& planColor, const RGBColor& planSelectedColor) const;
 
     /// @}
 
-    /// @brief check if person plan is valid
-    GNEDemandElement::Problem isPersonPlanValid() const;
+    /// @brief check if plan is valid
+    GNEDemandElement::Problem isPlanPersonValid() const;
 
-    /// @brief get person plan problem
+    /// @brief get plan problem
     std::string getPersonPlanProblem() const;
 
-    /// @brief arrival position
+    /// @brief depart position (used in tranships)
+    double myDepartPosition;
+
+    /// @brief arrival position (used in all plans over edges)
     double myArrivalPosition;
 
-    /// @brief person plans arrival position radius
-    static const double myPersonPlanArrivalPositionDiameter;
-
 private:
+    /// @brief draw from arrow
+    void drawFromArrow(const GUIVisualizationSettings& s, const GNELane* lane, const GNEPathManager::Segment* segment) const;
+
+    /// @brief draw to arrow
+    void drawToArrow(const GUIVisualizationSettings& s, const GNELane* lane, const GNEPathManager::Segment* segment) const;
+
+    /// @brief draw to arrow
+    void drawEndPosition(const GUIVisualizationSettings& s, const GUIVisualizationSettings::Detail d, const GNEPathManager::Segment* segment, const bool duplicateWidth) const;
+
     /// @brief pointer to plan element
     GNEDemandElement* myPlanElement;
+
+    /// @brief arrival position diameter
+    static const double myArrivalPositionDiameter;
 
     /// @brief Invalidated copy constructor.
     GNEDemandElementPlan(const GNEDemandElementPlan&) = delete;

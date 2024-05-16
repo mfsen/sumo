@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-# Copyright (C) 2009-2023 German Aerospace Center (DLR) and others.
+# Copyright (C) 2009-2024 German Aerospace Center (DLR) and others.
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # https://www.eclipse.org/legal/epl-2.0/
@@ -31,7 +31,7 @@ class demandElements:
 
     class edge2:
         x = 375
-        y = 30
+        y = 33
 
     class edge3:
         x = 280
@@ -45,9 +45,17 @@ class demandElements:
         x = 450
         y = 390
 
+    class edgeRepeat0:
+        x = 110
+        y = 250
+
+    class edgeRepeat1:
+        x = 150
+        y = 250
+
     class edgeBus1:
-        x = 115
-        y = 150
+        x = 150
+        y = 220
 
     class edgeBus2:
         x = 150
@@ -109,6 +117,10 @@ class demandElements:
         x = 470
         y = 440
 
+    class routeB:
+        x = 470
+        y = 400
+
     class container:
         x = 135
         y = 480
@@ -116,6 +128,22 @@ class demandElements:
     class containerPlanEdge:
         x = 197
         y = 37
+
+    class planTopEdge:
+        x = 750
+        y = 3
+
+    class planTopBusStop:
+        x = 750
+        y = 33
+
+    class planTopRide:
+        x = 750
+        y = 33
+
+    class planTop:
+        x = 720
+        y = 3
 
     # click over single trips, flows, etc... over edges
     class singleVehicleEdge:
@@ -129,17 +157,12 @@ class demandElements:
 
     # click over single person / flow over edges
     class person:
-        x = 136
-        y = 472
+        x = 133
+        y = 479
 
-    # click over person stop
-    class stopPerson:
-        x = 280
-        y = 0
-
-    # click over stop edge
+    # click stop/waypoint over edge
     class stopEdge:
-        x = 260
+        x = 256
         y = 35
 
     # click over single trip or flow over junctions
@@ -159,7 +182,7 @@ class demandElements:
 
     # click over plan in busStop
     class planBusStop:
-        x = 377
+        x = 318
         y = 14
 
     # click over plan in edge

@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -567,10 +567,10 @@ public:
 
     /// @brief check if undo-redo is enabled
     const std::string& isUndoRedoEnabled() const;
-    
+
     /// @brief clear undo list
     void clearUndoList();
-    
+
     /// @brief get file Menu Commands (needed for show/hide menu commands)
     GNEApplicationWindowHelper::FileMenuCommands& getFileMenuCommands();
 
@@ -579,13 +579,13 @@ public:
 
     /// @brief get Edit Menu Commands (needed for show/hide menu commands)
     GNEApplicationWindowHelper::EditMenuCommands& getEditMenuCommands();
-    
+
     /// @brief get processing Menu Commands
     const GNEApplicationWindowHelper::ProcessingMenuCommands& getProcessingMenuCommands() const;
-    
+
     /// @brief get lock Menu Commands
     GNEApplicationWindowHelper::LockMenuCommands& getLockMenuCommands();
-    
+
     /// @brief get SUMO options container
     OptionsCont& getSumoOptions();
 
@@ -615,42 +615,42 @@ protected:
     bool myAmLoading = false;
 
     /// @brief the submenus
-    FXMenuPane *myFileMenu = nullptr,
-               *myFileMenuNeteditConfig = nullptr,
-               *myFileMenuSumoConfig = nullptr,
-               *myFileMenuTLS = nullptr,
-               *myFileMenuEdgeTypes = nullptr,
-               *myFileMenuAdditionals = nullptr,
-               *myFileMenuDemandElements = nullptr,
-               *myFileMenuDataElements = nullptr,
-               *myFileMenuMeanDataElements = nullptr,
-               *myFileMenuRecentNetworks = nullptr,
-               *myFileMenuRecentConfigs = nullptr,
-               *myModesMenu = nullptr,
-               *myEditMenu = nullptr,
-               *myLockMenu = nullptr,
-               *myProcessingMenu = nullptr,
-               *myLocatorMenu = nullptr,
-               *myToolsMenu = nullptr,
-               *myToolsDetectorMenu = nullptr,
-               *myToolsDistrictMenu = nullptr,
-               *myToolsDRTMenu = nullptr,
-               *myToolsEmissionsMenu = nullptr,
-               *myToolsImportMenu = nullptr,
-               *myToolsImportCityBrainMenu = nullptr,
-               *myToolsImportGTFSMenu = nullptr,
-               *myToolsImportVissim = nullptr,
-               *myToolsImportVisum = nullptr,
-               *myToolsNetMenu = nullptr,
-               *myToolsRouteMenu = nullptr,
-               *myToolsOutputMenu = nullptr,
-               *myToolsShapes = nullptr,
-               *myToolsTLS = nullptr,
-               *myToolsTurnDefs = nullptr,
-               *myToolsVisualizationMenu = nullptr,
-               *myToolsXML = nullptr,
-               *myWindowMenu = nullptr,
-               *myHelpMenu = nullptr;
+    FXMenuPane* myFileMenu = nullptr,
+                *myFileMenuNeteditConfig = nullptr,
+                 *myFileMenuSumoConfig = nullptr,
+                  *myFileMenuTLS = nullptr,
+                   *myFileMenuEdgeTypes = nullptr,
+                    *myFileMenuAdditionals = nullptr,
+                     *myFileMenuDemandElements = nullptr,
+                      *myFileMenuDataElements = nullptr,
+                       *myFileMenuMeanDataElements = nullptr,
+                        *myFileMenuRecentNetworks = nullptr,
+                         *myFileMenuRecentConfigs = nullptr,
+                          *myModesMenu = nullptr,
+                           *myEditMenu = nullptr,
+                            *myLockMenu = nullptr,
+                             *myProcessingMenu = nullptr,
+                              *myLocatorMenu = nullptr,
+                               *myToolsMenu = nullptr,
+                                *myToolsDetectorMenu = nullptr,
+                                 *myToolsDistrictMenu = nullptr,
+                                  *myToolsDRTMenu = nullptr,
+                                   *myToolsEmissionsMenu = nullptr,
+                                    *myToolsImportMenu = nullptr,
+                                     *myToolsImportCityBrainMenu = nullptr,
+                                      *myToolsImportGTFSMenu = nullptr,
+                                       *myToolsImportVissim = nullptr,
+                                        *myToolsImportVisum = nullptr,
+                                         *myToolsNetMenu = nullptr,
+                                          *myToolsRouteMenu = nullptr,
+                                           *myToolsOutputMenu = nullptr,
+                                            *myToolsShapes = nullptr,
+                                             *myToolsTLS = nullptr,
+                                              *myToolsTurnDefs = nullptr,
+                                               *myToolsVisualizationMenu = nullptr,
+                                                *myToolsXML = nullptr,
+                                                 *myWindowMenu = nullptr,
+                                                  *myHelpMenu = nullptr;
 
     /// @brief map with menu pane tools and strings
     std::map<std::string, FXMenuPane*> myMenuPaneToolMaps;

@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2006-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2006-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -69,9 +69,9 @@ MFXGroupBoxModule::MFXGroupBoxModule(GNEFrame* frame, const std::string& text, c
     }
     if (myOptions & Options::EXTENSIBLE) {
         myExtendButton = new MFXButtonTooltip(headerFrame,
-            frame->getViewNet()->getViewParent()->getGNEAppWindows()->getStaticTooltipMenu(),
-            TL("Expand"), nullptr, this, MID_GROUPBOXMODULE_EXTEND, GUIDesignButtonMFXGroupBoxModuleExtend);
-            myExtendButton->setTipText(TL("Expand frame to show all contents"));
+                                              frame->getViewNet()->getViewParent()->getGNEAppWindows()->getStaticTooltipMenu(),
+                                              TL("Expand"), nullptr, this, MID_GROUPBOXMODULE_EXTEND, GUIDesignButtonMFXGroupBoxModuleExtend);
+        myExtendButton->setTipText(TL("Expand frame to show all contents"));
         myResetWidthButton = GUIDesigns::buildFXButton(headerFrame, "", "", "", GUIIconSubSys::getIcon(GUIIcon::RESET), this, MID_GROUPBOXMODULE_RESETWIDTH, GUIDesignButtonMFXGroupBoxModule);
     }
     if (myOptions & Options::SAVE) {

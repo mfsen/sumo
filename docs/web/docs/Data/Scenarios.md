@@ -31,7 +31,7 @@ of Bologna", SUMO2014, p 19-26
 
 - [Brunswick Scenario on GitHub](https://github.com/DLR-TS/sumo-scenarios/tree/main/brunswick)
 
-# Dublin - Irish Motorway, National road and city centre 
+# Dublin - Irish Motorway, National road and city centre
 
 - [Main Page](https://github.com/maxime-gueriau/ITSC2020_CAV_impact)
 - Publication: Quantifying the impact of connected and autonomous vehicles on traffic efficiency and safety in mixed traffic" by Maxime Gueriau and Ivana Dusparic, presented at the The 23rd IEEE International Conference on Intelligent Transportation Systems (ITSC 2020)
@@ -92,7 +92,7 @@ A large-scale mesoscopic traffic simulation of a 600-sqkm area around the Munici
 # TAPASCologne
 
 ![ssnap_TapasCologne_0.1.gif](../images/Ssnap_TapasCologne_0.1.gif
-"TAPAS Cologne")   
+"TAPAS Cologne")
 The "TAPAS Cologne" simulation scenario
 describes the traffic within the city of Cologne, Germany for a whole
 day. The original demand data stems from TAPAS, a system which computes
@@ -120,14 +120,14 @@ connected driving in Hamburg.
 
 [SUMO simulation files for running 24h of car traffic in five large-scale cities](https://www.research-collection.ethz.ch/handle/20.500.11850/584669)
 
-# Further real-world scenarios
+# Outdated real-world scenarios
 
-- [Bologna Ringway](https://academic.lucabedogni.it/the-bologna-ringway-dataset/).
+- [Bologna Ringway](https://web.archive.org/web/20220707045650/https://academic.lucabedogni.it/the-bologna-ringway-dataset/).
     Scenario built within the [COLOMBO R&D
     project](https://web.archive.org/web/20170716120720/https://www.colombo-fp7.eu/).
 
 !!! caution
-    This scenario is known to have lots of collisions due to unsafe traffic lights and some invalid junction definitions. It is also quite jammed.
+    This scenario seems to have been removed and is only here for historical reference. It was known to have lots of collisions due to unsafe traffic lights and some invalid junction definitions. It is also quite jammed.
 
 # Synthetic scenarios
 

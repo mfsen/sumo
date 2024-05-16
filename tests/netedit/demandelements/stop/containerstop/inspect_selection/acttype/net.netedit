@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2023-07-24 11:22:08 by Eclipse SUMO netedit Version v1_18_0+0458-be70fa69b0d
+<!-- generated on 2023-11-10 10:55:23 by Eclipse SUMO netedit Version v1_19_0+0034-128786327d5
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/neteditConfiguration.xsd">
 
     <input>
-        <additional-files value="/home/palcraft/.texttest/tmp/netedit.gui.24Jul110354.125148/netedit.gui/demandelements/stop/containerstop/inspect_selection/acttype/additionals.add.xml"/>
-        <route-files value="/home/palcraft/.texttest/tmp/netedit.gui.24Jul110354.125148/netedit.gui/demandelements/stop/containerstop/inspect_selection/acttype/routes.rou.xml"/>
-        <data-files value="/home/palcraft/.texttest/tmp/netedit.gui.24Jul110354.125148/netedit.gui/demandelements/stop/containerstop/inspect_selection/acttype/datas.dat.xml"/>
-        <sumo-net-file value="/home/palcraft/.texttest/tmp/netedit.gui.24Jul110354.125148/netedit.gui/demandelements/stop/containerstop/inspect_selection/acttype/net.net.xml"/>
+        <additional-files value="/home/palcraft/.texttest/tmp/netedit.gui.10Nov104609.40279/netedit.gui/demandelements/stop/containerstop/inspect_selection/acttype/additionals.add.xml"/>
+        <route-files value="/home/palcraft/.texttest/tmp/netedit.gui.10Nov104609.40279/netedit.gui/demandelements/stop/containerstop/inspect_selection/acttype/routes.rou.xml"/>
+        <data-files value="/home/palcraft/.texttest/tmp/netedit.gui.10Nov104609.40279/netedit.gui/demandelements/stop/containerstop/inspect_selection/acttype/datas.dat.xml"/>
+        <sumo-net-file value="/home/palcraft/.texttest/tmp/netedit.gui.10Nov104609.40279/netedit.gui/demandelements/stop/containerstop/inspect_selection/acttype/net.net.xml"/>
     </input>
 
     <output>
-        <output-file value="/home/palcraft/.texttest/tmp/netedit.gui.24Jul110354.125148/netedit.gui/demandelements/stop/containerstop/inspect_selection/acttype/net.net.xml"/>
+        <output-file value="/home/palcraft/.texttest/tmp/netedit.gui.10Nov104609.40279/netedit.gui/demandelements/stop/containerstop/inspect_selection/acttype/net.net.xml"/>
     </output>
 
     <processing>
@@ -37,22 +37,22 @@
     </netedit>
 
     <visualisation>
-        <gui-settings-file value="/home/palcraft/.texttest/tmp/netedit.gui.24Jul110354.125148/netedit.gui/demandelements/stop/containerstop/inspect_selection/acttype/gui-settings.xml"/>
+        <gui-settings-file value="/home/palcraft/.texttest/tmp/netedit.gui.10Nov104609.40279/netedit.gui/demandelements/stop/containerstop/inspect_selection/acttype/gui-settings.xml"/>
         <window-size value="1280, 720"/>
         <window-pos value="50,50"/>
         <gui-testing value="true"/>
-        <gui-testing.setting-output value="/home/palcraft/.texttest/tmp/netedit.gui.24Jul110354.125148/netedit.gui/demandelements/stop/containerstop/inspect_selection/acttype/guisettingsoutput.xml"/>
+        <gui-testing.setting-output value="/home/palcraft/.texttest/tmp/netedit.gui.10Nov104609.40279/netedit.gui/demandelements/stop/containerstop/inspect_selection/acttype/guisettingsoutput.xml"/>
     </visualisation>
 
     <report>
         <no-warnings value="true"/>
-        <error-log value="/home/palcraft/.texttest/tmp/netedit.gui.24Jul110354.125148/netedit.gui/demandelements/stop/containerstop/inspect_selection/acttype/log.txt"/>
+        <error-log value="/home/palcraft/.texttest/tmp/netedit.gui.10Nov104609.40279/netedit.gui/demandelements/stop/containerstop/inspect_selection/acttype/log.txt"/>
     </report>
 
 </configuration>
 -->
 
-<net version="1.16" junctionCornerDetail="5" limitTurnSpeed="5.50" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/net_file.xsd">
+<net version="1.20" junctionCornerDetail="5" limitTurnSpeed="5.50" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/net_file.xsd">
 
     <location netOffset="-10.00,-20.00" convBoundary="0.00,10.00,60.00,40.00" origBoundary="-10000000000.00,-10000000000.00,10000000000.00,10000000000.00" projParameter="!"/>
 

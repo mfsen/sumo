@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -54,7 +54,7 @@ public:
      * @param[in] id The name of the polygon
      * @param[in] type The (abstract) type of the polygon
      * @param[in] shape The shape of the polygon
-     * @param[in] geo specifiy if shape was loaded as GEO
+     * @param[in] geo specify if shape was loaded as GEO
      * @param[in] color The color of the polygon
      * @param[in] layer The layer of the polygon
      * @param[in] angle The rotation of the polygon
@@ -68,15 +68,16 @@ public:
     GNEPoly(GNENet* net, const std::string& id, const std::string& type, const PositionVector& shape, bool geo, bool fill,
             double lineWidth, const RGBColor& color, double layer, double angle, const std::string& imgFile, bool relativePath,
             const std::string& name, const Parameterised::Map& parameters);
-    
+
     /** @brief Constructor for JuPedSim elements
      * @param[in] net net in which this polygon is placed
      * @param[in] id The name of the polygon
      * @param[in] shape The shape of the polygon
+     * @param[in] geo specify if shape was loaded as GEO
      * @param[in] name Poly's name
      * @param[in] parameters generic parameters
      */
-    GNEPoly(SumoXMLTag tag, GNENet* net, const std::string& id, const PositionVector& shape, const std::string& name,
+    GNEPoly(SumoXMLTag tag, GNENet* net, const std::string& id, const PositionVector& shape, bool geo, const std::string& name,
             const Parameterised::Map& parameters);
 
     /// @brief Destructor
@@ -130,6 +131,14 @@ public:
 
     /// @}
 
+    /// @name Function related with contour drawing
+    /// @{
+
+    /// @brief check if draw move contour (red)
+    bool checkDrawMoveContour() const override;
+
+    /// @}
+
     /// @name inherited from GUIGlObject
     /// @{
     /**@brief Returns the name of the parent object
@@ -152,9 +161,6 @@ public:
      */
     void drawGL(const GUIVisualizationSettings& s) const override;
 
-    double getClickPriority() const override {
-        return getShapeLayer();
-    }
     /// @}
 
     /// @name inherited from GNEAttributeCarrier
@@ -232,9 +238,6 @@ protected:
     /// @brief flag to indicate if polygon is simplified
     bool mySimplifiedShape;
 
-    /// @brief geometry for lengths/rotations
-    GUIGeometry myPolygonGeometry;
-
 private:
     /// @brief set attribute after validation
     void setAttribute(SumoXMLAttr key, const std::string& value) override;
@@ -244,6 +247,21 @@ private:
 
     /// @brief commit move shape
     void commitMoveShape(const GNEMoveResult& moveResult, GNEUndoList* undoList) override;
+
+    /// @brief draw polygon
+    void drawPolygon(const GUIVisualizationSettings& s, const GUIVisualizationSettings::Detail d,
+                     const RGBColor& color, const double exaggeration) const;
+
+    /// @brief draw contour
+    void drawPolygonContour(const GUIVisualizationSettings& s, const GUIVisualizationSettings::Detail d,
+                            const RGBColor& color, const double exaggeration) const;
+
+    /// @brief draw geometry points
+    void drawGeometryPoints(const GUIVisualizationSettings& s, const GUIVisualizationSettings::Detail d,
+                            const RGBColor& color, const double exaggeration) const;
+
+    /// @brief draw polygon name and type
+    void drawPolygonNameAndType(const GUIVisualizationSettings& s) const;
 
     /// @brief Invalidated copy constructor.
     GNEPoly(const GNEPoly&) = delete;

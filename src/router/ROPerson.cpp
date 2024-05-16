@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2002-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2002-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -180,6 +180,23 @@ ROPerson::Ride::saveAsXML(OutputDevice& os, const bool extended, OptionsCont& op
 
 
 void
+ROPerson::Stop::saveAsXML(OutputDevice& os, const bool /*extended*/, const bool /*asTrip*/, OptionsCont& /*options*/) const {
+    stopDesc.write(os, false);
+    std::string comment = "";
+    for (std::string sID : stopDesc.getStoppingPlaceIDs()) {
+        const std::string name = RONet::getInstance()->getStoppingPlaceName(sID);
+        if (name != "") {
+            comment += name + " ";
+        }
+    }
+    if (comment != "") {
+        comment =  " <!-- " + comment + " -->";
+    }
+    stopDesc.writeParams(os);
+    os.closeTag(comment);
+}
+
+void
 ROPerson::Walk::saveAsXML(OutputDevice& os, const bool extended, OptionsCont& options) const {
     os.openTag(SUMO_TAG_WALK);
     std::string comment = "";
@@ -325,7 +342,8 @@ ROPerson::PersonTrip::getDuration() const {
 
 bool
 ROPerson::computeIntermodal(SUMOTime time, const RORouterProvider& provider,
-                            PersonTrip* const trip, const ROVehicle* const veh, MsgHandler* const errorHandler) {
+                            const PersonTrip* const trip, const ROVehicle* const veh,
+                            std::vector<TripItem*>& resultItems, MsgHandler* const errorHandler) {
     const double speed = getMaxSpeed() * trip->getWalkFactor();
     std::vector<ROIntermodalRouter::TripItem> result;
     provider.getIntermodalRouter().compute(trip->getOrigin(), trip->getDestination(),
@@ -358,9 +376,9 @@ ROPerson::computeIntermodal(SUMOTime time, const RORouterProvider& provider,
                     }
                 }
                 if (&item == &result.back() && trip->getStopDest() == "") {
-                    trip->addTripItem(new Walk(start, item.edges, item.cost, item.exitTimes, depPos, arrPos));
+                    resultItems.push_back(new Walk(start, item.edges, item.cost, item.exitTimes, depPos, arrPos));
                 } else {
-                    trip->addTripItem(new Walk(start, item.edges, item.cost, item.exitTimes, depPos, arrPos, item.destStop));
+                    resultItems.push_back(new Walk(start, item.edges, item.cost, item.exitTimes, depPos, arrPos, item.destStop));
                 }
             } else if (veh != nullptr && item.line == veh->getID()) {
                 double cost = item.cost;
@@ -369,16 +387,16 @@ ROPerson::computeIntermodal(SUMOTime time, const RORouterProvider& provider,
                     route->setProbability(1);
                     veh->getRouteDefinition()->addLoadedAlternative(route);
                     carUsed = true;
-                } else if (trip->needsRouting()) {
+                } else if (resultItems.empty()) {
                     // if this is the first plan item the initial taxi waiting time wasn't added yet
                     const double taxiWait = STEPS2TIME(string2time(OptionsCont::getOptions().getString("persontrip.taxi.waiting-time")));
                     cost += taxiWait;
                 }
-                trip->addTripItem(new Ride(start, item.edges.front(), item.edges.back(), veh->getID(), trip->getGroup(), cost, item.arrivalPos, item.length, item.destStop));
+                resultItems.push_back(new Ride(start, item.edges.front(), item.edges.back(), veh->getID(), trip->getGroup(), cost, item.arrivalPos, item.length, item.destStop));
             } else {
                 // write origin for first element of the plan
-                const ROEdge* origin = trip == myPlan.front() && trip->needsRouting() ? trip->getOrigin() : nullptr;
-                trip->addTripItem(new Ride(start, origin, nullptr, item.line, trip->getGroup(), item.cost, item.arrivalPos, item.length, item.destStop, item.intended, TIME2STEPS(item.depart)));
+                const ROEdge* origin = trip == myPlan.front() && resultItems.empty() ? trip->getOrigin() : nullptr;
+                resultItems.push_back(new Ride(start, origin, nullptr, item.line, trip->getGroup(), item.cost, item.arrivalPos, item.length, item.destStop, item.intended, TIME2STEPS(item.depart)));
             }
         }
         start += TIME2STEPS(item.cost);
@@ -399,36 +417,32 @@ ROPerson::computeRoute(const RORouterProvider& provider,
     for (PlanItem* const it : myPlan) {
         if (it->needsRouting()) {
             PersonTrip* trip = static_cast<PersonTrip*>(it);
-            std::vector<ROVehicle*>& vehicles = trip->getVehicles();
+            const std::vector<ROVehicle*>& vehicles = trip->getVehicles();
+            std::vector<TripItem*> resultItems;
+            std::vector<TripItem*> best;
+            const ROVehicle* bestVeh = nullptr;
             if (vehicles.empty()) {
-                computeIntermodal(time, provider, trip, nullptr, errorHandler);
+                computeIntermodal(time, provider, trip, nullptr, best, errorHandler);
             } else {
                 double bestCost = std::numeric_limits<double>::infinity();
-                PersonTrip* best = nullptr;
-                ROVehicle* bestVeh = nullptr;
-                for (std::vector<ROVehicle*>::iterator v = vehicles.begin(); v != vehicles.end();) {
-                    if (!computeIntermodal(time, provider, trip, *v, errorHandler)) {
-                        delete (*v)->getRouteDefinition();
-                        delete *v;
-                        v = vehicles.erase(v);
-                    } else {
-                        const double cost = trip->getCost();
-                        if (cost < bestCost) {
-                            bestCost = cost;
-                            if (best != nullptr) {
-                                delete best;
-                            }
-                            best = static_cast<PersonTrip*>(trip->clone());
-                            bestVeh = *v;
-                        }
-                        trip->clearItems();
-                        ++v;
+                for (const ROVehicle* const v : vehicles) {
+                    const bool carUsed = computeIntermodal(time, provider, trip, v, resultItems, errorHandler);
+                    double cost = 0.;
+                    for (const TripItem* const tripIt : resultItems) {
+                        cost += tripIt->getCost();
                     }
-                }
-                if (best != nullptr) {
-                    trip->copyItems(best, bestVeh);
+                    if (cost < bestCost) {
+                        bestCost = cost;
+                        bestVeh = carUsed ? v : nullptr;
+                        best.swap(resultItems);
+                    }
+                    for (const TripItem* const tripIt : resultItems) {
+                        delete tripIt;
+                    }
+                    resultItems.clear();
                 }
             }
+            trip->setItems(best, bestVeh);
         }
         time += it->getDuration();
     }

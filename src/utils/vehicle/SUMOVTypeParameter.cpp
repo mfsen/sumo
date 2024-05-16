@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -73,6 +73,7 @@ SUMOVTypeParameter::VClassDefaultValues::VClassDefaultValues(SUMOVehicleClass vc
     osgFile("car-normal-citrus.obj"),
     carriageLength(-1),
     locomotiveLength(-1),
+    carriageDoors(2),
     latAlignmentProcedure(LatAlignmentDefinition::CENTER) {
     // update default values
     switch (vclass) {
@@ -88,6 +89,18 @@ SUMOVTypeParameter::VClassDefaultValues::VClassDefaultValues(SUMOVehicleClass vc
             mass = 70.; // https://en.wikipedia.org/wiki/Human_body_weight for Europe
             speedFactor.getParameter()[1] = 0.1;
             break;
+        case SVC_WHEELCHAIR:
+            minGap = 0.5;
+            maxSpeed = 30.0 / 3.6; // https://en.wikipedia.org/wiki/Wheelchair_racing
+            desiredMaxSpeed = DEFAULT_PEDESTRIAN_SPEED;
+            width = 0.8;
+            height = 1.5;
+            shape = SUMOVehicleShape::PEDESTRIAN;
+            osgFile = "humanResting.obj";
+            emissionClass = PollutantsInterface::getClassByName(EMPREFIX + "zero", vclass);
+            mass = 90.; //
+            speedFactor.getParameter()[1] = 0.1;
+            break;
         case SVC_BICYCLE:
             minGap = 0.5;
             minGapLat = 0.35;
@@ -96,6 +109,20 @@ SUMOVTypeParameter::VClassDefaultValues::VClassDefaultValues(SUMOVehicleClass vc
             width = 0.65;
             height = 1.7;
             shape = SUMOVehicleShape::BICYCLE;
+            personCapacity = 1;
+            emissionClass = PollutantsInterface::getClassByName(EMPREFIX + "zero", vclass);
+            mass = 10.;
+            speedFactor.getParameter()[1] = 0.1;
+            latAlignmentProcedure = LatAlignmentDefinition::RIGHT;
+            break;
+        case SVC_SCOOTER:
+            minGap = 0.5;
+            minGapLat = 0.35;
+            maxSpeed = 25 / 3.6;
+            desiredMaxSpeed = DEFAULT_BICYCLE_SPEED;
+            width = 0.5;
+            height = 1.7;
+            shape = SUMOVehicleShape::SCOOTER;
             personCapacity = 1;
             emissionClass = PollutantsInterface::getClassByName(EMPREFIX + "zero", vclass);
             mass = 10.;
@@ -177,6 +204,7 @@ SUMOVTypeParameter::VClassDefaultValues::VClassDefaultValues(SUMOVehicleClass vc
             mass = 37900.;
             break;
         case SVC_RAIL_URBAN:
+        case SVC_SUBWAY:
             maxSpeed = 100. / 3.6;
             minGap = 5;
             width = 3.0;
@@ -199,7 +227,6 @@ SUMOVTypeParameter::VClassDefaultValues::VClassDefaultValues(SUMOVehicleClass vc
             break;
         case SVC_RAIL_ELECTRIC:
             maxSpeed = 220. / 3.6;
-            width = 0.78;
             minGap = 5;
             width = 2.95;
             height = 3.89;
@@ -253,6 +280,17 @@ SUMOVTypeParameter::VClassDefaultValues::VClassDefaultValues(SUMOVehicleClass vc
             emissionClass = PollutantsInterface::getClassByName(EMPREFIX + "zero", vclass);
             speedFactor.getParameter()[1] = 0.1;
             break;
+        case SVC_CONTAINER:
+            width = 2.5908;
+            break;
+        case SVC_DRONE:
+            width = 0.5;
+            break;
+        case SVC_AIRCRAFT:
+            // Airbus A380
+            shape = SUMOVehicleShape::AIRCRAFT;
+            width = 79.8;
+            break;
         case SVC_SHIP:
             width = 4;
             maxSpeed = 8 / 1.94; // 8 knots
@@ -298,11 +336,13 @@ SUMOVTypeParameter::SUMOVTypeParameter(const std::string& vtid, const SUMOVehicl
       carriageLength(-1),
       locomotiveLength(-1),
       carriageGap(1),
+      carriageDoors(2),
       timeToTeleport(TTT_UNSET),
       timeToTeleportBidi(TTT_UNSET),
       speedFactorPremature(-1),
       frontSeatPos(1.7),
       seatingWidth(-1),
+      boardingFactor(1),
       parametersSet(0),
       saved(false),
       onlyReferenced(false) {
@@ -330,6 +370,7 @@ SUMOVTypeParameter::SUMOVTypeParameter(const std::string& vtid, const SUMOVehicl
     osgFile = defaultValues.osgFile;
     carriageLength = defaultValues.carriageLength;
     locomotiveLength = defaultValues.locomotiveLength;
+    carriageDoors = defaultValues.carriageDoors;
     latAlignmentProcedure = defaultValues.latAlignmentProcedure;
     // check if default speeddev was defined
     if (oc.exists("default.speeddev")) {
@@ -519,6 +560,9 @@ SUMOVTypeParameter::write(OutputDevice& dev) const {
     if (wasSet(VTYPEPARS_SPEEDFACTOR_PREMATURE_SET)) {
         dev.writeAttr(SUMO_ATTR_SPEEDFACTOR_PREMATURE, speedFactorPremature);
     }
+    if (wasSet(VTYPEPARS_BOARDING_FACTOR_SET)) {
+        dev.writeAttr(SUMO_ATTR_BOARDING_FACTOR, boardingFactor);
+    }
     if (wasSet(VTYPEPARS_LANE_CHANGE_MODEL_SET)) {
         dev.writeAttr(SUMO_ATTR_LANE_CHANGE_MODEL, lcModel);
     }
@@ -556,6 +600,13 @@ SUMOVTypeParameter::write(OutputDevice& dev) const {
         dev.openTag(SUMO_TAG_PARAM);
         dev.writeAttr(SUMO_ATTR_KEY, toString(SUMO_ATTR_CARRIAGE_GAP));
         dev.writeAttr(SUMO_ATTR_VALUE, toString(carriageGap));
+        dev.closeTag();
+    }
+    // Write carriage doors
+    if (wasSet(VTYPEPARS_CARRIAGE_DOORS_SET)) {
+        dev.openTag(SUMO_TAG_PARAM);
+        dev.writeAttr(SUMO_ATTR_KEY, toString(SUMO_ATTR_CARRIAGE_DOORS));
+        dev.writeAttr(SUMO_ATTR_VALUE, toString(carriageDoors));
         dev.closeTag();
     }
     // Write rest of parameters
@@ -683,7 +734,7 @@ SUMOVTypeParameter::cacheParamRestrictions(const std::vector<std::string>& restr
 
 void
 SUMOVTypeParameter::initRailVisualizationParameters() {
-    if (knowsParameter("carriageLength")) {
+    if (hasParameter("carriageLength")) {
         carriageLength = StringUtils::toDouble(getParameter("carriageLength"));
         parametersSet |= VTYPEPARS_CARRIAGE_LENGTH_SET;
     } else {
@@ -732,17 +783,17 @@ SUMOVTypeParameter::initRailVisualizationParameters() {
                 break;
         }
     }
-    if (knowsParameter("locomotiveLength")) {
+    if (hasParameter("locomotiveLength")) {
         locomotiveLength = StringUtils::toDouble(getParameter("locomotiveLength"));
         parametersSet |= VTYPEPARS_LOCOMOTIVE_LENGTH_SET;
-    } else if (locomotiveLength <= 0) {
+    } else if (locomotiveLength < 0) {
         locomotiveLength = carriageLength;
     }
-    if (knowsParameter("carriageGap")) {
+    if (hasParameter("carriageGap")) {
         carriageGap = StringUtils::toDouble(getParameter("carriageGap"));
         parametersSet |= VTYPEPARS_CARRIAGE_GAP_SET;
     }
-    if (knowsParameter("frontSeatPos")) {
+    if (hasParameter("frontSeatPos")) {
         frontSeatPos = StringUtils::toDouble(getParameter("frontSeatPos"));
         parametersSet |= VTYPEPARS_FRONT_SEAT_POS_SET;
     } else {
@@ -776,7 +827,7 @@ SUMOVTypeParameter::initRailVisualizationParameters() {
         }
     }
 
-    if (knowsParameter("seatingWidth")) {
+    if (hasParameter("seatingWidth")) {
         seatingWidth = StringUtils::toDouble(getParameter("seatingWidth"));
         parametersSet |= VTYPEPARS_SEATING_WIDTH_SET;
     }
@@ -787,8 +838,10 @@ double
 SUMOVTypeParameter::getDefaultAccel(const SUMOVehicleClass vc) {
     switch (vc) {
         case SVC_PEDESTRIAN:
+        case SVC_WHEELCHAIR:
             return 1.5;
         case SVC_BICYCLE:
+        case SVC_SCOOTER:
             return 1.2;
         case SVC_MOTORCYCLE:
             return 6.;
@@ -823,8 +876,10 @@ double
 SUMOVTypeParameter::getDefaultDecel(const SUMOVehicleClass vc) {
     switch (vc) {
         case SVC_PEDESTRIAN:
+        case SVC_WHEELCHAIR:
             return 2.;
         case SVC_BICYCLE:
+        case SVC_SCOOTER:
             return 3.;
         case SVC_MOPED:
             return 7.;
@@ -856,9 +911,11 @@ SUMOVTypeParameter::getDefaultEmergencyDecel(const SUMOVehicleClass vc, double d
         double vcDecel;
         switch (vc) {
             case SVC_PEDESTRIAN:
+            case SVC_WHEELCHAIR:
                 vcDecel = 5.;
                 break;
             case SVC_BICYCLE:
+            case SVC_SCOOTER:
                 vcDecel = 7.;
                 break;
             case SVC_MOPED:

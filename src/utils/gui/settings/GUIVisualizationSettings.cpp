@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -157,8 +157,9 @@ const double GUIVisualizationStoppingPlaceSettings::chargingStationWidth(1);
 // Dotted contour values
 // -------------------------------------------------------------------------
 
+const double GUIVisualizationDottedContourSettings::segmentWidth(0.2);
 const double GUIVisualizationDottedContourSettings::segmentWidthSmall(0.1);
-const double GUIVisualizationDottedContourSettings::segmentWidthLarge(0.2);
+const double GUIVisualizationDottedContourSettings::segmentWidthLarge(0.5);
 const double GUIVisualizationDottedContourSettings::segmentLength(2);
 const RGBColor GUIVisualizationDottedContourSettings::firstInspectedColor(235, 235, 235);
 const RGBColor GUIVisualizationDottedContourSettings::secondInspectedColor(20, 20, 20);
@@ -183,26 +184,7 @@ const double GUIVisualizationWidthSettings::embeddedRouteWidth(0.55);
 // details of certain netedit objects (0 = drawn always)
 // -------------------------------------------------------------------------
 
-const double GUIVisualizationDetailSettings::connectionsDemandMode(5);
-const double GUIVisualizationDetailSettings::laneTextures(20); // originally 10
-const double GUIVisualizationDetailSettings::lockIcon(30);
-const double GUIVisualizationDetailSettings::additionalTextures(20); // originally 10
-const double GUIVisualizationDetailSettings::geometryPointsDetails(10);
-const double GUIVisualizationDetailSettings::geometryPointsText(20);
-const double GUIVisualizationDetailSettings::stoppingPlaceDetails(10);
-const double GUIVisualizationDetailSettings::stoppingPlaceText(10);
-const double GUIVisualizationDetailSettings::detectorDetails(10);
-const double GUIVisualizationDetailSettings::detectorText(30);
-const double GUIVisualizationDetailSettings::calibratorText(10);
-const double GUIVisualizationDetailSettings::stopsDetails(10);
-const double GUIVisualizationDetailSettings::stopsText(50);
-const double GUIVisualizationDetailSettings::vehicleTriangles(2);
-const double GUIVisualizationDetailSettings::vehicleBoxes(5);
-const double GUIVisualizationDetailSettings::vehicleShapes(10);
-const double GUIVisualizationDetailSettings::personTriangles(2);
-const double GUIVisualizationDetailSettings::personCircles(5);
-const double GUIVisualizationDetailSettings::personShapes(10);
-const double GUIVisualizationDetailSettings::personExaggeration(4);
+const double GUIVisualizationDetailSettings::tmp(5);
 
 // -------------------------------------------------------------------------
 // scheme names
@@ -537,6 +519,7 @@ GUIVisualizationSettings::GUIVisualizationSettings(const std::string& _name, boo
     showLaneDirection(false),
     showSublanes(true),
     spreadSuperposed(false),
+    disableHideByZoom(false),
     edgeParam("EDGE_KEY"),
     laneParam("LANE_KEY"),
     vehicleParam("PARAM_NUMERICAL"),
@@ -567,6 +550,8 @@ GUIVisualizationSettings::GUIVisualizationSettings(const std::string& _name, boo
     personSize(1),
     personName(false, 60, RGBColor(0, 153, 204, 255)),
     personValue(false, 80, RGBColor::CYAN),
+    showPedestrianNetwork(true),
+    pedestrianNetworkColor(RGBColor(179, 217, 255)),
     containerQuality(0),
     containerSize(1),
     containerName(false, 60, RGBColor(0, 153, 204, 255)),
@@ -612,9 +597,8 @@ GUIVisualizationSettings::GUIVisualizationSettings(const std::string& _name, boo
     gaming(false),
     drawBoundaries(false),
     selectorFrameScale(1.),
-    drawForPositionSelection(false),
+    drawForViewObjectsHandler(false),
     drawForRectangleSelection(false),
-    forceDrawForPositionSelection(false),
     forceDrawForRectangleSelection(false),
     disableDottedContours(false),
     geometryIndices(false, 50, RGBColor(255, 0, 128, 255)),
@@ -651,6 +635,7 @@ GUIVisualizationSettings::initSumoGuiDefaults() {
     scheme.addColor(RGBColor::RED, 8, TL("closed")); // road closing
     scheme.addColor(RGBColor::GREEN, 9, TL("connector")); // macro-connector
     scheme.addColor(RGBColor::ORANGE, 10, TL("forbidden")); // forbidden road
+    scheme.addColor(RGBColor(200, 240, 240), 11, TL("airway"));
     laneColorer.addScheme(scheme);
     scheme = GUIColorScheme(SCHEME_NAME_SELECTION, RGBColor(128, 128, 128, 255), TL("unselected"), true, 0, COL_SCHEME_MISC);
     scheme.addColor(RGBColor(0, 80, 180, 255), 1, TL("selected"));
@@ -1161,6 +1146,7 @@ GUIVisualizationSettings::initSumoGuiDefaults() {
     scheme = GUIColorScheme("uniform", TL("uniform"), RGBColor::BLACK, "", true);
     scheme.addColor(RGBColor(150, 200, 200), 1, TL("waterway"));
     scheme.addColor(RGBColor(0, 0, 0, 0), 2, TL("railway"));
+    scheme.addColor(RGBColor(200, 240, 240), 3, TL("airway"));
     junctionColorer.addScheme(scheme);
     scheme = GUIColorScheme(SCHEME_NAME_SELECTION, RGBColor(128, 128, 128, 255), TL("unselected"), true, 0, COL_SCHEME_MISC);
     scheme.addColor(RGBColor(0, 80, 180, 255), 1, TL("selected"));
@@ -1524,7 +1510,8 @@ GUIVisualizationSettings::initNeteditDefaults() {
     scheme.addColor(RGBColor::RED, 8, TL("closed")); // road closing
     scheme.addColor(RGBColor::GREEN, 9, TL("connector")); // macro-connector
     scheme.addColor(RGBColor::ORANGE, 10, TL("forbidden")); // forbidden road
-    scheme.addColor(RGBColor(145, 145, 145), 11., TL("data mode"));
+    scheme.addColor(RGBColor(145, 145, 145), 11, TL("data mode"));
+    scheme.addColor(RGBColor(200, 240, 240), 12, TL("airway"));
     laneColorer.addScheme(scheme);
     scheme = GUIColorScheme(SCHEME_NAME_SELECTION, RGBColor(128, 128, 128, 255), TL("unselected"), true, 0, COL_SCHEME_MISC);
     scheme.addColor(RGBColor(0, 80, 180, 255), 1., TL("selected"));
@@ -1735,7 +1722,6 @@ GUIVisualizationSettings::save(OutputDevice& dev) const {
     dev.writeAttr("dither", dither);
     dev.writeAttr("fps", fps);
     dev.writeAttr("drawBoundaries", drawBoundaries);
-    dev.writeAttr("forceDrawPositionSelection", forceDrawForPositionSelection);
     dev.writeAttr("disableDottedContours", disableDottedContours);
     dev.writeAttr("forceDrawRectangleSelection", forceDrawForRectangleSelection);
     geometryIndices.print(dev, "geometryIndices");
@@ -1763,6 +1749,7 @@ GUIVisualizationSettings::save(OutputDevice& dev) const {
     dev.writeAttr("showDirection", showLaneDirection);
     dev.writeAttr("showSublanes", showSublanes);
     dev.writeAttr("spreadSuperposed", spreadSuperposed);
+    dev.writeAttr("disableHideByZoom", disableHideByZoom);
     dev.writeAttr("edgeParam", edgeParam);
     dev.writeAttr("laneParam", laneParam);
     dev.writeAttr("vehicleParam", vehicleParam);
@@ -1829,6 +1816,8 @@ GUIVisualizationSettings::save(OutputDevice& dev) const {
     dev.openTag(SUMO_TAG_VIEWSETTINGS_PERSONS);
     dev.writeAttr("personMode", personColorer.getActive());
     dev.writeAttr("personQuality", personQuality);
+    dev.writeAttr("showPedestrianNetwork", showPedestrianNetwork);
+    dev.writeAttr("pedestrianNetworkColor", pedestrianNetworkColor);
     personSize.print(dev, "person");
     dev.lf();
     dev << "                ";
@@ -1998,9 +1987,6 @@ GUIVisualizationSettings::operator==(const GUIVisualizationSettings& v2) {
     if (drawBoundaries != v2.drawBoundaries) {
         return false;
     }
-    if (forceDrawForPositionSelection != v2.forceDrawForPositionSelection) {
-        return false;
-    }
     if (disableDottedContours != v2.disableDottedContours) {
         return false;
     }
@@ -2093,6 +2079,9 @@ GUIVisualizationSettings::operator==(const GUIVisualizationSettings& v2) {
         return false;
     }
     if (spreadSuperposed != v2.spreadSuperposed) {
+        return false;
+    }
+    if (disableHideByZoom != v2.disableHideByZoom) {
         return false;
     }
     if (edgeParam != v2.edgeParam) {
@@ -2195,6 +2184,12 @@ GUIVisualizationSettings::operator==(const GUIVisualizationSettings& v2) {
         return false;
     }
     if (personValue != v2.personValue) {
+        return false;
+    }
+    if (showPedestrianNetwork != v2.showPedestrianNetwork) {
+        return false;
+    }
+    if (pedestrianNetworkColor != v2.pedestrianNetworkColor) {
         return false;
     }
     if (!(containerColorer == v2.containerColorer)) {
@@ -2378,11 +2373,12 @@ GUIVisualizationSettings::getTextAngle(double objectAngle) const {
     // fmod round towards zero which is not want we want for negative numbers
     viewAngle = fmod(viewAngle, 360);
     if (viewAngle > 90 && viewAngle < 270) {
-        // avoid reading text on it's head
+        // avoid reading text on its head
         objectAngle -= 180;
     }
     return objectAngle;
 }
+
 
 bool
 GUIVisualizationSettings::flippedTextAngle(double objectAngle) const {
@@ -2396,14 +2392,36 @@ GUIVisualizationSettings::flippedTextAngle(double objectAngle) const {
 }
 
 
-
 bool
-GUIVisualizationSettings::drawAdditionals(const double exaggeration) const {
-    // if we're drawing for rectangle selection, draw always
-    if (drawForRectangleSelection) {
+GUIVisualizationSettings::checkBoundarySizeDrawing(const double w, const double h) const {
+    if (disableHideByZoom) {
         return true;
     } else {
-        return (scale * exaggeration) > 1.;
+        const double size = MAX2(w, h);
+        if (drawForViewObjectsHandler) {
+            return true;
+        } else {
+            // for low computers 20. for high 10
+            return (scale * size) > 15;
+        }
+    }
+}
+
+
+GUIVisualizationSettings::Detail
+GUIVisualizationSettings::getDetailLevel(const double exaggeration) const {
+    // calculate factor
+    const auto factor = (scale * exaggeration);
+    if (factor >= 10) {
+        return GUIVisualizationSettings::Detail::Level0;
+    } else if (factor >= 5) {
+        return GUIVisualizationSettings::Detail::Level1;
+    } else if (factor >= 2.5) {
+        return GUIVisualizationSettings::Detail::Level2;
+    } else if (factor >= 1.25) {
+        return GUIVisualizationSettings::Detail::Level3;
+    } else {
+        return GUIVisualizationSettings::Detail::Level4;
     }
 }
 
@@ -2414,30 +2432,6 @@ GUIVisualizationSettings::drawDetail(const double detail, const double exaggerat
         return true;
     } else {
         return ((scale * exaggeration) >= detail);
-    }
-}
-
-
-int
-GUIVisualizationSettings::getCircleResolution() const {
-    if (drawForPositionSelection || drawForRectangleSelection) {
-        return 8;
-    } else if (scale >= 10) {
-        return 32;
-    } else if (scale >= 5) {
-        return 16;
-    } else {
-        return 8;
-    }
-}
-
-
-bool
-GUIVisualizationSettings::drawDottedContour(const double exaggeration) const {
-    if (drawForPositionSelection || drawForRectangleSelection) {
-        return false;
-    } else {
-        return (scale * exaggeration) > 3.;
     }
 }
 

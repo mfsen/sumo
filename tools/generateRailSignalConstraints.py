@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-# Copyright (C) 2012-2023 German Aerospace Center (DLR) and others.
+# Copyright (C) 2012-2024 German Aerospace Center (DLR) and others.
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # https://www.eclipse.org/legal/epl-2.0/
@@ -26,7 +26,7 @@ When two vehicles stop subsequently at the same busStop (trainStop) and they rea
 via different routes, the switch where both routes merge is identified and a
 constraint is created for the rail signals that guard this merging switch:
     The vehicle B that arrives at the stop later, must wait (at its signal Y)
-    for the vehicle A that arrives first (to pass it's respective signal X)
+    for the vehicle A that arrives first (to pass its respective signal X)
     This uses the 'arrival' attribute of the vehicle stops
 
 A complication arises if the signal of the first vehicle is passed by other
@@ -45,7 +45,7 @@ a "virtual" intermediateStop directly after the switch to "normalize" the input.
 
 2. <insertionPredecessor>
 Whenever a vehicle B departs at a stop (assumed to coincide with the "until"
-attribute of it's first stop), the prior train A that leaves this stop is
+attribute of its first stop), the prior train A that leaves this stop is
 identified (also based on "until"). Then a constraint is created that prevents
 insertion of B until train A has passed the next signal that lies beyond the
 stop.
@@ -66,7 +66,7 @@ go second.
 
 3. <foeInsertion>
 Whenever a vehicle A departs at a stop (assumed to coincide with the "until"
-attribute of it's first stop), the latter train B that enters this stop is
+attribute of its first stop), the latter train B that enters this stop is
 identified (also based on "until"). Then a constraint is created that prevents
 B from entering the section with the stop until A has passed the next signal that lies beyond the
 stop.
@@ -644,7 +644,7 @@ def markOvertaken(options, vehicleStopRoutes, stopRoutes):
                     ended2 = parseTime(stop2.ended) if stop2.hasAttribute("ended") else None
 
                     swappedEnded = (ended2 is not None
-                                    # vehicle had not left but it's schedule follower had
+                                    # vehicle had not left but its schedule follower had
                                     and (ended is None
                                          # vehicle left after schedule follower
                                          or ended2 < ended))
@@ -657,7 +657,7 @@ def markOvertaken(options, vehicleStopRoutes, stopRoutes):
                             # legacy: until replaced by ended
                             until2 < until or
                             (started2 is not None
-                                # vehicle had not arrived but it's schedule follower had
+                                # vehicle had not arrived but its schedule follower had
                                 and (started is None
                                      # vehicle arrived after schedule follower
                                      or started2 < started)) or
@@ -730,7 +730,10 @@ def updateStartedEnded(options, net, stopEdges, stopRoutes, vehicleStopRoutes):
     # signal -> [(tripID, otherSignal, otherTripID, limit, line, otherLine, vehID, otherVehID), ...]
     limit = 1 + options.limit
     conflicts = defaultdict(list)
+    # foe(parking)Insertion conflicts
+    fpiConflicts = defaultdict(list)
     numConflicts = 0
+    numConflicts2 = 0
 
     maxShift = 0
     for busStop in sorted(stopRoutes.keys()):
@@ -782,14 +785,13 @@ def updateStartedEnded(options, net, stopEdges, stopRoutes, vehicleStopRoutes):
                     index = vehStops.index((edgesBefore, stop))
                     isPassing = index < len(vehStops) - 1
                     if isPassing:
-                        nNextEdges = vehStops[index + 1][0]
 
+                        pSignal = findSignal(net, (stopEdge,) + pNextEdges)
                         if parseBool(stop.getAttributeSecure("parking", "false")):
                             # we need an insertion constraint for insertion after parking
 
                             # find signal in nextEdges
-                            pSignal = findSignal(net, (stopEdge,) + pNextEdges)
-                            nSignal = findSignal(net, (stopEdge,) + nNextEdges)
+                            nSignal = getDownstreamSignal(net, stopEdges, vehStops, index)
                             if pSignal is None or nSignal is None:
                                 print(("Ignoring parking insertion conflict between %s and %s at stop '%s' " +
                                        "because no rail signal was found after the stop") % (
@@ -813,9 +815,38 @@ def updateStartedEnded(options, net, stopEdges, stopRoutes, vehicleStopRoutes):
 
                         else:
                             # this is a foeInsertionConflicts and we need a normal constraint
-                            print(("Warning: constraint for non-parking vehicle '%s'" % stop.vehID)
-                                  + (" after ended parking vehicle '%s' not implemented yet." % pStop.vehID)
-                                  + (" Possible deadlock at '%s' " % busStop), file=sys.stderr)
+
+                            # find signal in prior edges
+                            nSignal = getUpstreamSignal(net, vehStops, index)
+                            if pSignal is None:
+                                print(("Ignoring foe parking insertion conflict between %s and %s at stop '%s' " +
+                                       "because no rail signal was found after the stop") % (
+                                    stop.prevTripId, pStop.prevTripId, busStop), file=sys.stderr)
+                                continue
+                            if nSignal is None:
+                                print(("Ignoring foe parking insertion conflict between %s and %s at stop '%s' " +
+                                       "because no rail signal was found before the stop") % (
+                                    stop.prevTripId, pStop.prevTripId, busStop), file=sys.stderr)
+                                continue
+
+                            # vehicles have already stopped so the new tripId applies
+                            nStopBefore = vehStops[index - 1][1]
+                            nTripID = nStopBefore.getAttributeSecure("tripId", nStopBefore.vehID)
+                            pTripID = pStop.getAttributeSecure("tripId", pStop.vehID)
+                            # marked as inactive because they are causing more
+                            # deadlocks than they solve but might already be usefully (i.e. via TraCI)
+                            fpiConflicts[nSignal].append(Conflict(nTripID, pSignal, pTripID, limit,
+                                                                  # attributes for adding comments
+                                                                  nStopBefore.line,
+                                                                  pStop.line,
+                                                                  nStopBefore.vehID,
+                                                                  pStop.vehID,
+                                                                  "foeEnded=%s " % humanReadableTime(ended),
+                                                                  None,  # switch
+                                                                  stop.busStop,
+                                                                  "foeParking",
+                                                                  active=False))
+                            numConflicts2 += 1
 
         if busStop == options.debugStop and shift > 0:
             print("Shifted stop times at %s by %s" % (busStop, shift))
@@ -825,8 +856,10 @@ def updateStartedEnded(options, net, stopEdges, stopRoutes, vehicleStopRoutes):
 
     if options.verbose and numConflicts > 0:
         print("Found %s parking insertion conflicts" % numConflicts)
+    if options.verbose and numConflicts2 > 0:
+        print("Found %s foe parking insertion conflicts" % numConflicts2)
 
-    return conflicts
+    return conflicts, fpiConflicts
 
 
 def addCommonStop(options, switch, edgesBefore, stop, edgesBefore2, stop2, vehicleStopRoutes, stopRoutes2):
@@ -1026,7 +1059,7 @@ def findConflicts(options, net, switchRoutes, mergeSignals, signalTimes, stopEdg
                         "invalid", False) and not pStop.getAttributeSecure("invalid", False)
                     if isIntermediateParking:
                         # intermediateParkingConflicts: train order isn't determined at the switch
-                        #  but rather when the second vehicle leaves it's parking stop
+                        #  but rather when the second vehicle leaves its parking stop
                         stopEdge = stopEdges[nStop.intermediateStop.busStop]
                         signal = findSignal(net, (stopEdge,) + nStop.edgesBeforeCommon)
                         if signal is None:
@@ -1451,7 +1484,7 @@ def findBidiConflicts(options, net, stopEdges, uniqueRoutes, stopRoutes, vehicle
                     bidi = getBidiID(net, edge)
                     for route in edge2Route[bidi]:
                         # insertion on the stopEdgeBidi may also define a bidi
-                        # conflict (i.e. with a foe vehicle that has delayed insertion w.r.t it's schedule)
+                        # conflict (i.e. with a foe vehicle that has delayed insertion w.r.t its schedule)
                         if stopEdgeBidi not in route[1:]:
                             oRoutes.add(route)
             if oRoutes:
@@ -1529,7 +1562,9 @@ def findBidiConflicts(options, net, stopEdges, uniqueRoutes, stopRoutes, vehicle
                             conflicts[conflict.signal].append(conflict)
                             numConflicts += 1
 
-    numRemoved = checkBidiConsistency(conflicts, options.verbose)
+    tl_to_stop = getStopTLS(stopEdges, net)
+    numRemoved = removeDeadlockingBidiConstraints(conflicts, tl_to_stop, options.verbose)
+    numRemoved += checkBidiConsistency(conflicts, options.verbose)
     numConflicts -= numRemoved
 
     if numConflicts > 0:
@@ -1682,6 +1717,46 @@ def checkBidiConsistency(conflicts, verbose):
     return numRemoved
 
 
+def removeDeadlockingBidiConstraints(conflicts, tl_to_stop, verbose):
+    """If there is a non-bidi section in between two single tracks
+    (like so: A--=B=--C), contradictory constraints may be generated,
+    where train at A waits for train at C to pass a signal at B, and where
+    train at C waits for train at A to pass the signal at B.
+    """
+    tfcMap = defaultdict(list)
+    numRemoved = 0
+
+    for signal in sorted(conflicts.keys()):
+        for c in conflicts[signal]:
+            other_stop = tl_to_stop.get(c.otherSignal, None)
+            if not other_stop:
+                continue
+            key = (c.tripID, c.otherTripID, other_stop)
+            rkey = (c.otherTripID, c.tripID, other_stop)
+            if key in tfcMap and verbose:
+                print("Deadlock-causing conflict between '%s' and '%s' at busStop '%s'." % key, file=sys.stderr)
+            tfcMap[key].append(c)
+            if rkey in tfcMap:
+                keyToRemove = None
+                # decide which of the two conflicts to keep
+                times = dict([t.split("=") for t in c.conflictTime.split()])
+                if parseTime(times["foeStopArrival"]) < parseTime(times["stopArrival"]):
+                    keyToRemove = rkey
+                else:
+                    keyToRemove = key
+                for c in tfcMap[keyToRemove]:
+                    numRemoved += 1
+                    conflicts[c.signal].remove(c)
+                    if verbose:
+                        print("Found bidi conflict causing deadlock (tripId=%s, foeId=%s, busStop=%s)." % keyToRemove)
+                    if not conflicts[c.signal]:
+                        del conflicts[c.signal]
+                del tfcMap[keyToRemove]
+    if numRemoved > 0 and verbose:
+        print("Removed %s deadlock-causing bidi conflicts." % numRemoved)
+    return numRemoved
+
+
 def getEdges(stopRoute, index, startEdge, forward, noIndex=False):
     """return all edges along the route starting at the given stop index and startEdge
        either going forward or backward
@@ -1791,6 +1866,18 @@ def writeConstraint(options, outf, tag, c):
         tag, c.tripID, c.otherSignal, c.otherTripID, limit, active, close, comment))
 
 
+def getStopTLS(stopEdges, net):
+    # Generates a mapping from traffic lights to associated stop locations
+    tls_to_stop = {}
+    for key, val in stopEdges.items():
+        stop = key.split("@")[-1]
+        node = net.getEdge(val).getFromNode()
+        if node.getType() == "rail_signal":
+            tl = net.getTLS(node.getID()).getID()
+            tls_to_stop[tl] = stop
+    return tls_to_stop
+
+
 def main(options):
     net = sumolib.net.readNet(options.netFile)
     stopEdges, stopEnds = getStopEdges(net, options.addFile)
@@ -1799,7 +1886,8 @@ def main(options):
             net, options, stopEdges, stopEnds, bidiStops)  # noqa
     if options.abortUnordered:
         markOvertaken(options, vehicleStopRoutes, stopRoutes)
-    parkingConflicts = updateStartedEnded(options, net, stopEdges, stopRoutesBidi, vehicleStopRoutes)
+    parkingConflicts, foeParkingInsertionConflicts = updateStartedEnded(
+        options, net, stopEdges, stopRoutesBidi, vehicleStopRoutes)
 
     mergeSwitches = findMergingSwitches(options, uniqueRoutes, net)
     signalTimes = computeSignalTimes(options, net, stopRoutes)
@@ -1819,6 +1907,7 @@ def main(options):
 
     signals = sorted(set(list(conflicts.keys())
                          + list(foeInsertionConflicts.keys())
+                         + list(foeParkingInsertionConflicts.keys())
                          + list(insertionConflicts.keys())
                          + list(parkingConflicts.keys())
                          + list(intermediateParkingConflicts.keys())
@@ -1830,7 +1919,8 @@ def main(options):
             outf.write('    <railSignalConstraints id="%s">\n' % signal)
             for conflict in conflicts[signal]:
                 writeConstraint(options, outf, "predecessor", conflict)
-            for conflict in foeInsertionConflicts[signal]:
+            for conflict in (foeInsertionConflicts[signal] +
+                             foeParkingInsertionConflicts[signal]):
                 writeConstraint(options, outf, "foeInsertion", conflict)
             for conflict in (insertionConflicts[signal] +
                              inactiveInsertionConflicts[signal] +

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-# Copyright (C) 2010-2023 German Aerospace Center (DLR) and others.
+# Copyright (C) 2010-2024 German Aerospace Center (DLR) and others.
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # https://www.eclipse.org/legal/epl-2.0/
@@ -214,20 +214,21 @@ def get_options(args=None):
         for edge in options.net.getEdges():
             if edge.allows(options.vclass):
                 length += edge.getLaneNumber() * edge.getLength()
+        if length == 0:
+            raise ValueError("No valid edges for computing insertion-density")
+
         options.insertionRate = [density * (length / 1000.0) for density in options.insertionDensity]
 
     if options.insertionRate:
-        if any([rate <= 0 for rate in options.insertionRate]):
-            raise ValueError("insertionRate must be positive.")
-        options.period = [3600.0 / rate for rate in options.insertionRate]
+        options.period = [3600.0 / rate if rate != 0.0 else 0.0 for rate in options.insertionRate]
 
     if options.period:
-        if any([period <= 0 for period in options.period]):
-            raise ValueError("Period must be positive.")
+        if any([period < 0 for period in options.period]):
+            raise ValueError("Period / insertionRate must be non-negative.")
         options.period = list(map(intIfPossible, options.period))
         if options.binomial:
             for p in options.period:
-                if 1.0 / p / options.binomial >= 1:
+                if p != 0.0 and 1.0 / p / options.binomial >= 1:
                     print("Warning: Option --binomial %s is too low for insertion period %s." % (options.binomial, p)
                           + " Insertions will not be randomized.", file=sys.stderr)
 
@@ -630,6 +631,10 @@ def samplePosition(edge):
 
 
 def main(options):
+    if all([period == 0 for period in options.period]):
+        print("Warning: All intervals are empty.", file=sys.stderr)
+        return False
+
     if not options.random:
         random.seed(options.seed)
 
@@ -652,7 +657,7 @@ def main(options):
     vias = {}
 
     time_delta = (parseTime(options.end) - parseTime(options.begin)) / len(options.period)
-    times = [parseTime(options.begin) + i*time_delta for i in range(len(options.period)+1)]
+    times = [parseTime(options.begin) + i * time_delta for i in range(len(options.period) + 1)]
     times = list(map(intIfPossible, times))
 
     def generate_origin_destination(trip_generator, options):
@@ -780,6 +785,8 @@ def main(options):
                     time = departureTime = parseTime(times[i])
                     arrivalTime = parseTime(times[i+1])
                     period = options.period[i]
+                    if period == 0.0:
+                        continue
                     if options.binomial is None:
                         departures = []
                         if options.randomDepart:
@@ -832,6 +839,8 @@ def main(options):
                             departureTime = times[i]
                             arrivalTime = times[i+1]
                             period = options.period[i]
+                            if period == 0.0:
+                                continue
                             origin, destination, intermediate = origins_destinations[j]
                             generate_one(j, departureTime, arrivalTime, period, origin, destination, intermediate, i)
                 except Exception as exc:
@@ -922,7 +931,7 @@ if __name__ == "__main__":
     try:
         if not main(get_options()):
             print("Error: Trips couldn't be generated as requested. "
-                  "Try the --verbose option to output more details on the failure.")
+                  "Try the --verbose option to output more details on the failure.", file=sys.stderr)
             sys.exit(1)
     except ValueError as e:
         print("Error:", e, file=sys.stderr)

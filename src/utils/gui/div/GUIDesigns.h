@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -48,13 +48,16 @@ class MFXMenuCheckIcon;
 /// @name ComboBox sizes
 /// @{
 /// @brief combo box size small
-#define GUIDesignComboBoxSizeSmall  5
+#define GUIDesignComboBoxVisibleItemsSmall  ((int)getApp()->reg().readIntEntry("SETTINGS", "comboRows", 32))
+
 
 /// @brief combo box medium small
-#define GUIDesignComboBoxSizeMedium 10
+#define GUIDesignComboBoxVisibleItemsMedium GUIDesignComboBoxVisibleItemsSmall
 
 /// @brief combo box large small
-#define GUIDesignComboBoxSizeLarge  15
+#define GUIDesignComboBoxVisibleItemsLarge GUIDesignComboBoxVisibleItemsSmall
+
+#define GUIDesignComboBoxVisibleItemsFixed 15
 
 /// @}
 
@@ -726,7 +729,7 @@ public:
 
     /// Construct label with given text and icon
     static FXLabel* buildFXLabel(FXComposite* p, const std::string& text,  const std::string& tip, const std::string& help,
-                                 FXIcon* ic, FXuint opts, FXint x = 0, FXint y = 0, FXint w = 0, FXint h = 0, 
+                                 FXIcon* ic, FXuint opts, FXint x = 0, FXint y = 0, FXint w = 0, FXint h = 0,
                                  FXint pl = DEFAULT_PAD, FXint pr = DEFAULT_PAD, FXint pt = DEFAULT_PAD, FXint pb = DEFAULT_PAD);
 
     /// @brief build button
@@ -736,6 +739,6 @@ public:
 
     /// @brief build radio button
     static FXRadioButton* buildFXRadioButton(FXComposite* p, const std::string& text, const std::string& tip, const std::string& help,
-                                             FXObject* tgt, FXSelector sel, FXuint opts = RADIOBUTTON_NORMAL, FXint x = 0, FXint y = 0, FXint w = 0, FXint h = 0,
-                                             FXint pl = DEFAULT_PAD,FXint pr = DEFAULT_PAD,FXint pt = DEFAULT_PAD,FXint pb = DEFAULT_PAD);
+            FXObject* tgt, FXSelector sel, FXuint opts = RADIOBUTTON_NORMAL, FXint x = 0, FXint y = 0, FXint w = 0, FXint h = 0,
+            FXint pl = DEFAULT_PAD, FXint pr = DEFAULT_PAD, FXint pt = DEFAULT_PAD, FXint pb = DEFAULT_PAD);
 };

@@ -1,5 +1,5 @@
-Eclipse SUMO sumo Version v1_17_0+2470-b55cba8942c
- Copyright (C) 2001-2023 German Aerospace Center (DLR) and others; https://sumo.dlr.de
+Eclipse SUMO sumo Version v1_20_0+0026-b9eee10faaa
+ Copyright (C) 2001-2024 German Aerospace Center (DLR) and others; https://sumo.dlr.de
 A microscopic, multi-modal traffic simulation.
 
 Usage: sumo [OPTION]*
@@ -176,6 +176,10 @@ Output Options:
   --save-state.constraints             Save rail signal constraints
   --save-state.precision INT           Write internal state values with the
                                         given precision (default 2)
+  --pedestrian.jupedsim.wkt FILE       The filename to output the JuPedSim
+                                        network as WKT
+  --pedestrian.jupedsim.wkt.geo        Whether to output JuPedSim network as
+                                        WKT using geo-coordinates (lon/lat)
 
 Time Options:
   -b, --begin TIME                     Defines the begin time in seconds;
@@ -369,11 +373,26 @@ Processing Options:
                                         walkingarea
   --pedestrian.jupedsim.step-length TIME  The update interval of the JuPedSim
                                         simulation (in seconds)
-  --pedestrian.jupedsim.exit-tolerance FLOAT  The distance to the destination
-                                        point considered as arrival (in meters)
+  --pedestrian.jupedsim.exit-tolerance FLOAT  The distance to accept the
+                                        JuPedSim arrival point (in meters)
+  --pedestrian.jupedsim.model STR      The submodel to use in JuPedSim
+                                        (currently only 'CollisionFreeSpeed')
+  --pedestrian.jupedsim.strength-neighbor-repulsion FLOAT  The neighbor
+                                        repulsion strength of the JuPedSim model
+  --pedestrian.jupedsim.range-neighbor-repulsion FLOAT  The neighbor repulsion
+                                        range of the JuPedSim model (in meters)
+  --pedestrian.jupedsim.strength-geometry-repulsion FLOAT  The geometry
+                                        repulsion strength of the JuPedSim model
+  --pedestrian.jupedsim.range-geometry-repulsion FLOAT  The geometry repulsion
+                                        range of the JuPedSim model (in meters)
   --ride.stop-tolerance FLOAT          Tolerance to apply when matching
                                         pedestrian and vehicle positions on
                                         boarding at individual stops
+  --mapmatch.distance FLOAT            Maximum distance when mapping input
+                                        coordinates (fromXY etc.) to the road
+                                        network
+  --mapmatch.junctions                 Match positions to junctions instead of
+                                        edges
   --persontrip.walk-opposite-factor FLOAT  Use FLOAT as a factor on walking
                                         speed against vehicle traffic direction
 
@@ -436,6 +455,8 @@ Routing Options:
                                         edge weights
   --device.rerouting.with-taz          Use zones (districts) as routing start-
                                         and endpoints
+  --device.rerouting.mode STR          Set routing flags (8 ignores temporary
+                                        blockages)
   --device.rerouting.init-with-loaded-weights  Use weight files given with
                                         option --weight-files for initializing
                                         edge weights
@@ -550,9 +571,12 @@ Battery Options:
                                         deterministic using a fraction of 1000
   --device.stationfinder.rescueTime TIME  Time to wait for a rescue vehicle on
                                         the road side when the battery is empty
-  --device.stationfinder.reserveFactor FLOAT  Additional battery buffer for
-                                        unexpected traffic situation when
-                                        estimating the battery need
+  --device.stationfinder.rescueAction STR  How to deal with a vehicle which has
+                                        to stop due to low battery: [none,
+                                        remove, tow]
+  --device.stationfinder.reserveFactor FLOAT  Scale battery need with this
+                                        factor to account for unexpected traffic
+                                        situations
   --device.stationfinder.emptyThreshold FLOAT  Battery percentage to go into
                                         rescue mode
   --device.stationfinder.radius TIME   Search radius in travel time seconds
@@ -564,6 +588,10 @@ Battery Options:
   --device.stationfinder.waitForCharge TIME  After this waiting time vehicle
                                         searches for a new station when the
                                         initial one is blocked
+  --device.stationfinder.saturatedChargeLevel FLOAT  Target state of charge
+                                        after which the vehicle stops charging
+  --device.stationfinder.needToChargeLevel FLOAT  State of charge the vehicle
+                                        begins searching for charging stations
   --device.battery.probability FLOAT   The probability for a vehicle to have a
                                         'battery' device
   --device.battery.explicit STR[]      Assign a 'battery' device to named
@@ -728,6 +756,8 @@ Bluelight Device Options:
   --device.bluelight.reactiondist FLOAT  Set the distance at which other
                                         drivers react to the blue light and
                                         siren sound
+  --device.bluelight.mingapfactor FLOAT  Reduce the minGap for reacting
+                                        vehicles by the given factor
 
 FCD Device Options:
   --device.fcd.probability FLOAT       The probability for a vehicle to have a
@@ -817,6 +847,15 @@ Friction Device Options:
                                         can be applied to the friction device ->
                                         e.g. to force false measurements
 
+FCD Replay Device Options:
+  --device.fcd-replay.probability FLOAT  The probability for a vehicle to have
+                                        a 'fcd-replay' device
+  --device.fcd-replay.explicit STR[]   Assign a 'fcd-replay' device to named
+                                        vehicles
+  --device.fcd-replay.deterministic    The 'fcd-replay' devices are set
+                                        deterministic using a fraction of 1000
+  --device.fcd-replay.file FILE        FCD file to read
+
 TraCI Server Options:
   --remote-port INT                    Enables TraCI Server if set
   --num-clients INT                    Expected number of connecting clients
@@ -902,8 +941,6 @@ GUI Only Options:
                                         position
   --tracker-interval TIME              The aggregation period for value tracker
                                         windows
-  --osg-view                           Start with an OpenSceneGraph view
-                                        instead of the regular 2D view
   --gui-testing                        Enable overlay for screen recognition
   --gui-testing-debug                  Enable output messages during
                                         GUI-Testing

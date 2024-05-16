@@ -1,6 +1,6 @@
 /****************************************************************************/
 // Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-// Copyright (C) 2001-2023 German Aerospace Center (DLR) and others.
+// Copyright (C) 2001-2024 German Aerospace Center (DLR) and others.
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License 2.0 which is available at
 // https://www.eclipse.org/legal/epl-2.0/
@@ -300,6 +300,9 @@ GNELoadThread::fillOptions(OptionsCont& neteditOptions) {
     neteditOptions.addSynonyme("meandata-files", "meandata");
     neteditOptions.addDescription("meandata-files", "Input", TL("Load meanData descriptions from FILE(s)"));
 
+    neteditOptions.doRegister("ignore-missing-inputs", new Option_Bool(false));
+    neteditOptions.addDescription("ignore-missing-inputs", "Input", TL("Reset path values (additional, route, data...) after loading netedit config"));
+
     // TOPIC: Output
 
     neteditOptions.doRegister("tls-file", new Option_String());
@@ -322,7 +325,7 @@ GNELoadThread::fillOptions(OptionsCont& neteditOptions) {
 
     neteditOptions.doRegister("ignore.additionalelements", new Option_Bool(false));
     neteditOptions.addDescription("ignore.additionalelements", "Netedit", TL("Ignore additional elements during loading of sumo-configs"));
-    
+
     neteditOptions.doRegister("ignore.routeelements", new Option_Bool(false));
     neteditOptions.addDescription("ignore.routeelements", "Netedit", TL("Ignore route elements during loading of sumo-configs"));
 
@@ -395,18 +398,6 @@ GNELoadThread::fillOptions(OptionsCont& neteditOptions) {
 
     neteditOptions.doRegister("jps.obstacle-prefix", new Option_String("jps.obstacle"));
     neteditOptions.addDescription("jps.obstacle-prefix", "Netedit", TL("Prefix for jps obstacle naming"));
-
-    neteditOptions.doRegister("jps.waitingArea-prefix", new Option_String("jps.waiting_area"));
-    neteditOptions.addDescription("jps.waitingArea-prefix", "Netedit", TL("Prefix for jps waiting area naming"));
-
-    neteditOptions.doRegister("jps.source-prefix", new Option_String("jps.source"));
-    neteditOptions.addDescription("jps.source-prefix", "Netedit", TL("Prefix for jps source naming"));
-
-    neteditOptions.doRegister("jps.sink-prefix", new Option_String("jps.sink"));
-    neteditOptions.addDescription("jps.sink-prefix", "Netedit", TL("Prefix for jps sink naming"));
-
-    neteditOptions.doRegister("jps.waypoint-prefix", new Option_String("jps.waypoint"));
-    neteditOptions.addDescription("jps.waypoint-prefix", "Netedit", TL("Prefix for jps waypoints naming"));
 
     // demand prefixes
 

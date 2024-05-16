@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2023-06-28 19:12:06 by Eclipse SUMO sumo Version v1_17_0+1334-7429cff45dd
+<!-- generated on 2024-05-06 22:23:06 by Eclipse SUMO sumo Version v1_19_0+2013-766b9941f98
 -->
 
 <xsd:schema elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
@@ -31,6 +31,7 @@
             <xsd:element name="tripinfo_device" type="tripinfo_deviceTopicType" minOccurs="0"/>
             <xsd:element name="vehroutes_device" type="vehroutes_deviceTopicType" minOccurs="0"/>
             <xsd:element name="friction_device" type="friction_deviceTopicType" minOccurs="0"/>
+            <xsd:element name="fcd_replay_device" type="fcd_replay_deviceTopicType" minOccurs="0"/>
             <xsd:element name="traci_server" type="traci_serverTopicType" minOccurs="0"/>
             <xsd:element name="mesoscopic" type="mesoscopicTopicType" minOccurs="0"/>
             <xsd:element name="random_number" type="random_numberTopicType" minOccurs="0"/>
@@ -136,6 +137,8 @@
             <xsd:element name="save-state.transportables" type="boolOptionType" minOccurs="0"/>
             <xsd:element name="save-state.constraints" type="boolOptionType" minOccurs="0"/>
             <xsd:element name="save-state.precision" type="intOptionType" minOccurs="0"/>
+            <xsd:element name="pedestrian.jupedsim.wkt" type="fileOptionType" minOccurs="0"/>
+            <xsd:element name="pedestrian.jupedsim.wkt.geo" type="boolOptionType" minOccurs="0"/>
         </xsd:all>
     </xsd:complexType>
 
@@ -216,8 +219,16 @@
             <xsd:element name="pedestrian.striping.reserve-oncoming.max" type="floatOptionType" minOccurs="0"/>
             <xsd:element name="pedestrian.striping.legacy-departposlat" type="boolOptionType" minOccurs="0"/>
             <xsd:element name="pedestrian.striping.walkingarea-detail" type="intOptionType" minOccurs="0"/>
-            <xsd:element name="pedestrian.remote.address" type="strOptionType" minOccurs="0"/>
+            <xsd:element name="pedestrian.jupedsim.step-length" type="timeOptionType" minOccurs="0"/>
+            <xsd:element name="pedestrian.jupedsim.exit-tolerance" type="floatOptionType" minOccurs="0"/>
+            <xsd:element name="pedestrian.jupedsim.model" type="strOptionType" minOccurs="0"/>
+            <xsd:element name="pedestrian.jupedsim.strength-neighbor-repulsion" type="floatOptionType" minOccurs="0"/>
+            <xsd:element name="pedestrian.jupedsim.range-neighbor-repulsion" type="floatOptionType" minOccurs="0"/>
+            <xsd:element name="pedestrian.jupedsim.strength-geometry-repulsion" type="floatOptionType" minOccurs="0"/>
+            <xsd:element name="pedestrian.jupedsim.range-geometry-repulsion" type="floatOptionType" minOccurs="0"/>
             <xsd:element name="ride.stop-tolerance" type="floatOptionType" minOccurs="0"/>
+            <xsd:element name="mapmatch.distance" type="floatOptionType" minOccurs="0"/>
+            <xsd:element name="mapmatch.junctions" type="boolOptionType" minOccurs="0"/>
             <xsd:element name="persontrip.walk-opposite-factor" type="floatOptionType" minOccurs="0"/>
         </xsd:all>
     </xsd:complexType>
@@ -249,6 +260,7 @@
             <xsd:element name="device.rerouting.adaptation-steps" type="intOptionType" minOccurs="0"/>
             <xsd:element name="device.rerouting.adaptation-interval" type="timeOptionType" minOccurs="0"/>
             <xsd:element name="device.rerouting.with-taz" type="boolOptionType" minOccurs="0"/>
+            <xsd:element name="device.rerouting.mode" type="strOptionType" minOccurs="0"/>
             <xsd:element name="device.rerouting.init-with-loaded-weights" type="boolOptionType" minOccurs="0"/>
             <xsd:element name="device.rerouting.threads" type="intOptionType" minOccurs="0"/>
             <xsd:element name="device.rerouting.synchronize" type="boolOptionType" minOccurs="0"/>
@@ -276,6 +288,8 @@
             <xsd:element name="log" type="fileOptionType" minOccurs="0"/>
             <xsd:element name="message-log" type="fileOptionType" minOccurs="0"/>
             <xsd:element name="error-log" type="fileOptionType" minOccurs="0"/>
+            <xsd:element name="log.timestamps" type="boolOptionType" minOccurs="0"/>
+            <xsd:element name="log.processid" type="boolOptionType" minOccurs="0"/>
             <xsd:element name="language" type="strOptionType" minOccurs="0"/>
             <xsd:element name="duration-log.disable" type="boolOptionType" minOccurs="0"/>
             <xsd:element name="duration-log.statistics" type="boolOptionType" minOccurs="0"/>
@@ -417,6 +431,7 @@
             <xsd:element name="device.bluelight.explicit" type="strArrayOptionType" minOccurs="0"/>
             <xsd:element name="device.bluelight.deterministic" type="boolOptionType" minOccurs="0"/>
             <xsd:element name="device.bluelight.reactiondist" type="floatOptionType" minOccurs="0"/>
+            <xsd:element name="device.bluelight.mingapfactor" type="floatOptionType" minOccurs="0"/>
         </xsd:all>
     </xsd:complexType>
 
@@ -491,6 +506,15 @@
             <xsd:element name="device.friction.deterministic" type="boolOptionType" minOccurs="0"/>
             <xsd:element name="device.friction.stdDev" type="floatOptionType" minOccurs="0"/>
             <xsd:element name="device.friction.offset" type="floatOptionType" minOccurs="0"/>
+        </xsd:all>
+    </xsd:complexType>
+
+    <xsd:complexType name="fcd_replay_deviceTopicType">
+        <xsd:all>
+            <xsd:element name="device.fcd-replay.probability" type="floatOptionType" minOccurs="0"/>
+            <xsd:element name="device.fcd-replay.explicit" type="strArrayOptionType" minOccurs="0"/>
+            <xsd:element name="device.fcd-replay.deterministic" type="boolOptionType" minOccurs="0"/>
+            <xsd:element name="device.fcd-replay.file" type="fileOptionType" minOccurs="0"/>
         </xsd:all>
     </xsd:complexType>
 

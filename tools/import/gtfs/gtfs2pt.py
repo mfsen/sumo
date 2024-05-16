@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Eclipse SUMO, Simulation of Urban MObility; see https://eclipse.dev/sumo
-# Copyright (C) 2010-2023 German Aerospace Center (DLR) and others.
+# Copyright (C) 2010-2024 German Aerospace Center (DLR) and others.
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # https://www.eclipse.org/legal/epl-2.0/
@@ -14,6 +14,7 @@
 # @file    gtfs2pt.py
 # @author  Jakob Erdmann
 # @author  Michael Behrisch
+# @author  Robert Hilbrich
 # @date    2018-08-28
 
 """
@@ -36,6 +37,7 @@ sys.path += [os.path.join(os.environ["SUMO_HOME"], "tools"),
              os.path.join(os.environ['SUMO_HOME'], 'tools', 'route')]
 import route2poly  # noqa
 import sumolib  # noqa
+from sumolib.miscutils import humanReadableTime  # noqa
 import tracemapper  # noqa
 
 import gtfs2fcd  # noqa
@@ -66,6 +68,8 @@ def get_options(args=None):
     ap.add_argument("--sort", action="store_true", default=False, category="processing",
                     help="sorting the output-file")
     ap.add_argument("--stops", category="input", type=ap.file, help="file with predefined stop positions to use")
+    ap.add_argument("-H", "--human-readable-time", category="output", dest="hrtime", default=False, action="store_true",
+                    help="write times as h:m:s")
 
     # ----------------------- fcd options -------------------------------------
     ap.add_argument("--network-split", category="input",
@@ -198,7 +202,7 @@ def mapFCD(options, typedNets):
         subprocess.call(call, shell=True)
 
 
-def traceMap(options, typedNets, fixedStops, invEdgeMap, radius=100):
+def traceMap(options, typedNets, fixedStops, invEdgeMap, radius=150):
     routes = collections.OrderedDict()
     for mode in sorted(typedNets.keys()):
         if options.verbose:
@@ -220,7 +224,9 @@ def traceMap(options, typedNets, fixedStops, invEdgeMap, radius=100):
                     fixed = fixedStops.get("%s.%s" % (tid, idx))
                     if fixed:
                         vias[idx] = invEdgeMap[fixed.lane[:fixed.lane.rfind("_")]]
-                mappedRoute = sumolib.route.mapTrace(trace, net, radius, fillGaps=options.fill_gaps, vias=vias)
+                mappedRoute = sumolib.route.mapTrace(trace, net, radius, verbose=options.verbose,
+                                                     fillGaps=options.fill_gaps, gapPenalty=5000., vias=vias,
+                                                     reversalPenalty=1000.)
                 if mappedRoute:
                     routes[tid] = [e.getID() for e in mappedRoute]
         if options.verbose:
@@ -344,6 +350,7 @@ def map_stops(options, net, routes, rout, edgeMap, fixedStops):
 
 
 def filter_trips(options, routes, stops, outf, begin, end):
+    ft = humanReadableTime if options.hrtime else lambda x: x
     numDays = int(end) // 86400
     if end % 86400 != 0:
         numDays += 1
@@ -361,7 +368,7 @@ def filter_trips(options, routes, stops, outf, begin, end):
                             # only add trimmed trips the first day
                             continue
                         line = (u'    <vehicle id="%s.%s" route="%s" type="%s" depart="%s" line="%s">\n' %
-                                (veh.id, d, veh.route, veh.type, depart, veh.line))
+                                (veh.id, d, veh.route, veh.type, ft(depart), veh.line))
                         for p in veh.param:
                             line += u'        <param key="%s" value="%s"/>\n' % p
                         line += u'    </vehicle>\n'
@@ -390,7 +397,7 @@ def main(options):
             fixedStops[stop.id] = stop
     if options.osm_routes:
         # Import PT from GTFS and OSM routes
-        gtfsZip = zipfile.ZipFile(sumolib.openz(options.gtfs, mode="rb", tryGZip=False))
+        gtfsZip = zipfile.ZipFile(sumolib.openz(options.gtfs, mode="rb", tryGZip=False, printErrors=True))
         routes, trips_on_day, shapes, stops, stop_times = gtfs2osm.import_gtfs(options, gtfsZip)
         gtfsZip.fp.close()
 
@@ -444,6 +451,7 @@ def main(options):
             stops = map_stops(options, net, routes, aout, edgeMap, fixedStops)
             aout.write(u'</additional>\n')
         with sumolib.openz(options.route_output, mode='w') as rout:
+            ft = humanReadableTime if options.hrtime else lambda x: x
             sumolib.xml.writeHeader(rout, os.path.basename(__file__), "routes", options=options)
             for vehID, edges in routes.items():
                 if edges:
@@ -453,7 +461,7 @@ def main(options):
                         if offset is None:
                             offset = stop[1]
                         rout.write(u'        <stop busStop="%s" duration="%s" until="%s"/> <!-- %s -->\n' %
-                                   (stop[0], options.duration, stop[1] - offset, stop[2]))
+                                   (stop[0], ft(options.duration), ft(stop[1] - offset), stop[2]))
                     rout.write(u'    </route>\n')
                 else:
                     print("Warning! Empty route", vehID, file=sys.stderr)
